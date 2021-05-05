@@ -8,6 +8,8 @@
     "talisman:scan": "scripts/talisman/scan.sh",
     "talisman:view": "scripts/talisman/view.sh"
   },
+  "author": "Matt Norris <matnorri@cisco.com>",
+  "license": "Apache-2.0",
   "devDependencies": {
     "@babel/core": "^7.13.15",
     "@babel/eslint-parser": "^7.13.14",
