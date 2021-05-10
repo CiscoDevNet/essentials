@@ -199,7 +199,7 @@ class Command extends EventEmitter {
     if (intent) {
       // Get the intent, if one is detected.
       ({ name, confidence = 0 } = intent);
-      const intentNameMatched = name === this.intent;
+      const intentNameMatched = this.matchIntent(name);
       const confidenceReached = confidence >= INTENT_CONFIDENCE;
       shouldEmitEvent = intentNameMatched && confidenceReached;
     } else {
@@ -220,6 +220,31 @@ class Command extends EventEmitter {
     }
 
     return shouldEmitEvent;
+  }
+
+  /**
+   * Returns true if the intent name matches this intent, false otherwise.
+   * @param {String|Object} intent
+   * @see https://stackoverflow.com/a/9436948/154065
+   * @returns {Boolean} true if the intent name matches this intent
+   */
+  matchIntent(intent) {
+    const isString = typeof intent === "string" || intent instanceof String;
+    if (isString) {
+      return intent === this.intent;
+    }
+
+    try {
+      return intent.name === this.intent;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  matchKnowledgeIntent(intent) {
+    const { answers, fulfillmentText, name } = intent;
+    const isFromKnowledgeBase = name.startsWith("Knowledge.KnowledgeBase.");
+    return answers && fulfillmentText && isFromKnowledgeBase;
   }
 
   /**

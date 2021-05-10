@@ -102,10 +102,22 @@ class Intents {
     const responses = await this.sessionClient.detectIntent(request);
     const result = responses[0].queryResult;
 
-    const { intent, sentimentAnalysisResult: sentiment = undefined } = result;
-    let { intentDetectionConfidence: confidence = 0 } = result;
+    const { intent } = result;
+    let {
+      fulfillmentText,
+      knowledgeAnswers,
+      intentDetectionConfidence: confidence = 0,
+    } = result;
 
-    if (intent) {
+    // Handle nulls.
+    const sentiment = result.sentimentAnalysisResult || undefined;
+
+    let answers;
+    if (knowledgeAnswers) {
+      ({ answers } = knowledgeAnswers);
+    }
+
+    if (intent && !intent.isFallback) {
       let { displayName: name } = intent;
       const { parameters } = intent;
 
@@ -118,7 +130,14 @@ class Intents {
         debug(`changed intent to "${name}"`);
       }
 
-      message._intent = { name, confidence, sentiment, parameters };
+      message._intent = {
+        name,
+        confidence,
+        fulfillmentText,
+        sentiment,
+        parameters,
+        answers,
+      };
     } else {
       debug(`no match for ${text}`);
     }
