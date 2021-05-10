@@ -243,8 +243,10 @@ class Command extends EventEmitter {
 
   matchKnowledgeIntent(intent) {
     const { answers, fulfillmentText, name } = intent;
+    const hasAnswers = !!answers;
+    const hasTextResponse = !!fulfillmentText;
     const isFromKnowledgeBase = name.startsWith("Knowledge.KnowledgeBase.");
-    return answers && fulfillmentText && isFromKnowledgeBase;
+    return isFromKnowledgeBase && hasAnswers && hasTextResponse;
   }
 
   /**
