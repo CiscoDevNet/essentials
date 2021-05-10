@@ -38,22 +38,54 @@ class BotFactory {
     }
   }
 
-  static configureCommand(controller, commandPath, friendlyCommandName) {
-    if (!friendlyCommandName) {
-      ({ name: friendlyCommandName } = path.parse(commandPath));
+  /**
+   * A command
+   * @typedef {Object} Command
+   * @property {String} friendlyName
+   */
+
+  static configureCommand(controller, command) {
+    const friendlyName = BotFactory.getFriendlyCommandName(command);
+
+    const results = {
+      name: friendlyName,
+      isConfigured: false,
+    };
+
+    try {
+      // Treat command as a proper @gve/bot-commands.Command.
+      command.controller = controller;
+      results.isConfigured = true;
+    } catch (err) {
+      console.error(err);
     }
 
-    const command = {
-      path: commandPath,
-      name: friendlyCommandName,
-      isConfigured: true,
-    };
-    try {
-      controller.loadModule(commandPath);
-    } catch (_) {
-      command.isConfigured = false;
+    if (!results.isConfigured) {
+      // Treat command as a path to a module.
+      try {
+        controller.loadModule(command);
+        results.isConfigured = true;
+      } catch (err) {
+        console.error(err);
+      }
     }
-    return command;
+
+    return results;
+  }
+
+  static getFriendlyCommandName(command) {
+    let friendlyName;
+
+    ({ friendlyName } = command);
+    if (!friendlyName) {
+      friendlyName = command.name || command.intent;
+    }
+
+    if (!friendlyName && command.constructor) {
+      friendlyName = command.constructor.name;
+    }
+
+    return friendlyName;
   }
 
   static getCommandLog(commandName, isEnabled) {
