@@ -3,9 +3,10 @@
  * @author Matt Norris <matnorri@cisco.com>
  */
 const debug = require("debug")("bot-factory");
-const path = require("path");
 
 const { Botkit } = require("botkit");
+const gveMiddleware = require("@gve/bot-middleware");
+
 const {
   ENABLED,
   DISABLED,
@@ -91,6 +92,34 @@ class BotFactory {
   static getCommandLog(commandName, isEnabled) {
     const status = isEnabled ? ENABLED : DISABLED;
     return `command: ${commandName}: ${status}`;
+  }
+
+  /**
+   * Configures the intent middleware on the given controller.
+   * @param {Botkit.Controller} controller - the bot controller
+   * @returns {Botkit.Controller} the modified bot controller
+   * @note Mutates the controller
+   */
+  static configureIntentMiddleware(controller, apiId, knowledgeBaseId) {
+    const results = {
+      controller,
+      isConnected: false,
+      isKnowledgeBaseConnected: false,
+    };
+
+    if (apiId) {
+      const intents = new gveMiddleware.Intents(apiId, knowledgeBaseId);
+      controller.middleware.ingest.use(intents.get);
+      // console.info("intent detection: connected");
+      results.isConnected = true;
+      if (knowledgeBaseId) {
+        // console.info("intent knowledge base: connected");
+        results.isKnowledgeBaseConnected = true;
+        debug("intent knowledge base ID:", knowledgeBaseId);
+      }
+    }
+
+    return results;
   }
 }
 
