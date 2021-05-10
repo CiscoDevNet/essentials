@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "git:commit": "cz",
+    "lerna:ci": "lerna clean --yes && lerna bootstrap",
     "lint": "eslint '**/{src,test}/**/*.{js,json}'",
     "talisman:scan": "scripts/talisman/scan.sh",
     "talisman:view": "scripts/talisman/view.sh"
