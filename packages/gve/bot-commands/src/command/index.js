@@ -32,6 +32,8 @@ const REGEX_IGNORE_CASE = "i";
  * @property {string[]} phrases - Phrases to listen for
  * @property {function} handleText - Handles message text
  * @property {function} handleAttachment - Handles message attachment actions, e.g., Adaptive Card clicks
+ * @property {Botkit} controller - Bot interface to define all bot features and functionality
+ * @property {string} friendlyName - Friendly name of the command
  */
 
 /**
@@ -51,23 +53,28 @@ class Command extends EventEmitter {
     intent,
     config = {
       messageTypes: Command.getStandardMessageTypes(),
-      phrases: [intent],
+      phrases: [intent.toLowerCase()],
+      friendlyName: intent.toLowerCase(),
     }
   ) {
     super();
     this.intent = intent;
 
     // Configure command with given values or provide sensible defaults.
+    const defaultIntent = intent.toLowerCase();
     const {
+      controller,
       messageTypes: messageTypesToUse = Command.getStandardMessageTypes(),
-      phrases = [intent],
+      phrases = [defaultIntent],
+      friendlyName = defaultIntent,
       handleText = this.defaultHandleText.bind(this),
       handleAttachment = this.defaultHandleAttachment.bind(this),
     } = config;
 
+    this.controller = controller;
     this.messageTypes = messageTypesToUse;
     this.phrases = phrases;
-
+    this.friendlyName = friendlyName;
     this.getIntent = this.getIntent.bind(this);
     this.handleText = handleText;
     this.handleAttachment = handleAttachment;
