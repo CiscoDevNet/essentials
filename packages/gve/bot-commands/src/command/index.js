@@ -26,6 +26,13 @@ const {
 const REGEX_IGNORE_CASE = "i";
 
 /**
+ * A regular expression that never matches anything.
+ * @constant {RegExp}
+ * @see https://2ality.com/2012/09/empty-regexp.html
+ */
+const REGEX_NEVER_MATCH = /.^/;
+
+/**
  * Command configuration
  * @typedef {Object} CommandConfig
  * @property {String} intent - name of the intent
@@ -113,7 +120,9 @@ class Command extends EventEmitter {
 
   set phrases(newPhrases) {
     this._phrases = newPhrases;
-    this.phraseExpression = Command.getPhraseExpression(this._phrases);
+    this.phraseExpression = this._phrases
+      ? Command.getPhraseExpression(this._phrases)
+      : new RegExp(REGEX_NEVER_MATCH);
     debug(`phrase: ${this.phraseExpression}`);
   }
 
