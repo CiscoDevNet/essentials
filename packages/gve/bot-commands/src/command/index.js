@@ -28,6 +28,7 @@ const REGEX_IGNORE_CASE = "i";
 /**
  * Command configuration
  * @typedef {Object} CommandConfig
+ * @property {String} intent - name of the intent
  * @property {string[]} messageTypes - Types of messages to listen for, e.g., a direct (1-on-1) message
  * @property {string[]} phrases - Phrases to listen for
  * @property {function} handleText - Handles message text
@@ -44,42 +45,45 @@ class Command extends EventEmitter {
   /**
    * Creates a new command.
    * Listens to direct and group messages by default.
-   * Listens for the given intent by default.
-   * @param {String} intent - name of the intent
    * @param {CommandConfig} config - optional configuration
    */
   constructor(
-    intent,
     config = {
-      messageTypes: Command.getStandardMessageTypes(),
-      phrases: Command._getDefaultPhrases(intent),
+      messageTypes: Object.values(STANDARD_MESSAGE_TYPES),
     }
   ) {
     super();
-    this.intent = intent;
-
-    // Configure command with given values or provide sensible defaults.
-    let defaultIntent;
-    try {
-      defaultIntent = intent.toLowerCase();
-    } catch (_) {
-      debug(`intent is not a string: ${intent}`);
-    }
 
     const {
-      messageTypes: messageTypesToUse = Command.getStandardMessageTypes(),
-      phrases = Command._getDefaultPhrases(defaultIntent),
-      friendlyName = defaultIntent,
+      intent,
+      messageTypes = Object.values(STANDARD_MESSAGE_TYPES),
       handleText = this.defaultHandleText.bind(this),
       handleAttachment = this.defaultHandleAttachment.bind(this),
     } = config;
 
-    this.messageTypes = messageTypesToUse;
+    this.intent = intent;
+    const { phrases, friendlyName } = this._getDefaultConfig(config);
+
+    this.messageTypes = messageTypes;
     this.phrases = phrases;
     this.friendlyName = friendlyName;
     this.getIntent = this.getIntent.bind(this);
     this.handleText = handleText;
     this.handleAttachment = handleAttachment;
+  }
+
+  _getDefaultConfig(config) {
+    let { phrases, friendlyName } = config;
+
+    if (!phrases && this.intent) {
+      phrases = Command._getDefaultPhrases(this.intent);
+    }
+
+    if (!friendlyName && this.intent) {
+      friendlyName = this.intent;
+    }
+
+    return { phrases, friendlyName };
   }
 
   static _getDefaultPhrases(phrase) {
@@ -124,15 +128,6 @@ class Command extends EventEmitter {
     this._controller.on(ATTACHMENT_EVENT, this.handleAttachment);
 
     return this._controller;
-  }
-
-  /**
-   * Returns the most common bot message types,
-   * e.g., "message", "direct_message".
-   * @returns {String[]} Standard bot message types
-   */
-  static getStandardMessageTypes() {
-    return Object.values(STANDARD_MESSAGE_TYPES);
   }
 
   /**
@@ -199,9 +194,9 @@ class Command extends EventEmitter {
     if (intent) {
       // Get the intent, if one is detected.
       ({ name, confidence = 0 } = intent);
-      const intentNameMatched = this.matchIntent(name);
-      const confidenceReached = confidence >= INTENT_CONFIDENCE;
-      shouldEmitEvent = intentNameMatched && confidenceReached;
+      const isIntentMatched = this.matchIntent(intent);
+      const isConfidenceReached = confidence >= INTENT_CONFIDENCE;
+      shouldEmitEvent = isIntentMatched && isConfidenceReached;
     } else {
       // Otherwise, fall back to phrases.
       shouldEmitEvent = this._matchPhrase(message);
@@ -222,13 +217,21 @@ class Command extends EventEmitter {
     return shouldEmitEvent;
   }
 
+  matchIntent(intent) {
+    if (this.intent) {
+      return this._matchNamedIntent(intent);
+    }
+
+    return Command._matchKnowledgeIntent(intent);
+  }
+
   /**
    * Returns true if the intent name matches this intent, false otherwise.
    * @param {String|Object} intent
    * @see https://stackoverflow.com/a/9436948/154065
    * @returns {Boolean} true if the intent name matches this intent
    */
-  matchIntent(intent) {
+  _matchNamedIntent(intent) {
     const isString = typeof intent === "string" || intent instanceof String;
     if (isString) {
       return intent === this.intent;
@@ -241,12 +244,17 @@ class Command extends EventEmitter {
     }
   }
 
-  matchKnowledgeIntent(intent) {
+  static _matchKnowledgeIntent(intent) {
     const { answers, fulfillmentText, name } = intent;
     const hasAnswers = !!answers;
     const hasTextResponse = !!fulfillmentText;
-    const isFromKnowledgeBase = name.startsWith("Knowledge.KnowledgeBase.");
-    return isFromKnowledgeBase && hasAnswers && hasTextResponse;
+
+    try {
+      const isFromKnowledgeBase = name.startsWith("Knowledge.KnowledgeBase.");
+      return isFromKnowledgeBase && hasAnswers && hasTextResponse;
+    } catch (_) {
+      return false;
+    }
   }
 
   /**
@@ -275,8 +283,5 @@ class Command extends EventEmitter {
     return !!messageText.match(phrase);
   }
 }
-
-Command.ATTACHMENT_EVENT = ATTACHMENT_EVENT;
-Command.STANDARD_MESSAGE_TYPES = STANDARD_MESSAGE_TYPES;
 
 module.exports = Command;

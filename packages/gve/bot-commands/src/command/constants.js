@@ -24,9 +24,9 @@ const MESSAGE = "message";
 const DIRECT_MESSAGE = "direct_message";
 
 /**
- * Standard bot message types.
+ * Most common bot message types, e.g., "message", "direct_message".
  * Most bots will want to listen for both group and direct messages.
- * @constant {Array}
+ * @constant {Object}
  */
 const STANDARD_MESSAGE_TYPES = {
   MESSAGE,

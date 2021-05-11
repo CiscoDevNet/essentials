@@ -1,14 +1,16 @@
-// Base command
+// Basic command
 const Command = require("./command");
 
 // Common commands
 const Gifs = require("./gifs");
 const Help = require("./help");
 
-const { getStandardMessageTypes } = Command;
+// Helpful constants
+const { ATTACHMENT_EVENT, STANDARD_MESSAGE_TYPES } = require("./constants");
 
 module.exports = {
-  getStandardMessageTypes,
+  ATTACHMENT_EVENT,
+  STANDARD_MESSAGE_TYPES,
   Command,
   Gifs,
   Help,
