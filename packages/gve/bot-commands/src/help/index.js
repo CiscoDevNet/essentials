@@ -21,8 +21,8 @@ const defaultPhrases = [
 ];
 
 class Help extends Command {
-  constructor(intent = "help", config = { phrases: defaultPhrases }) {
-    super(intent, config);
+  constructor(config = { intent: "help", phrases: defaultPhrases }) {
+    super(config);
     this.handleText = this.getHelp.bind(this);
     this.buildHelp = this.buildHelp.bind(this);
     this.commands = {};
