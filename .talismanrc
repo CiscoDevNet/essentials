@@ -62,3 +62,6 @@ fileignoreconfig:
 - filename: README.md
   checksum: 7265d0bc7f1693202091064428e78adcfa1e2fbf87ce6b719116e1f967e98c70
   ignore_detectors: [filecontent]
+- filename: packages/gve/bot-middleware/src/config/env.js
+  checksum: caca2ba9ce6677d7e42187850f95bdd644cc0487907b0f24a98702c2ac50e503
+  ignore_detectors: [filename]
