@@ -10,7 +10,10 @@ const dialogflow = require("@google-cloud/dialogflow");
 const path = require("path");
 
 const defaultIntent = "default";
-const { INTENT_CONFIDENCE: confidenceThreshold } = require("./config");
+const {
+  CREDENTIALS,
+  INTENT_CONFIDENCE: confidenceThreshold,
+} = require("./config");
 const languageCode = "en-US";
 
 /**
@@ -39,10 +42,10 @@ class Intents {
   _getSessionsClient() {
     // If a Knowledge Base ID is configured, use Beta.
     if (this.knowledgeBaseId) {
-      return new dialogflow.v2beta1.SessionsClient();
+      return new dialogflow.v2beta1.SessionsClient(CREDENTIALS);
     }
 
-    return new dialogflow.SessionsClient();
+    return new dialogflow.SessionsClient(CREDENTIALS);
   }
 
   async get(bot, message, next) {
