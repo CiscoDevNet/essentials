@@ -7,4 +7,4 @@ const { Env } = require("@humanwhocodes/env");
 
 const env = new Env();
 
-module.exports = env;
+module.exports = { env };

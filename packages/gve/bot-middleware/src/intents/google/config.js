@@ -3,7 +3,7 @@ const debug = require("debug")("middleware:intents");
 var fs = require("fs");
 
 const { CredentialsError } = require("./errors");
-const env = require("../../config/env");
+const { env } = require("../../config");
 
 const GOOGLE_APPLICATION_CREDENTIALS = env.require(
   "GOOGLE_APPLICATION_CREDENTIALS"
