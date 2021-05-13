@@ -9,35 +9,34 @@ const GOOGLE_APPLICATION_CREDENTIALS = env.require(
   "GOOGLE_APPLICATION_CREDENTIALS"
 );
 
-/**
- * Object containing client_email and private_key properties, or the
- * external account client options.
- */
-
-// export interface CredentialBody {
-//   client_email?: string;
-//   private_key?: string;
-// }
-
-// Is this a valid filepath?
-// Yes - do nothing OR... read the file and put it into the credential format
-// No - take what's there and try to put it into a credential format
-
 const CREDENTIALS = parseCredentials(GOOGLE_APPLICATION_CREDENTIALS);
 
+/**
+ * A Google Auth CredentialBody
+ * @typedef {Object} CredentialBody
+ * @property client_email
+ * @property private_key
+ * @see https://github.com/googleapis/google-auth-library-nodejs/blob/9ae2d30c15c9bce3cae70ccbe6e227c096005695/src/auth/credentials.ts#L81
+ */
+
+/**
+ * Parses the credentials
+ * @param {String} credentials - file path or JSON string containing credentials
+ * @returns {CredentialBody} credentials needed to authorize
+ */
 function parseCredentials(credentials) {
+  let credentialsSource = credentials;
   const credentialsPath = fs.statSync(credentials);
-  if (credentialsPath.isFile()) {
-    debug(`valid filepath: true: ${credentials}`);
-    try {
-      const rawFile = fs.readFileSync(credentials, "utf8");
-      return JSON.parse(rawFile);
-    } catch (error) {
-      throw new CredentialsError(error.message);
+
+  try {
+    if (credentialsPath.isFile()) {
+      debug(`valid filepath: ${credentials}`);
+      credentialsSource = fs.readFileSync(credentials, "utf8");
     }
-  } else {
-    debug(`valid filepath: false - parsing the string...`);
-    return JSON.parse(credentials);
+    const { client_email, private_key } = JSON.parse(credentialsSource);
+    return { client_email, private_key };
+  } catch (error) {
+    throw new CredentialsError(error.message);
   }
 }
 
