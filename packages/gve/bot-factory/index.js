@@ -100,7 +100,7 @@ class BotFactory {
    * @returns {Botkit.Controller} the modified bot controller
    * @note Mutates the controller
    */
-  static configureIntentMiddleware(controller, apiId, knowledgeBaseId) {
+  static async configureIntentMiddleware(controller, apiId, knowledgeBaseId) {
     const results = {
       controller,
       isConnected: false,
@@ -110,10 +110,8 @@ class BotFactory {
     if (apiId) {
       const intents = new gveMiddleware.Intents(apiId, knowledgeBaseId);
       controller.middleware.ingest.use(intents.get);
-      // console.info("intent detection: connected");
-      results.isConnected = true;
+      results.isConnected = await intents.ping();
       if (knowledgeBaseId) {
-        // console.info("intent knowledge base: connected");
         results.isKnowledgeBaseConnected = true;
         debug("intent knowledge base ID:", knowledgeBaseId);
       }

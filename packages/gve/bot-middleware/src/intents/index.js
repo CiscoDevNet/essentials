@@ -70,6 +70,17 @@ class Intents {
     next();
   }
 
+  async ping() {
+    let isServiceReachable = false;
+    try {
+      isServiceReachable = !!(await this.sessionClient.getProjectId());
+    } catch (error) {
+      console.error(error.message);
+    }
+
+    return isServiceReachable;
+  }
+
   /**
    * Get the intent.
    * @param {String} text user text
