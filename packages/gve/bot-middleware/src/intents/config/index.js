@@ -18,15 +18,12 @@ try {
     GOOGLE_APPLICATION_CREDENTIALS_NAME
   );
   CREDENTIALS = parseCredentials(GOOGLE_APPLICATION_CREDENTIALS);
-  debug("credentials loaded:", GOOGLE_APPLICATION_CREDENTIALS_NAME);
 } catch (_) {
   const client_email = env.require("INTENT_API_EMAIL");
   const rawPrivateKey = env.require("INTENT_API_KEY");
-  debug(process.env.INTENT_API_KEY);
-  debug(rawPrivateKey);
   const private_key = formatKey(rawPrivateKey);
+  // TODO: This will most likely not work. GC probably needs ALL props.
   CREDENTIALS = { client_email, private_key };
-  debug("credentials loaded: individual");
 }
 
 debug("credentials:", CREDENTIALS);
@@ -45,26 +42,34 @@ debug("credentials:", CREDENTIALS);
  * @returns {CredentialBody} credentials needed to authorize
  */
 function parseCredentials(credentials) {
-  let credentialsSource = credentials;
-  const credentialsPath = fs.statSync(credentials);
+  let isFile = false;
+  let credentialsSource;
+  let credentialsPath;
 
   try {
-    if (credentialsPath.isFile()) {
-      debug(`valid filepath: ${credentials}`);
+    credentialsPath = fs.statSync(credentials);
+    isFile = credentialsPath.isFile();
+    if (isFile) {
       credentialsSource = fs.readFileSync(credentials, "utf8");
+    } else {
+      throw new Error("Invalid file path. Use credentials directly.");
     }
-    const { client_email, private_key } = JSON.parse(credentialsSource);
-    return { client_email, private_key };
+  } catch (_) {
+    credentialsSource = credentials;
+  }
+
+  debug(`valid filepath: ${isFile}: ${credentials}`);
+
+  try {
+    return JSON.parse(credentialsSource);
   } catch (error) {
     throw new CredentialsError(error.message);
   }
 }
 
 function formatKey(key) {
-  const parts = key.split("\\n");
-  debug(parts);
-
   const joiner = (joined, next) => `${joined}\n${next}`;
+  const parts = key.split("\\n");
   let formattedKey = parts.reduce(joiner);
 
   if (!formattedKey.startsWith(BEGIN_KEY)) {
