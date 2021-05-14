@@ -111,7 +111,7 @@ class BotFactory {
       const intents = new gveMiddleware.Intents(apiId, knowledgeBaseId);
       controller.middleware.ingest.use(intents.get);
       results.isConnected = await intents.ping();
-      if (knowledgeBaseId) {
+      if (knowledgeBaseId && results.isConnected) {
         results.isKnowledgeBaseConnected = true;
         debug("intent knowledge base ID:", knowledgeBaseId);
       }

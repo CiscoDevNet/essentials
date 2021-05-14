@@ -22,17 +22,15 @@ try {
   const client_email = env.require("INTENT_API_EMAIL");
   const rawPrivateKey = env.require("INTENT_API_KEY");
   const private_key = formatKey(rawPrivateKey);
-  // TODO: This will most likely not work. GC probably needs ALL props.
   CREDENTIALS = { client_email, private_key };
 }
-
-debug("credentials:", CREDENTIALS);
 
 /**
  * A Google Auth CredentialBody
  * @typedef {Object} CredentialBody
  * @property client_email
  * @property private_key
+ * @see https://github.com/googleapis/google-cloud-node/blob/master/docs/authentication.md#the-config-object
  * @see https://github.com/googleapis/google-auth-library-nodejs/blob/9ae2d30c15c9bce3cae70ccbe6e227c096005695/src/auth/credentials.ts#L81
  */
 
@@ -61,7 +59,8 @@ function parseCredentials(credentials) {
   debug(`valid filepath: ${isFile}: ${credentials}`);
 
   try {
-    return JSON.parse(credentialsSource);
+    const { client_email, private_key } = JSON.parse(credentialsSource);
+    return { client_email, private_key };
   } catch (error) {
     throw new CredentialsError(error.message);
   }

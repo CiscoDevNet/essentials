@@ -8,6 +8,7 @@ const debug = require("debug")("middleware:intents");
 
 const dialogflow = require("@google-cloud/dialogflow");
 const path = require("path");
+const uuid = require("uuid");
 
 const defaultIntent = "default";
 const {
@@ -40,12 +41,13 @@ class Intents {
    * @see https://cloud.google.com/dialogflow/es/docs/knowledge-connectors#detect_intent_with_knowledge_base
    */
   _getSessionsClient() {
+    const config = { credentials: CREDENTIALS };
     // If a Knowledge Base ID is configured, use Beta.
     if (this.knowledgeBaseId) {
-      return new dialogflow.v2beta1.SessionsClient(CREDENTIALS);
+      return new dialogflow.v2beta1.SessionsClient(config);
     }
 
-    return new dialogflow.SessionsClient(CREDENTIALS);
+    return new dialogflow.SessionsClient(config);
   }
 
   async get(bot, message, next) {
@@ -72,10 +74,14 @@ class Intents {
 
   async ping() {
     let isServiceReachable = false;
+    const mockMessage = { id: uuid.v4() };
     try {
-      isServiceReachable = !!(await this.sessionClient.getProjectId());
+      // If the message can make a roundtrip to the intent detection service
+      // with no errors, we know we can reach the service.
+      const updatedMessage = await this.getIntent("ping", mockMessage);
+      isServiceReachable = updatedMessage.id === mockMessage.id;
     } catch (error) {
-      console.error(error.message);
+      console.error(`intent detection ping failed: ${error.message}`);
     }
 
     return isServiceReachable;
@@ -85,6 +91,7 @@ class Intents {
    * Get the intent.
    * @param {String} text user text
    * @param {Object} message system message
+   * @returns {Object} system message with attached intent
    * @see https://googleapis.dev/nodejs/dialogflow/latest/index.html
    */
   async getIntent(text, message) {
@@ -135,7 +142,9 @@ class Intents {
       let { displayName: name } = intent;
       const { parameters } = intent;
 
-      debug(`"${text}" matched intent "${name}" with ${confidence} confidence`);
+      debug(
+        `"${text}": intent matched: "${name}" with ${confidence} confidence`
+      );
 
       // Fall back to default intent.
       if (confidence < confidenceThreshold) {
@@ -153,8 +162,10 @@ class Intents {
         answers,
       };
     } else {
-      debug(`no match for ${text}`);
+      debug(`"${text}": intent matched: none`);
     }
+
+    return message;
   }
 
   /**
