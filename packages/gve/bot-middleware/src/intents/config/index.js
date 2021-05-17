@@ -4,24 +4,23 @@ const { CredentialsError } = require("./errors");
 const { env } = require("../../config");
 var fs = require("fs");
 
-const GOOGLE_APPLICATION_CREDENTIALS_NAME = "GOOGLE_APPLICATION_CREDENTIALS";
+let GOOGLE_APPLICATION_CREDENTIALS = env.get("GOOGLE_APPLICATION_CREDENTIALS");
 const INTENT_CONFIDENCE = env.get("INTENT_CONFIDENCE", 0.5);
 
 const BEGIN_KEY = "-----BEGIN PRIVATE KEY-----\n";
 const END_KEY = "\n-----END PRIVATE KEY-----\n";
 
 let CREDENTIALS;
-let GOOGLE_APPLICATION_CREDENTIALS;
 
-try {
-  GOOGLE_APPLICATION_CREDENTIALS = env.require(
-    GOOGLE_APPLICATION_CREDENTIALS_NAME
-  );
+if (GOOGLE_APPLICATION_CREDENTIALS) {
   CREDENTIALS = parseCredentials(GOOGLE_APPLICATION_CREDENTIALS);
-} catch (_) {
-  const client_email = env.require("INTENT_API_EMAIL");
-  const rawPrivateKey = env.require("INTENT_API_KEY");
-  const private_key = formatKey(rawPrivateKey);
+} else {
+  const client_email = env.get("INTENT_API_EMAIL");
+  const rawPrivateKey = env.get("INTENT_API_KEY");
+  let private_key;
+  if (rawPrivateKey) {
+    private_key = formatKey(rawPrivateKey);
+  }
   CREDENTIALS = { client_email, private_key };
 }
 
