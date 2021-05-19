@@ -5,8 +5,8 @@
   "scripts": {
     "git:commit": "cz",
     "lerna:ci": "lerna clean --yes && lerna bootstrap",
-    "licenses:gpl": "license-checker --production | grep GPL",
     "licenses": "license-checker --csv --production > output/licenses.csv",
+    "licenses:gpl": "license-checker --production | grep GPL",
     "lint": "eslint '**/{src,test}/**/*.{js,json}'",
     "talisman:scan": "scripts/talisman/scan.sh",
     "talisman:view": "scripts/talisman/view.sh"
