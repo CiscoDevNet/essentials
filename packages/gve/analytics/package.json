@@ -14,5 +14,8 @@
   "dependencies": {
     "@gve/core": "^0.1.0-alpha.0",
     "snake-case": "^3.0.4"
+  },
+  "devDependencies": {
+    "standard-version": "^9.3.0"
   }
 }
