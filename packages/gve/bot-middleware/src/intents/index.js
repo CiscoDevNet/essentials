@@ -11,10 +11,7 @@ const path = require("path");
 const uuid = require("uuid");
 
 const defaultIntent = "default";
-const {
-  CREDENTIALS,
-  INTENT_CONFIDENCE: confidenceThreshold,
-} = require("./config");
+const { CREDENTIALS, INTENT_CONFIDENCE: CONFIDENCE_MIN } = require("./config");
 const languageCode = "en-US";
 
 /**
@@ -146,8 +143,9 @@ class Intents {
         `"${text}": intent matched: "${name}" with ${confidence} confidence`
       );
 
-      // Fall back to default intent.
-      if (confidence < confidenceThreshold) {
+      // Fall back to default intent if confidence isn't met.
+      const isConfidenceMet = confidence >= CONFIDENCE_MIN;
+      if (!isConfidenceMet) {
         name = defaultIntent;
         confidence = 1;
         debug(`changed intent to "${name}"`);
