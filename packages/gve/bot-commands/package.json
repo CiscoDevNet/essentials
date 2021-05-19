@@ -15,5 +15,8 @@
     "@giphy/js-fetch-api": "^2.4.0",
     "@gve/analytics": "^0.1.0-alpha.0",
     "axios": "^0.21.1"
+  },
+  "devDependencies": {
+    "standard-version": "^9.3.0"
   }
 }

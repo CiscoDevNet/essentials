@@ -16,5 +16,8 @@
     "@gve/bot-middleware": "^0.1.0-alpha.0",
     "botbuilder-adapter-webex": "^1.0.9",
     "botkit": "^4.10.0"
+  },
+  "devDependencies": {
+    "standard-version": "^9.3.0"
   }
 }
