@@ -4,8 +4,9 @@
  */
 
 const debug = require("debug")("commands");
-
 const EventEmitter = require("events");
+
+const { ControllerAssignError } = require("./errors");
 
 /**
  * Confidence threshold - if the confidence falls below
@@ -13,8 +14,6 @@ const EventEmitter = require("events");
  * @const {number}
  */
 const { INTENT_CONFIDENCE } = require("./config");
-
-const { ControllerAssignError } = require("./errors");
 
 const {
   ATTACHMENT_EVENT,

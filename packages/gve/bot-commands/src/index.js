@@ -6,10 +6,7 @@ const Gifs = require("./gifs");
 const Help = require("./help");
 
 // Helpful constants
-const {
-  ATTACHMENT_EVENT,
-  STANDARD_MESSAGE_TYPES,
-} = require("./command/constants");
+const { ATTACHMENT_EVENT, STANDARD_MESSAGE_TYPES } = require("./constants");
 
 module.exports = {
   ATTACHMENT_EVENT,
