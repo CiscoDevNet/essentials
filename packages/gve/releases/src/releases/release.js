@@ -100,6 +100,7 @@ class Release {
     const commandParts = this.getComposeCommandParts();
     commandParts.push("build");
     const command = commandParts.join(" ");
+    debug(command);
     execSync(command, EXEC_SYNC_OPTIONS);
     console.log(this.getImageUploadInstructions());
   }
@@ -109,6 +110,7 @@ class Release {
     const upCommandParts = ["up", "--force-recreate", "--build"];
     const commandParts = [...initialCommandParts, ...upCommandParts];
     const command = commandParts.join(" ");
+    debug(command);
     execSync(command, EXEC_SYNC_OPTIONS);
   }
 
@@ -151,7 +153,7 @@ class Release {
       `NPM_REGISTRY=${NPM_REGISTRY}`,
       npmUsername,
       npmPassword,
-      "docker-compose",
+      "docker compose",
       `-f ${dockerComposePrimaryFile}`,
       `-f ${dockerComposeEnvFile}`,
     ].filter((part) => part !== undefined);
