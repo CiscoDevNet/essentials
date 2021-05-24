@@ -1,4 +1,4 @@
-const debug = require("debug")("modules:salesforce");
+const debug = require("debug")("salesforce");
 
 const axios = require("axios");
 const EventEmitter = require("events");

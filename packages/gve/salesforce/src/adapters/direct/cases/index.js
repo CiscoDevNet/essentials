@@ -1,4 +1,4 @@
-const debug = require("debug")("modules:salesforce:cases");
+const debug = require("debug")("salesforce:cases");
 
 const axios = require("axios");
 const path = require("path");
@@ -22,7 +22,7 @@ class Cases {
     this.update = async (id, data) =>
       await this.salesforce.updateObject(CASE, id, data);
 
-    debug("cases: initiated");
+    debug("initiated");
   }
 
   /**

@@ -1,4 +1,4 @@
-const debug = require("debug")("modules:salesforce:users");
+const debug = require("debug")("salesforce:users");
 
 class Users {
   constructor(salesforce) {

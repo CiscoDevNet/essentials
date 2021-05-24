@@ -1,4 +1,4 @@
-const debug = require("debug")("modules:salesforce");
+const debug = require("debug")("salesforce");
 
 const jsforce = require("jsforce");
 
