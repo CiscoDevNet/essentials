@@ -16,8 +16,7 @@ class Opportunities {
 
   async get(opportunityId) {
     const requestUrl = this.getUrl(opportunityId);
-    const { headers: requestHeaders, user } = this.salesforce;
-    const headers = requestHeaders(user.accessToken);
+    const { headers } = this.salesforce;
 
     let opportunity;
     try {
@@ -69,8 +68,7 @@ class Opportunities {
     ].concat(filters);
     const query = queryParts.join(spacer).replace(/ /g, spacer);
 
-    const { headers: requestHeaders, user, connection } = this.salesforce;
-    const headers = requestHeaders(user.accessToken);
+    const { headers, connection } = this.salesforce;
     const requestUrl = new URL(`?q=${query}`, connection.url);
 
     let opportunity;
@@ -102,6 +100,10 @@ class Opportunities {
 
   async _updateOpportunity(id, data) {
     return this.salesforce.updateObject("Opportunity", id, data);
+  }
+
+  static getUrl(url, path = "") {
+    return `${new URL(path, url).toString()}/`;
   }
 }
 

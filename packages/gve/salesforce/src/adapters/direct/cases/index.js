@@ -2,7 +2,6 @@ const debug = require("debug")("salesforce:cases");
 
 const axios = require("axios");
 const path = require("path");
-const nodeUrl = require("url");
 
 const { SALESFORCE_OBJECTS_PATH } = require("../../../config");
 
@@ -30,26 +29,22 @@ class Cases {
    * @param data - case data
    */
   async _create(data) {
-    const { headers: requestHeaders, url, user } = this.salesforce;
-    const requestUrl = nodeUrl.resolve(url, CASE_PATH);
-    const headers = requestHeaders(user.accessToken);
+    const { headers, url } = this.salesforce;
+    const requestUrl = Cases.getUrl(url, CASE_PATH);
     return await axios.post(requestUrl, data, { headers });
   }
 
   async _describe() {
-    const pathname = path.join(CASE_PATH, "describe");
-    const { headers: requestHeaders, url, user } = this.salesforce;
-    const requestUrl = nodeUrl.resolve(url, pathname);
-    const headers = requestHeaders(user.accessToken);
-
+    const urlPath = path.join(CASE_PATH, "describe");
+    const { headers, url } = this.salesforce;
+    const requestUrl = Cases.getUrl(url, urlPath);
     return await axios.get(requestUrl, { headers });
   }
 
   async _get(id) {
-    const pathname = path.join(CASE_PATH, id);
-    const { headers: requestHeaders, url, user } = this.salesforce;
-    const requestUrl = nodeUrl.resolve(url, pathname);
-    const headers = requestHeaders(user.accessToken);
+    const urlPath = path.join(CASE_PATH, id);
+    const { headers, url } = this.salesforce;
+    const requestUrl = Cases.getUrl(url, urlPath);
 
     return await axios.get(requestUrl, { headers });
   }
@@ -61,16 +56,18 @@ class Cases {
     }
 
     const field = fields[0];
-    let pathname = path.join(CASE_PATH, field, data[field]);
+    let urlPath = path.join(CASE_PATH, field, data[field]);
     if (field === "id") {
-      pathname = path.join(CASE_PATH, data[field]);
+      urlPath = path.join(CASE_PATH, data[field]);
     }
 
-    const { headers: requestHeaders, url, user } = this.salesforce;
-    const requestUrl = nodeUrl.resolve(url, pathname);
-    const headers = requestHeaders(user.accessToken);
-
+    const { headers, url } = this.salesforce;
+    const requestUrl = Cases.getUrl(url, urlPath);
     return await axios.get(requestUrl, { headers });
+  }
+
+  static getUrl(url, path = "") {
+    return `${new URL(path, url).toString()}/`;
   }
 }
 

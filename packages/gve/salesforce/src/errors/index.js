@@ -1,6 +1,11 @@
+const HttpError = require("./http-error");
+const SalesforceError = require("./error");
+const SalesforceLoginError = require("./login-error");
+const SalesforceLogoutError = require("./logout-error");
+
 module.exports = {
-  HttpError: require("./http-error"),
-  SalesforceError: require("./error"),
-  SalesforceLoginError: require("./login-error"),
-  SalesforceLogoutError: require("./logout-error"),
+  HttpError,
+  SalesforceError,
+  SalesforceLoginError,
+  SalesforceLogoutError,
 };

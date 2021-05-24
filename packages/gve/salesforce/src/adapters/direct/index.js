@@ -1,4 +1,4 @@
-const debug = require("debug")("salesforce");
+const debug = require("debug")("salesforce:adapter:direct");
 
 const jsforce = require("jsforce");
 
@@ -12,7 +12,6 @@ const Users = require("./users");
 class DirectAdapter extends SalesforceAdapter {
   constructor(username, password, url) {
     super(username, password, url);
-    this.user = { username };
 
     const connector = new jsforce.Connection({
       loginUrl: this.connection.url,
@@ -23,7 +22,7 @@ class DirectAdapter extends SalesforceAdapter {
     this.Opportunities = Opportunities;
     this.Users = Users;
 
-    debug("adapter: initiated");
+    debug("initiated");
   }
 
   /**
