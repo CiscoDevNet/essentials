@@ -4,7 +4,6 @@
  */
 
 const debug = require("debug")("commands");
-const EventEmitter = require("events");
 
 const { ControllerAssignError } = require("./errors");
 
@@ -47,7 +46,7 @@ const REGEX_NEVER_MATCH = /.^/;
  * Specific commands
  * @class
  */
-class Command extends EventEmitter {
+class Command {
   /**
    * Creates a new command.
    * Listens to direct and group messages by default.
@@ -58,8 +57,6 @@ class Command extends EventEmitter {
       messageTypes: Object.values(STANDARD_MESSAGE_TYPES),
     }
   ) {
-    super();
-
     const {
       intent,
       messageTypes = Object.values(STANDARD_MESSAGE_TYPES),
@@ -218,7 +215,6 @@ class Command extends EventEmitter {
         confidence,
         type: matchType,
       };
-      this.emit(INTENT_DETECTED_EVENT, payload);
       debug(INTENT_DETECTED_EVENT, payload);
     }
 

@@ -48,9 +48,7 @@ class DirectAdapter extends SalesforceAdapter {
         this.connected = !!accessToken;
       }
 
-      // Emit login success or failure before throwing an error.
       const payload = { success: this.connected, user: this.user };
-      this.emit("login", payload);
       const errorMessage = loginError ? `: ${loginError.message}` : "";
       debug(`login: salesforce: ${payload.success}${errorMessage}`);
 

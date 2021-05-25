@@ -1,7 +1,6 @@
 const debug = require("debug")("commands:gifs");
 
 const axios = require("axios");
-const EventEmitter = require("events");
 const fs = require("fs");
 const FormData = require("form-data");
 const { GiphyFetch } = require("@giphy/js-fetch-api");
@@ -50,9 +49,8 @@ const eventTemplate = {
   },
 };
 
-class Gifs extends EventEmitter {
+class Gifs {
   constructor(apiKey) {
-    super();
     this.apiKey = apiKey;
     this.fetch = new GiphyFetch(this.apiKey);
 
@@ -93,7 +91,6 @@ class Gifs extends EventEmitter {
       return Math.floor(Math.random() * Math.floor(max));
     }
 
-    this.emit("gif requested");
     const query = message.text.replace(phrase, "").trim();
     debug(`gif requested: ${query}`);
 
