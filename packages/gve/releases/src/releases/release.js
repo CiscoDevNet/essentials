@@ -107,7 +107,13 @@ class Release {
 
   up() {
     const initialCommandParts = this.getComposeCommandParts();
-    const upCommandParts = ["up", "--force-recreate", "--build"];
+    const upCommandParts = [
+      "up",
+      "--force-recreate",
+      "--build",
+      "--always-recreate-deps",
+      "--renew-anon-volumes",
+    ];
     const commandParts = [...initialCommandParts, ...upCommandParts];
     const command = commandParts.join(" ");
     debug(command);

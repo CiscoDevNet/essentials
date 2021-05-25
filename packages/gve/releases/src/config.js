@@ -6,10 +6,11 @@
 const debug = require("debug")("releases:config");
 
 const dotenv = require("dotenv");
+const { Env } = require("@humanwhocodes/env");
 const fs = require("fs");
 const path = require("path");
 
-const { YAML_FILE_EXT } = require("./constants");
+const { NODE_ENV_DEVELOPMENT, YAML_FILE_EXT } = require("./constants");
 
 const DEFAULT_PLATFORM = {
   NAME: "docker",
@@ -17,13 +18,9 @@ const DEFAULT_PLATFORM = {
   ORG: "libary",
 };
 
-const NODE_ENV_DEVELOPMENT = "development";
+const env = new Env();
 
-/**
- * Node environment. Defaults to development.
- * @type {String}
- */
-const NODE_ENV = process.env.NODE_ENV || NODE_ENV_DEVELOPMENT;
+const NODE_ENV = env.get("NODE_ENV", NODE_ENV_DEVELOPMENT);
 
 const currentDir = process.cwd();
 
@@ -46,8 +43,11 @@ const ENVIRONMENT_VARIABLES = dotenv.config({ path: envFilePath });
  * Release configuration directory.
  * @type {String}
  */
-const RELEASES_DIRECTORY =
-  process.env.RELEASES_DIRECTORY || path.join(currentDir, ".releases");
+const DEFAULT_RELEASES_DIRECTORY = path.join(currentDir, ".releases");
+const RELEASES_DIRECTORY = env.get(
+  "RELEASES_DIRECTORY",
+  DEFAULT_RELEASES_DIRECTORY
+);
 
 const {
   RELEASES_PLATFORM = DEFAULT_PLATFORM.NAME,
@@ -103,9 +103,9 @@ module.exports = {
   NODE_ENV,
   PORT: process.env.PORT || 3000,
 
-  NPM_REGISTRY: process.env.NPM_REGISTRY || "https://registry.npmjs.org",
-  NPM_USERNAME: process.env.NPM_USERNAME || "",
-  NPM_PASSWORD: process.env.NPM_PASSWORD || "",
+  NPM_REGISTRY: env.get("NPM_REGISTRY", "https://registry.npmjs.org"),
+  NPM_USERNAME: env.get("NPM_USERNAME"),
+  NPM_PASSWORD: env.get("NPM_PASSWORD"),
 
   RELEASES_DIRECTORY,
   RELEASES_DEPLOYMENT,

@@ -15,6 +15,7 @@
     "build-image": "src/index.js"
   },
   "dependencies": {
+    "@humanwhocodes/env": "^2.2.0",
     "colors": "^1.4.0",
     "debug": "^4.1.1",
     "dotenv": "^8.2.0",
