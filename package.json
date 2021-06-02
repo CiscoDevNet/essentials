@@ -5,6 +5,9 @@
   "scripts": {
     "git:commit": "cz",
     "lerna:ci": "lerna clean --yes && lerna bootstrap",
+    "lerna:version": "npx lerna version --conventional-commits --no-push",
+    "lerna:push": "git push --follow-tags origin main",
+    "lerna:publish": "lerna publish from-package",
     "licenses": "license-checker --csv --production > output/licenses.csv",
     "licenses:gpl": "license-checker --production | grep GPL",
     "lint": "eslint '**/{src,test}/**/*.{js,json}'",
