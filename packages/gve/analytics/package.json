@@ -1,6 +1,6 @@
 {
   "name": "@gve/analytics",
-  "version": "0.1.10",
+  "version": "0.1.20",
   "description": "Analytics events and constants to track system usage",
   "main": "src/index.js",
   "scripts": {
