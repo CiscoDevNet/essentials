@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.30](https://www-github.cisco.com/matnorri/essentials/compare/@gve/salesforce@0.3.21...@gve/salesforce@0.3.30) (2021-06-02)
+
+**Note:** Version bump only for package @gve/salesforce
+
+
+
+
+
 ## [0.3.21](https://www-github.cisco.com/matnorri/essentials/compare/@gve/salesforce@0.3.20...@gve/salesforce@0.3.21) (2021-05-25)
 
 **Note:** Version bump only for package @gve/salesforce
