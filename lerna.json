@@ -1,0 +1,9 @@
+{
+  "packages": ["packages/gve/*"],
+  "version": "independent",
+  "command": {
+    "version": {
+      "allowBranch": "main"
+    }
+  }
+}

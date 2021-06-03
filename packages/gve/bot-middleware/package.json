@@ -1,0 +1,26 @@
+{
+  "name": "@gve/bot-middleware",
+  "version": "0.1.22",
+  "description": "Middleware to intercept messages, e.g., gather and send analytics",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest --setupFiles dotenv/config"
+  },
+  "author": "Matt Norris <matnorri@cisco.com>",
+  "files": [
+    "src/"
+  ],
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@google-cloud/dialogflow": "^3.4.0",
+    "@gve/analytics": "^0.1.22",
+    "@humanwhocodes/env": "^2.2.0",
+    "axios": "^0.21.1",
+    "email-addresses": "^4.0.0",
+    "lodash.mergewith": "^4.6.2",
+    "lodash.union": "^4.6.0"
+  },
+  "devDependencies": {
+    "standard-version": "^9.3.0"
+  }
+}

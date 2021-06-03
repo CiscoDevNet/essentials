@@ -1,0 +1,28 @@
+{
+  "name": "@gve/releases",
+  "version": "0.1.41",
+  "description": "Build Docker images and deploy containers to Google Cloud or OpenShift",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matt Norris <matnorri@cisco.com>",
+  "files": [
+    "src/"
+  ],
+  "license": "Apache-2.0",
+  "bin": {
+    "build-image": "src/index.js"
+  },
+  "dependencies": {
+    "@humanwhocodes/env": "^2.2.0",
+    "colors": "^1.4.0",
+    "debug": "^4.1.1",
+    "dotenv": "^8.2.0",
+    "flat": "^5.0.0",
+    "lodash.pick": "^4.4.0"
+  },
+  "devDependencies": {
+    "standard-version": "^9.3.0"
+  }
+}

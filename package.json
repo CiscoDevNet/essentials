@@ -1,0 +1,39 @@
+{
+  "name": "root",
+  "description": "Essential packages to build, release, and run great software",
+  "private": true,
+  "scripts": {
+    "git:commit": "cz",
+    "lerna:ci": "lerna clean --yes && lerna bootstrap",
+    "lerna:version": "npx lerna version --conventional-commits --no-push",
+    "lerna:push": "git push --follow-tags origin main",
+    "lerna:publish": "lerna publish from-package",
+    "licenses": "license-checker --csv --production > output/licenses.csv",
+    "licenses:gpl": "license-checker --production | grep GPL",
+    "lint": "eslint '**/{src,test}/**/*.{js,json}'",
+    "talisman:scan": "scripts/talisman/scan.sh",
+    "talisman:view": "scripts/talisman/view.sh"
+  },
+  "author": "Matt Norris <matnorri@cisco.com>",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@babel/core": "^7.13.15",
+    "@babel/eslint-parser": "^7.13.14",
+    "commitizen": "^4.1.2",
+    "cz-lerna-changelog": "^2.0.2",
+    "eslint": "^7.23.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-sonar": "^0.5.0",
+    "lerna": "^3.22.1",
+    "prettier": "2.0.5",
+    "typescript": "^4.2.4"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-lerna-changelog"
+    }
+  },
+  "dependencies": {
+    "license-checker": "^25.0.1"
+  }
+}
