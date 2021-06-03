@@ -1,0 +1,23 @@
+{
+  "name": "@gve/bot-factory",
+  "version": "0.1.22",
+  "description": "Create Webex bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matt Norris <matnorri@cisco.com>",
+  "files": [
+    "index.js",
+    "constants.js"
+  ],
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@gve/bot-middleware": "^0.1.22",
+    "botbuilder-adapter-webex": "^1.0.9",
+    "botkit": "^4.10.0"
+  },
+  "devDependencies": {
+    "standard-version": "^9.3.0"
+  }
+}

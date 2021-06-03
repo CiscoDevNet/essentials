@@ -1,0 +1,21 @@
+{
+  "name": "@gve/core",
+  "version": "0.1.11",
+  "description": "Helpful functions to reduce parsing and errors",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest --setupFiles dotenv/config"
+  },
+  "author": "Matt Norris <matnorri@cisco.com>",
+  "files": [
+    "src/"
+  ],
+  "license": "Apache-2.0",
+  "dependencies": {
+    "force-boolean": "^1.2.0",
+    "normalize-url": "^5.3.0"
+  },
+  "devDependencies": {
+    "standard-version": "^9.3.0"
+  }
+}
