@@ -24,7 +24,12 @@ const {
   RELEASES_ORG,
 } = require("../config");
 
-const { EXEC_SYNC_OPTIONS, YAML_FILE_EXT } = require("../constants");
+const {
+  DOCKER_COMPOSE_BUILD_COMMAND,
+  DOCKER_COMPOSE_UP_COMMAND,
+  EXEC_SYNC_OPTIONS,
+  YAML_FILE_EXT,
+} = require("../constants");
 
 /**
  * Release configuration
@@ -97,8 +102,12 @@ class Release {
   }
 
   build() {
-    const commandParts = this.getComposeCommandParts();
-    commandParts.push("build");
+    const commandParts = [
+      ...this.commandPrefix,
+      DOCKER_COMPOSE_BUILD_COMMAND,
+      ...this.commandFlags,
+      "build",
+    ];
     const command = commandParts.join(" ");
     debug(command);
     execSync(command, EXEC_SYNC_OPTIONS);
@@ -106,34 +115,22 @@ class Release {
   }
 
   up() {
-    const initialCommandParts = this.getComposeCommandParts();
-    const upCommandParts = [
+    const commandParts = [
+      ...this.commandPrefix,
+      DOCKER_COMPOSE_UP_COMMAND,
+      ...this.commandFlags,
       "up",
       "--force-recreate",
       "--build",
       "--always-recreate-deps",
       "--renew-anon-volumes",
     ];
-    const commandParts = [...initialCommandParts, ...upCommandParts];
     const command = commandParts.join(" ");
     debug(command);
     execSync(command, EXEC_SYNC_OPTIONS);
   }
 
-  createDir(dirPath) {
-    const releaseDir = dirPath || this.releaseDir;
-    return Release.createReleasesDir(releaseDir);
-  }
-
-  static createReleasesDir(dirPath = RELEASES_DIRECTORY) {
-    if (!fs.existsSync(dirPath)) {
-      fs.mkdirSync(dirPath);
-    }
-
-    return dirPath;
-  }
-
-  getComposeCommandParts() {
+  get commandPrefix() {
     debug(`NPM_REGISTRY: ${NPM_REGISTRY}`);
 
     let npmUsername;
@@ -151,18 +148,34 @@ class Release {
       npmPassword = `NPM_PASSWORD=${NPM_PASSWORD}`;
     }
 
-    const dockerComposePrimaryFile = `docker-compose.${YAML_FILE_EXT}`;
-    const dockerComposeEnvFile = `docker-compose.${this.environment}.${YAML_FILE_EXT}`;
-
-    return [
+    const envVariables = [
       `IMAGE_NAME=${this.fullImageName}`,
       `NPM_REGISTRY=${NPM_REGISTRY}`,
       npmUsername,
       npmPassword,
-      "docker compose",
-      `-f ${dockerComposePrimaryFile}`,
-      `-f ${dockerComposeEnvFile}`,
-    ].filter((part) => part !== undefined);
+    ].filter((envVariable) => envVariable !== undefined);
+
+    return envVariables;
+  }
+
+  get commandFlags() {
+    const dockerComposePrimaryFile = `docker-compose.${YAML_FILE_EXT}`;
+    const dockerComposeEnvFile = `docker-compose.${this.environment}.${YAML_FILE_EXT}`;
+
+    return [`-f ${dockerComposePrimaryFile}`, `-f ${dockerComposeEnvFile}`];
+  }
+
+  createDir(dirPath) {
+    const releaseDir = dirPath || this.releaseDir;
+    return Release.createReleasesDir(releaseDir);
+  }
+
+  static createReleasesDir(dirPath = RELEASES_DIRECTORY) {
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath);
+    }
+
+    return dirPath;
   }
 
   getImageUploadInstructions() {
