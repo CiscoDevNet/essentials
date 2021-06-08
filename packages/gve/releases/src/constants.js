@@ -8,7 +8,7 @@ const NODE_ENV_DEVELOPMENT = "development";
  * "docker-compose build" command
  *
  * "docker compose" and "docker-compose" are different.
- * Use docker-compose to enabled builds with ARGS.
+ * Use docker-compose to enable builds with ARGS.
  * @see https://stackoverflow.com/a/67853849/154065
  */
 const DOCKER_COMPOSE_BUILD_COMMAND = "docker-compose";
