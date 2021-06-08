@@ -24,7 +24,12 @@ const {
   RELEASES_ORG,
 } = require("../config");
 
-const { EXEC_SYNC_OPTIONS, YAML_FILE_EXT } = require("../constants");
+const {
+  DOCKER_COMPOSE_BUILD_COMMAND,
+  DOCKER_COMPOSE_UP_COMMAND,
+  EXEC_SYNC_OPTIONS,
+  YAML_FILE_EXT,
+} = require("../constants");
 
 /**
  * Release configuration
@@ -54,7 +59,6 @@ class Release {
       releaseDir = RELEASES_DIRECTORY,
     } = config;
 
-    this.command = "docker compose";
     this.config = config;
 
     this.hostName = hostName;
@@ -100,7 +104,7 @@ class Release {
   build() {
     const commandParts = [
       ...this.commandPrefix,
-      this.command,
+      DOCKER_COMPOSE_BUILD_COMMAND,
       ...this.commandFlags,
       "build",
     ];
@@ -113,7 +117,7 @@ class Release {
   up() {
     const commandParts = [
       ...this.commandPrefix,
-      this.command,
+      DOCKER_COMPOSE_UP_COMMAND,
       ...this.commandFlags,
       "up",
       "--force-recreate",
