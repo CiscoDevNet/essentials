@@ -1,4 +1,4 @@
-const debug = require("debug")("middleware:people:webex");
+const debug = require("debug")("people:middleware:webex");
 
 const emailAddresses = require("email-addresses");
 const mergeWith = require("lodash.mergewith");
