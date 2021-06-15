@@ -10,10 +10,12 @@ const { execSync, spawn } = require("child_process");
 const path = require("path");
 const url = require("url");
 
-const Release = require("./release");
+const Release = require("../release");
 
 const {
   BOT_URL,
+  COMMAND_EVENTS,
+  EXEC_SYNC_OPTIONS,
   PORT,
   RELEASES_DEPLOYMENT,
   RELEASES_DEPLOYMENT_TEMPLATE,
@@ -23,9 +25,7 @@ const {
   RELEASES_ROUTE_TEMPLATE,
   RELEASES_SECRET,
   RELEASES_SERVICE,
-} = require("../config");
-
-const { COMMAND_EVENTS, EXEC_SYNC_OPTIONS } = require("../constants");
+} = require("./config");
 
 class OpenShiftRelease extends Release {
   constructor(config) {
@@ -121,6 +121,8 @@ class OpenShiftRelease extends Release {
 
     console.log(instructions.join("\n"));
   }
+
+  _addSecret() {}
 
   buildRoute() {
     const botUrl = BOT_URL;
