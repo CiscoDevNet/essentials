@@ -1,6 +1,6 @@
 {
   "name": "@gve/salesforce",
-  "version": "0.3.31",
+  "version": "0.3.32",
   "description": "Query and update Salesforcewith built-in retries",
   "main": "src/index.js",
   "scripts": {
