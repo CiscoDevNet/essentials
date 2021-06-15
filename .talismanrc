@@ -53,9 +53,6 @@ fileignoreconfig:
 - filename: packages/gve/salesforce/src/index.test.js
   checksum: 3a74a0661512624cda8cb82d15b70122504ccb1a846c774e21d30afed51cd4de
   ignore_detectors: [filecontent]
-- filename: packages/gve/releases/src/releases/release-openshift.js
-  checksum: a9b6f290cb0fc7aea213354fd693b53936f2288ded4dc2baeff1274538efaa14
-  ignore_detectors: [filecontent]
 - filename: packages/gve/bot-middleware/README.md
   checksum: 3c2a8e37bd705deda35d8dca719740ea8336b0e28d6d8124cefa9914ac968943
   ignore_detectors: [filecontent]
@@ -67,4 +64,10 @@ fileignoreconfig:
   ignore_detectors: [filecontent]
 - filename: packages/gve/releases/CHANGELOG.md
   checksum: c869a6f14e9e03b8c14c6c5b56c27236a97a7fe65a327e60429bb630c6112aad
+  ignore_detectors: [filecontent]
+- filename: packages/gve/releases/src/releases/release-openshift/config.js
+  checksum: 2cc027ac418ba6ed57b7478355c57299550093855f2bea28b9f8aea790c524e0
+  ignore_detectors: [filecontent]
+- filename: packages/gve/releases/src/releases/release-openshift/index.js
+  checksum: 75d6582c121c2fef87e74b19cc42db55c604fd1b2b2a03dc0bdbeba9d4229863
   ignore_detectors: [filecontent]
