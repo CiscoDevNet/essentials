@@ -95,6 +95,8 @@ const RELEASES_SERVICE = `${SERVICE_NAME}.${YAML_FILE_EXT}`;
 const { RELEASES_URL } = process.env;
 
 module.exports = {
+  env,
+
   BOT_NAME,
   BOT_VERSION,
   BOT_URL: process.env.BOT_URL,
@@ -121,7 +123,6 @@ module.exports = {
   RELEASES_ORG,
   RELEASES_PLATFORM,
 
-  RELEASES_IMAGE_PULL_SECRET: process.env.RELEASES_IMAGE_PULL_SECRET,
   RELEASES_PROJECT_ID,
   RELEASES_PROJECT_NAME,
 
