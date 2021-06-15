@@ -27,6 +27,8 @@ const {
   RELEASES_SERVICE,
 } = require("./config");
 
+const { DeploymentConfigError } = require("./errors");
+
 class OpenShiftRelease extends Release {
   constructor(config) {
     super(config);
@@ -83,30 +85,24 @@ class OpenShiftRelease extends Release {
     ];
 
     const generateTemplateCommand = generateTemplateCommandParts.join(" ");
-    debug(generateTemplateCommand, "\n");
-
     execSync(generateTemplateCommand);
 
     debug("reading template: ", deploymentTemplatePath);
-    const data = Release.read(deploymentTemplatePath);
+    const deploymentTemplate = Release.read(deploymentTemplatePath);
 
-    // Add the secret name to the deployment config.
-    const { items } = data;
-    const deploymentConfig = items
-      .filter((item) => item.kind === "DeploymentConfig")
-      .pop();
-    const { spec } = deploymentConfig.spec.template;
-    const secret = RELEASES_IMAGE_PULL_SECRET;
-
-    if (secret === undefined) {
-      throw new Error(`RELEASES_IMAGE_PULL_SECRET is not defined.`);
+    debug(
+      `adding secret ${RELEASES_IMAGE_PULL_SECRET} to deployment config...`
+    );
+    const deploymentConfig = this._getDeploymentConfig(deploymentTemplate);
+    if (!deploymentConfig) {
+      throw new DeploymentConfigError("deployment config not found");
     }
-    debug(`adding secret: ${secret}`);
-    spec.imagePullSecrets = [{ name: secret }];
+    const { spec } = deploymentConfig.spec.template;
+    spec.imagePullSecrets = [{ name: RELEASES_IMAGE_PULL_SECRET }];
 
     const deploymentPath = path.join(releasesDir, RELEASES_DEPLOYMENT);
     debug("writing config: ", deploymentPath);
-    Release.write(data, deploymentPath);
+    Release.write(deploymentTemplate, deploymentPath);
 
     console.log(colors.green("Created Deployment configuration.\n"));
 
@@ -122,7 +118,21 @@ class OpenShiftRelease extends Release {
     console.log(instructions.join("\n"));
   }
 
-  _addSecret() {}
+  /**
+   * Returns the deployment configuration of the given deployment template.
+   * @param {Object} deploymentTemplate
+   * @returns {Object} deployment config
+   */
+  _getDeploymentConfig(deploymentTemplate) {
+    const { items = [] } = deploymentTemplate;
+    const deploymentConfigs = items.filter((item) => {
+      const { kind: itemType } = item;
+      const isDeploymentConfig =
+        itemType === "Deployment" || itemType === "DeploymentConfig";
+      return isDeploymentConfig;
+    });
+    return deploymentConfigs[0];
+  }
 
   buildRoute() {
     const botUrl = BOT_URL;
