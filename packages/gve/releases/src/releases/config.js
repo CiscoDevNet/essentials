@@ -1,0 +1,34 @@
+/**
+ * @file Configuration file for releases.
+ * @author Matt Norris <matnorri@cisco.com>
+ */
+
+const {
+  env,
+  BOT_URL,
+  PORT,
+  RELEASES_DEPLOYMENT,
+  RELEASES_DEPLOYMENT_TEMPLATE,
+  RELEASES_PROJECT_NAME,
+  RELEASES_ROUTE,
+  RELEASES_ROUTE_TEMPLATE,
+  RELEASES_SECRET,
+  RELEASES_SERVICE,
+} = require("../config");
+
+const { COMMAND_EVENTS, EXEC_SYNC_OPTIONS } = require("../constants");
+
+module.exports = {
+  env,
+  BOT_URL,
+  COMMAND_EVENTS,
+  EXEC_SYNC_OPTIONS,
+  PORT,
+  RELEASES_DEPLOYMENT,
+  RELEASES_DEPLOYMENT_TEMPLATE,
+  RELEASES_PROJECT_NAME,
+  RELEASES_ROUTE,
+  RELEASES_ROUTE_TEMPLATE,
+  RELEASES_SECRET,
+  RELEASES_SERVICE,
+};
