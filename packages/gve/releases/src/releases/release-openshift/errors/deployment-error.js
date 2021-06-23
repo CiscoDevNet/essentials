@@ -3,7 +3,7 @@
  * @author Matt Norris <matnorri@cisco.com>
  */
 
-class DeploymentConfigError extends Error {
+class DeploymentError extends Error {
   /**
    * @constructs DeploymentConfigError
    * @param {String} message error message
@@ -13,4 +13,4 @@ class DeploymentConfigError extends Error {
   }
 }
 
-module.exports = DeploymentConfigError;
+module.exports = DeploymentError;

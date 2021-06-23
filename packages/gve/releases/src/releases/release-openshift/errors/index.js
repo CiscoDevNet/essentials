@@ -1,3 +1,3 @@
-const DeploymentConfigError = require("./deployment-config-error");
+const DeploymentError = require("./deployment-error");
 
-module.exports = { DeploymentConfigError };
+module.exports = { DeploymentError };
