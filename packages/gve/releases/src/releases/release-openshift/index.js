@@ -90,11 +90,18 @@ class OpenShiftRelease extends Release {
     );
     const isDeploymentConfig =
       this.deploymentKind === OPENSHIFT_DEPLOYMENT_CONFIG;
+
+    /**
+     * Label to set in all resources for this application.
+     */
+    const labels = `-l app=${this.name}`;
+
     const generateTemplateCommandParts = [
       "oc",
       "new-app",
       this.fullImageName,
       variables.join(" "),
+      labels,
       `--as-deployment-config=${isDeploymentConfig}`,
       "--dry-run=true",
       `-o yaml > ${deploymentTemplatePath}`,
