@@ -27,13 +27,24 @@ const {
   RELEASES_SERVICE,
 } = require("./config");
 
-const { DeploymentConfigError } = require("./errors");
+/**
+ * Deployment kinds
+ */
+const KUBERNETES_DEPLOYMENT = "Deployment";
+const OPENSHIFT_DEPLOYMENT_CONFIG = "DeploymentConfig";
+
+const { DeploymentError } = require("./errors");
 
 class OpenShiftRelease extends Release {
   constructor(config) {
     super(config);
 
-    const { projectName = RELEASES_PROJECT_NAME } = this.config;
+    const {
+      projectName = RELEASES_PROJECT_NAME,
+      deploymentKind = OPENSHIFT_DEPLOYMENT_CONFIG,
+    } = this.config;
+
+    this.deploymentKind = deploymentKind;
 
     // Require an explicit project name so that code isn't released
     // to the implicit, active project.
@@ -75,14 +86,17 @@ class OpenShiftRelease extends Release {
       releasesDir,
       RELEASES_DEPLOYMENT_TEMPLATE
     );
+    const isDeploymentConfig =
+      this.deploymentKind === OPENSHIFT_DEPLOYMENT_CONFIG;
     const generateTemplateCommandParts = [
       "oc",
       "new-app",
       this.fullImageName,
       variables.join(" "),
+      `--as-deployment-config=${isDeploymentConfig}`,
       "--dry-run=true",
       `-o yaml > ${deploymentTemplatePath}`,
-    ];
+    ].filter(Boolean);
 
     const generateTemplateCommand = generateTemplateCommandParts.join(" ");
     execSync(generateTemplateCommand);
@@ -90,14 +104,12 @@ class OpenShiftRelease extends Release {
     debug("reading template: ", deploymentTemplatePath);
     const deploymentTemplate = Release.read(deploymentTemplatePath);
 
-    debug(
-      `adding secret ${RELEASES_IMAGE_PULL_SECRET} to deployment config...`
-    );
-    const deploymentConfig = this._getDeploymentConfig(deploymentTemplate);
-    if (!deploymentConfig) {
-      throw new DeploymentConfigError("deployment config not found");
+    debug(`adding secret ${RELEASES_IMAGE_PULL_SECRET} to deployment...`);
+    const deploymentData = this._getDeploymentData(deploymentTemplate);
+    if (!deploymentData) {
+      throw new DeploymentError("deployment data not found");
     }
-    const { spec } = deploymentConfig.spec.template;
+    const { spec } = deploymentData.spec.template;
     spec.imagePullSecrets = [{ name: RELEASES_IMAGE_PULL_SECRET }];
 
     const deploymentPath = path.join(releasesDir, RELEASES_DEPLOYMENT);
@@ -123,13 +135,12 @@ class OpenShiftRelease extends Release {
    * @param {Object} deploymentTemplate
    * @returns {Object} deployment config
    */
-  _getDeploymentConfig(deploymentTemplate) {
+  _getDeploymentData(deploymentTemplate) {
     const { items = [] } = deploymentTemplate;
     const deploymentConfigs = items.filter((item) => {
-      const { kind: itemType } = item;
-      const isDeploymentConfig =
-        itemType === "Deployment" || itemType === "DeploymentConfig";
-      return isDeploymentConfig;
+      const { kind: deploymentKind } = item;
+      const isDeploymentKind = deploymentKind === this.deploymentKind;
+      return isDeploymentKind;
     });
     return deploymentConfigs[0];
   }
@@ -185,29 +196,56 @@ class OpenShiftRelease extends Release {
 
   buildService() {
     console.log("Creating Service configuration...");
-    const name = this.name;
-    const port = PORT;
+    const serviceTemplate = this._getServiceTemplate();
+    const releasesDir = Release.createReleasesDir();
+    const servicePath = path.join(releasesDir, RELEASES_SERVICE);
+    Release.write(serviceTemplate, servicePath);
+    console.log(colors.green("Created Service configuration.\n"));
+  }
 
-    const serviceTemplate = {
-      apiVersion: "v1",
+  /**
+   * Gets a service template.
+   * @returns {Object} service template
+   * @see https://gist.github.com/bmaupin/d5be3ca882345ff92e8336698230dae0
+   */
+  _getServiceTemplate() {
+    let apiVersion = "v1";
+    const selector = {
+      app: this.name,
+    };
+
+    switch (this.deploymentKind) {
+      case OPENSHIFT_DEPLOYMENT_CONFIG:
+        selector.deploymentconfig = this.name;
+        break;
+
+      case KUBERNETES_DEPLOYMENT:
+        apiVersion = "apps/v1";
+        break;
+    }
+
+    return {
+      apiVersion,
       items: [
         {
-          apiVersion: "v1",
+          apiVersion,
           kind: "Service",
           metadata: {
             labels: {
-              app: name,
+              app: this.name,
             },
-            name,
+            name: this.name,
           },
           spec: {
             ports: [
-              { name: `${port}-tcp`, port, protocol: "TCP", targetPort: port },
+              {
+                name: `${PORT}-tcp`,
+                port: PORT,
+                protocol: "TCP",
+                targetPort: PORT,
+              },
             ],
-            selector: {
-              app: name,
-              deploymentconfig: name,
-            },
+            selector,
           },
           status: {
             loadBalancer: {},
@@ -217,11 +255,6 @@ class OpenShiftRelease extends Release {
       kind: "List",
       metadata: {},
     };
-
-    const releasesDir = Release.createReleasesDir();
-    const servicePath = path.join(releasesDir, RELEASES_SERVICE);
-    Release.write(serviceTemplate, servicePath);
-    console.log(colors.green("Created Service configuration.\n"));
   }
 
   async release() {
