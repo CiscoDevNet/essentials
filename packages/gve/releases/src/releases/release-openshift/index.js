@@ -356,7 +356,7 @@ class OpenShiftRelease extends Release {
    * Runs the given command and its args inside a Promise
    * so it can be unpacked later.
    * @param {String} commandName - the command name
-   * @param {Array[String]} args - the command arguments
+   * @param {string[]} args - the command arguments
    * @see https://stackoverflow.com/a/35896832/154065
    * @returns {Promise} string output
    */
