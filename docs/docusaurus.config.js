@@ -9,7 +9,7 @@ module.exports = {
   tagline: "Essential packages to build, release, and run great software.",
   url: "https://your-docusaurus-test-site.com",
   baseUrl: "/",
-  onBrokenLinks: "warn",
+  onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
   organizationName: "CiscoDevNet", // Usually your GitHub org/user name.
@@ -24,9 +24,9 @@ module.exports = {
       items: [
         {
           type: "doc",
-          docId: "api",
+          docId: "documentation",
           position: "left",
-          label: "Tutorial",
+          label: "Documentation",
         },
         {
           href: "https://github.com/CiscoDevNet/essentials",
@@ -38,15 +38,15 @@ module.exports = {
     footer: {
       style: "dark",
       links: [
-        {
-          title: "Docs",
-          items: [
-            {
-              label: "Tutorial",
-              to: "/docs/intro",
-            },
-          ],
-        },
+        // {
+        //   title: "Docs",
+        //   items: [
+        //     {
+        //       label: "Documentation",
+        //       to: "documentation",
+        //     },
+        //   ],
+        // },
         {
           title: "Community",
           items: [
@@ -67,10 +67,10 @@ module.exports = {
         {
           title: "More",
           items: [
-            {
-              label: "Blog",
-              to: "/blog",
-            },
+            // {
+            //   label: "Blog",
+            //   to: "/blog",
+            // },
             {
               label: "GitHub",
               href: "https://github.com/facebook/docusaurus",
@@ -91,6 +91,7 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
+          routeBasePath: "/",
           // Please change this to your repo.
           editUrl:
             "https://github.com/facebook/docusaurus/edit/master/website/",
