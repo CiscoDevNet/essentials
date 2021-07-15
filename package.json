@@ -3,7 +3,10 @@
   "description": "Essential packages to build, release, and run great software",
   "private": true,
   "scripts": {
-    "docs": "npm run docs:jsdoc",
+    "docs": "npm run docs:readme && npm run docs:api && cd docs && npm run build && npm run serve",
+    "docs:dev": "npm run docs:readme && npm run docs:api && cd docs && npx docusaurus start",
+    "docs:readme": "echo -e \"---\nid: README\nslug: /\n---\n$(cat README.md)\" > docs/docs/README.md",
+    "docs:api": "npx jsdoc2md packages/gve/**/src/**/*.js > docs/docs/api.md",
     "predocs:jsdoc": "mkdir -p output/jsdoc/docs",
     "docs:jsdoc": "jsdoc -c ./.jsdoc.json -R ./README.md -r packages/gve/**/src -d output/jsdoc/docs",
     "predocs:dox": "mkdir -p output/dox/docs",
@@ -19,7 +22,8 @@
     "licenses:gpl": "license-checker --production | grep GPL",
     "lint": "eslint '**/{src,test}/**/*.{js,json}'",
     "talisman:scan": "scripts/talisman/scan.sh",
-    "talisman:view": "scripts/talisman/view.sh"
+    "talisman:view": "scripts/talisman/view.sh",
+    "postinstall": "cd docs && npm i && mkdir -p docs && cd .."
   },
   "author": "Matt Norris <matnorri@cisco.com>",
   "license": "Apache-2.0",
@@ -33,6 +37,7 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-sonar": "^0.5.0",
     "jsdoc": "^3.6.7",
+    "jsdoc-to-markdown": "^7.0.1",
     "lerna": "^3.22.1",
     "netlify-cli": "^4.3.1",
     "prettier": "2.0.5",
