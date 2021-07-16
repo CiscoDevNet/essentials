@@ -3,11 +3,10 @@
   "description": "Essential packages to build, release, and run great software",
   "private": true,
   "scripts": {
-    "predocs": "mkdir -p docs/docs/api",
-    "docs": "npm run docs:readme && npm run docs:api && cd docs && npm run build && npm run serve",
-    "docs:dev": "npm run docs:readme && npm run docs:api && cd docs && npx docusaurus start",
-    "docs:readme": "echo -e \"---\nid: README\nslug: /\n---\n$(cat README.md)\" > docs/docs/api/README.md",
-    "docs:api": "npx jsdoc2md packages/gve/**/src/**/*.js > docs/docs/api/index.md",
+    "docs": "npm run docs:api && cd docs && npm run build && npm run serve",
+    "docs:dev": "npm run docs:api && cd docs && npx docusaurus start",
+    "docs:api": "npx jsdoc2md packages/gve/**/src/**/*.js > docs/docs/api.md",
+    "postdocs:api": "echo \"---\nid: api\ntitle: API\nsidebar_position: 4\n---\n$(cat $npm_package_config_docsApi)\" > $npm_package_config_docsApi",
     "predocs:jsdoc": "mkdir -p output/jsdoc/docs",
     "docs:jsdoc": "jsdoc -c ./.jsdoc.json -R ./README.md -r packages/gve/**/src -d output/jsdoc/docs",
     "predocs:dox": "mkdir -p output/dox/docs",
@@ -24,7 +23,7 @@
     "lint": "eslint '**/{src,test}/**/*.{js,json}'",
     "talisman:scan": "scripts/talisman/scan.sh",
     "talisman:view": "scripts/talisman/view.sh",
-    "postinstall": "cd docs && npm i && mkdir -p docs/api && cd .."
+    "postinstall": "cd docs && npm i && cd .."
   },
   "author": "Matt Norris <matnorri@cisco.com>",
   "license": "Apache-2.0",
@@ -47,7 +46,8 @@
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-lerna-changelog"
-    }
+    },
+    "docsApi": "docs/docs/api.md"
   },
   "dependencies": {
     "license-checker": "^25.0.1"

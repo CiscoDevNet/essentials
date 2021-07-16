@@ -103,7 +103,7 @@ __pycache__
 .venv
 
 # Generated output, e.g., documentation
-docs/docs/api/*.md
+docs/docs/api.md
 output
 
 # Databases, e.g., sqlite
