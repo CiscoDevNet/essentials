@@ -30,14 +30,14 @@ const TRACKING_CARD_REASON = "Message is a card.";
 
 /**
  * Partial known space data.
- * @typedef {Object} space
+ * @typedef {Object} Space
  * @property {String} space_id - space ID
  * @property {String} space_type - space type, e.g., "direct" or "group"
  */
 
 /**
  * Known spaces.
- * Keys are of type {@link Space.space_id}.
+ * Keys are of type {@link Space} `space_id`.
  * Properties are of type {@link Space}.
  * @typedef {Map} Spaces
  */

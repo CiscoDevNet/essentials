@@ -36,7 +36,7 @@ class People {
     /**
      * Known people.
      *
-     * Keys are of type {@link Person.id}.
+     * Keys are of type {@link Person} `id`.
      * Properties are of type {@link Person}.
      * @typedef {Map} People
      */
