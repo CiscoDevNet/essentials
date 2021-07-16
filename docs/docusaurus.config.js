@@ -8,7 +8,7 @@ module.exports = {
   title: "Essentials",
   tagline: "Essential packages to build, release, and run great software.",
   url: "https://your-docusaurus-test-site.com",
-  baseUrl: "/",
+  baseUrl: "/docs/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
