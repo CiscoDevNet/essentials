@@ -6,21 +6,32 @@
 const debug = require("debug")("releases:google");
 
 const colors = require("colors/safe");
+const { execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const pick = require("lodash.pick");
 const yaml = require("js-yaml");
 
-const Release = require("./release");
+const Release = require("../release");
 
-const APP_FILE = "app.yml";
-const HOSTNAME_BASE = "docker.pkg.dev";
+const {
+  APP_FILE,
+  EXEC_SYNC_OPTIONS,
+  HOSTNAME_BASE,
+  HOSTNAME_LOCATION,
+  PROJECT_ID,
+  PROJECT_NAME,
+} = require("./config");
 
 class GoogleRelease extends Release {
   constructor(config) {
     super(config);
 
-    const { location, projectId, projectName } = this.config;
+    const {
+      location = HOSTNAME_LOCATION,
+      projectId = PROJECT_ID,
+      projectName = PROJECT_NAME,
+    } = this.config;
     if (!projectId && !projectName) {
       throw new Error("projectId or projectName needed to create image.");
     }
@@ -40,6 +51,15 @@ class GoogleRelease extends Release {
 
   get imageRepo() {
     return path.join(this.hostName, this.projectId, this.org, this.imageName);
+  }
+
+  activate() {
+    execSync(`gcloud config set project ${this.projectId}`, EXEC_SYNC_OPTIONS);
+    execSync(
+      `gcloud config set compute/region ${this.location}`,
+      EXEC_SYNC_OPTIONS
+    );
+    return this.projectId;
   }
 
   buildDeployment() {

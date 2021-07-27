@@ -50,8 +50,13 @@ const ENV_NON_PROD_MODIFIER = "--test";
 
 class Release {
   constructor(config = DEFAULT_CONFIG) {
+    /**
+     * hostName cannot be configured by default.
+     * Subclasses may require a particular hostName structure,
+     * so the default hostName must be fetched when asked for.
+     */
+
     const {
-      hostName = RELEASES_HOSTNAME,
       name = BOT_NAME,
       environment = NODE_ENV,
       org = RELEASES_ORG,
@@ -61,7 +66,6 @@ class Release {
 
     this.config = config;
 
-    this.hostName = hostName;
     this.name = name;
     this.environment = environment;
     this.org = org;
@@ -69,6 +73,14 @@ class Release {
     this.releasesDir = releaseDir;
 
     debug("initiated");
+  }
+
+  set hostName(name) {
+    this._hostName = name;
+  }
+
+  get hostName() {
+    return this._hostName || DEFAULT_CONFIG.hostName;
   }
 
   get envVariables() {
