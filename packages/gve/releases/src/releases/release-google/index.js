@@ -59,6 +59,7 @@ class GoogleRelease extends Release {
       `gcloud config set compute/region ${this.location}`,
       EXEC_SYNC_OPTIONS
     );
+    console.log(colors.green(`Project activated: ${this.projectId}`));
     return this.projectId;
   }
 
