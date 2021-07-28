@@ -7,10 +7,7 @@ const debug = require("debug")("releases:google");
 
 const colors = require("colors/safe");
 const { execSync } = require("child_process");
-const fs = require("fs");
 const path = require("path");
-const pick = require("lodash.pick");
-const yaml = require("js-yaml");
 
 const Release = require("../release");
 
@@ -64,38 +61,52 @@ class GoogleRelease extends Release {
   }
 
   buildDeployment() {
-    const releasesDir = Release.createReleasesDir();
-
-    // Include any valid environment variables in the deployment configuration.
-    const env_variables = pick(process.env, this.envVariables);
-
-    const data = {
+    console.log("Creating Deployment configuration...");
+    debug("getting environment variables...");
+    debug(
+      `found ${Object.values(this.envVariables).length} environment variables`
+    );
+    const fileContent = {
       runtime: "custom",
       env: "flex",
-      env_variables,
+      env_variables: this.envVariables,
     };
 
-    const deployment = path.join(releasesDir, APP_FILE);
-    const yamlData = yaml.safeDump(data);
-    fs.writeFileSync(deployment, yamlData, "utf8");
+    const deploymentPath = path.join(this.releasesDir, APP_FILE);
+    Release.write(fileContent, deploymentPath);
+
+    console.log(colors.green("Created Deployment configuration.\n"));
+
+    const instructions = [
+      "Deploy this configuration with:",
+      "",
+      `  npm run release:google`,
+      "",
+    ];
+
+    console.log(instructions.join("\n"));
+  }
+
+  async release() {
+    const deploymentPath = path.join(this.releasesDir, APP_FILE);
 
     // Google versions don't accept dots, only dashes.
     const version = this.version.replace(/\./g, "-");
+
     const commandParts = [
-      "gcloud app deploy",
-      deployment,
-      "--quiet",
+      "gcloud",
+      "app",
+      `deploy ${deploymentPath}`,
+      `--image-url ${this.fullImageName}`,
+      `--project ${this.projectId}`,
       `--version ${version}`,
-    ];
-    const command = commandParts.join(" ");
-    const instructions = [
-      `${colors.green("Created deployment file.")} Deploy it with:`,
-      "",
-      command,
-      "",
+      "--quiet",
     ];
 
-    return { command: commandParts, imageName: this.imageName, instructions };
+    const releaseCommand = commandParts.join(" ");
+    debug("release command:", releaseCommand);
+
+    execSync(releaseCommand, EXEC_SYNC_OPTIONS);
   }
 }
 
