@@ -19,6 +19,7 @@ const {
   PORT,
   RELEASES_DEPLOYMENT,
   RELEASES_DEPLOYMENT_TEMPLATE,
+  RELEASES_HOSTNAME,
   RELEASES_IMAGE_PULL_SECRET,
   RELEASES_PROJECT_NAME,
   RELEASES_ROUTE,
@@ -40,10 +41,12 @@ class OpenShiftRelease extends Release {
     super(config);
 
     const {
+      hostName = RELEASES_HOSTNAME,
       projectName = RELEASES_PROJECT_NAME,
       deploymentKind = OPENSHIFT_DEPLOYMENT_CONFIG,
     } = this.config;
 
+    this.hostName = hostName;
     this.deploymentKind = deploymentKind;
 
     // Require an explicit project name so that code isn't released
