@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/mattnorris/essentials/compare/@gve/releases@0.1.42...@gve/releases@0.2.0) (2021-07-28)
+
+
+### Features
+
+* **releases:** add Google Cloud release capabilities ([4164a61](https://github.com/mattnorris/essentials/commit/4164a61763b3ffee570136b22364c2ee28d4ef35))
+
+
+
+
+
 ## 0.1.42 (2021-06-15)
 
 
