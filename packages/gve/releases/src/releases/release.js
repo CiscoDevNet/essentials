@@ -6,7 +6,7 @@
 const debug = require("debug")("releases");
 
 const colors = require("colors/safe");
-const { execSync } = require("child_process");
+const { execSync, spawn: nodeSpawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const yaml = require("js-yaml");
@@ -25,6 +25,7 @@ const {
 } = require("../config");
 
 const {
+  COMMAND_EVENTS,
   DOCKER_COMPOSE_BUILD_COMMAND,
   DOCKER_COMPOSE_UP_COMMAND,
   EXEC_SYNC_OPTIONS,
@@ -50,8 +51,13 @@ const ENV_NON_PROD_MODIFIER = "--test";
 
 class Release {
   constructor(config = DEFAULT_CONFIG) {
+    /**
+     * hostName cannot be configured by default.
+     * Subclasses may require a particular hostName structure,
+     * so the default hostName must be fetched when asked for.
+     */
+
     const {
-      hostName = RELEASES_HOSTNAME,
       name = BOT_NAME,
       environment = NODE_ENV,
       org = RELEASES_ORG,
@@ -61,7 +67,6 @@ class Release {
 
     this.config = config;
 
-    this.hostName = hostName;
     this.name = name;
     this.environment = environment;
     this.org = org;
@@ -69,6 +74,14 @@ class Release {
     this.releasesDir = releaseDir;
 
     debug("initiated");
+  }
+
+  set hostName(name) {
+    this._hostName = name;
+  }
+
+  get hostName() {
+    return this._hostName || DEFAULT_CONFIG.hostName;
   }
 
   get envVariables() {
@@ -207,6 +220,48 @@ class Release {
   static write(contents, output) {
     const yamlData = yaml.safeDump(contents);
     fs.writeFileSync(output, yamlData, "utf8");
+  }
+
+  /**
+   * Runs the given command and its args inside a Promise
+   * so it can be unpacked later.
+   * @param {String} commandName - the command name
+   * @param {Array[String]} args - the command arguments
+   * @see https://stackoverflow.com/a/35896832/154065
+   * @returns {Promise} string output
+   */
+  static spawn(commandName, args) {
+    return new Promise((resolve, reject) => {
+      let stdoutData = "";
+      let stderrData = "";
+
+      // Run the command.
+      const command = nodeSpawn(commandName, args);
+
+      // Gather normal output.
+      command.stdout.on(COMMAND_EVENTS.DATA, (data) => {
+        stdoutData += data;
+      });
+
+      // Gather errors.
+      command.stderr.on(COMMAND_EVENTS.DATA, (data) => {
+        stderrData += data;
+      });
+
+      // Reject if there is an error.
+      command.on(COMMAND_EVENTS.ERROR, (err) => {
+        reject(err);
+      });
+
+      // When finished, reject if there are errors. Resolve otherwise.
+      command.on(COMMAND_EVENTS.CLOSE, () => {
+        if (stderrData) {
+          reject(stderrData);
+        } else {
+          resolve(stdoutData);
+        }
+      });
+    });
   }
 }
 
