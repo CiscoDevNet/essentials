@@ -6,7 +6,7 @@
 const debug = require("debug")("releases:openshift");
 
 const colors = require("colors/safe");
-const { execSync, spawn } = require("child_process");
+const { execSync } = require("child_process");
 const path = require("path");
 const url = require("url");
 
@@ -14,11 +14,11 @@ const Release = require("../release");
 
 const {
   BOT_URL,
-  COMMAND_EVENTS,
   EXEC_SYNC_OPTIONS,
   PORT,
   RELEASES_DEPLOYMENT,
   RELEASES_DEPLOYMENT_TEMPLATE,
+  RELEASES_HOSTNAME,
   RELEASES_IMAGE_PULL_SECRET,
   RELEASES_PROJECT_NAME,
   RELEASES_ROUTE,
@@ -40,10 +40,12 @@ class OpenShiftRelease extends Release {
     super(config);
 
     const {
+      hostName = RELEASES_HOSTNAME,
       projectName = RELEASES_PROJECT_NAME,
       deploymentKind = OPENSHIFT_DEPLOYMENT_CONFIG,
     } = this.config;
 
+    this.hostName = hostName;
     this.deploymentKind = deploymentKind;
 
     // Require an explicit project name so that code isn't released
@@ -321,7 +323,7 @@ class OpenShiftRelease extends Release {
 
     // Create the file on the server.
     try {
-      fileResult = await this._spawn("oc", createFileArgs);
+      fileResult = await Release.spawn("oc", createFileArgs);
     } catch (createFileErrorMessage) {
       errorMessage = createFileErrorMessage;
       hasRemoteFile = createFileErrorMessage.includes("AlreadyExists");
@@ -337,7 +339,7 @@ class OpenShiftRelease extends Release {
       const updateFileArgs = ["apply", "-f", remoteFile];
 
       try {
-        fileResult = await this._spawn("oc", updateFileArgs);
+        fileResult = await Release.spawn("oc", updateFileArgs);
       } catch (udpateFileErrorMessage) {
         errorMessage = udpateFileErrorMessage;
         debug("update file error:", errorMessage);
@@ -350,48 +352,6 @@ class OpenShiftRelease extends Release {
     }
 
     return fileResult;
-  }
-
-  /**
-   * Runs the given command and its args inside a Promise
-   * so it can be unpacked later.
-   * @param {String} commandName - the command name
-   * @param {Array[String]} args - the command arguments
-   * @see https://stackoverflow.com/a/35896832/154065
-   * @returns {Promise} string output
-   */
-  _spawn(commandName, args) {
-    return new Promise((resolve, reject) => {
-      let stdoutData = "";
-      let stderrData = "";
-
-      // Run the command.
-      const command = spawn(commandName, args);
-
-      // Gather normal output.
-      command.stdout.on(COMMAND_EVENTS.DATA, (data) => {
-        stdoutData += data;
-      });
-
-      // Gather errors.
-      command.stderr.on(COMMAND_EVENTS.DATA, (data) => {
-        stderrData += data;
-      });
-
-      // Reject if there is an error.
-      command.on(COMMAND_EVENTS.ERROR, (err) => {
-        reject(err);
-      });
-
-      // When finished, reject if there are errors. Resolve otherwise.
-      command.on(COMMAND_EVENTS.CLOSE, () => {
-        if (stderrData) {
-          reject(stderrData);
-        } else {
-          resolve(stdoutData);
-        }
-      });
-    });
   }
 }
 
