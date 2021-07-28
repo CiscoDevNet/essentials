@@ -49,7 +49,7 @@ class GoogleRelease extends Release {
     return `${this.location}-${HOSTNAME_BASE}`;
   }
 
-  get imageRepo() {
+  get fullImageName() {
     return path.join(this.hostName, this.projectId, this.org, this.imageName);
   }
 
