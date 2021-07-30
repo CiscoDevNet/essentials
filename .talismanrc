@@ -71,6 +71,9 @@ fileignoreconfig:
 - filename: packages/gve/releases/src/releases/release-openshift/index.js
   checksum: 75d6582c121c2fef87e74b19cc42db55c604fd1b2b2a03dc0bdbeba9d4229863
   ignore_detectors: [filecontent]
-- filename: packages/gve/cards/CHANGELOG.md
-  checksum: d372ffb2e6e880f320da4a0307c6fdfd8444f676a971a0195345f1a1244994c6
+- filename: packages/gve/google/src/auth/index.js
+  checksum: 7b9f4446739849a20e0ee708fdb9a1e7575460436745e1278119eb61800b2849
+  ignore_detectors: [filecontent]
+- filename: packages/gve/google/src/config.js
+  checksum: 663f927986325e655491b286e0b5a44b6a67be1f2f92ae9ed0d8b931463f7ef2
   ignore_detectors: [filecontent]
