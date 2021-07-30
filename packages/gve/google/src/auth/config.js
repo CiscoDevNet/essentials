@@ -1,0 +1,15 @@
+const {
+  env,
+  GOOGLE_APPLICATION_CREDENTIALS,
+  GOOGLE_EMAIL,
+  GOOGLE_KEY,
+  GOOGLE_PROJECT_ID,
+} = require("../config");
+
+module.exports = {
+  env,
+  GOOGLE_APPLICATION_CREDENTIALS,
+  GOOGLE_EMAIL,
+  GOOGLE_KEY,
+  GOOGLE_PROJECT_ID,
+};
