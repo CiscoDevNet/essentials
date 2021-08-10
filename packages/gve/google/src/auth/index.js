@@ -3,27 +3,33 @@ const debug = require("debug")("google:auth");
 const { CredentialsError } = require("./errors");
 var fs = require("fs");
 
+const { BEGIN_KEY, END_KEY } = require("./constants");
 const {
   GOOGLE_APPLICATION_CREDENTIALS,
   GOOGLE_EMAIL,
   GOOGLE_KEY,
 } = require("./config");
 
-const BEGIN_KEY = "-----BEGIN PRIVATE KEY-----\n";
-const END_KEY = "\n-----END PRIVATE KEY-----\n";
+/**
+ * Gets the Google credentials from environment variables.
+ * @returns {CredentialBody} credentials
+ */
+function getCredentials() {
+  let credentials;
 
-let CREDENTIALS;
-
-if (GOOGLE_APPLICATION_CREDENTIALS) {
-  CREDENTIALS = parseCredentials(GOOGLE_APPLICATION_CREDENTIALS);
-} else {
-  const client_email = GOOGLE_EMAIL;
-  const rawPrivateKey = GOOGLE_KEY;
-  let private_key;
-  if (rawPrivateKey) {
-    private_key = formatKey(rawPrivateKey);
+  if (GOOGLE_APPLICATION_CREDENTIALS) {
+    credentials = parseCredentials(GOOGLE_APPLICATION_CREDENTIALS);
+  } else {
+    const client_email = GOOGLE_EMAIL;
+    const rawPrivateKey = GOOGLE_KEY;
+    let private_key;
+    if (rawPrivateKey) {
+      private_key = formatKey(rawPrivateKey);
+    }
+    credentials = { client_email, private_key };
   }
-  CREDENTIALS = { client_email, private_key };
+
+  return credentials;
 }
 
 /**
@@ -83,5 +89,5 @@ function formatKey(key) {
 }
 
 module.exports = {
-  CREDENTIALS,
+  credentials: getCredentials(),
 };
