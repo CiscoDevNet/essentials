@@ -10,8 +10,10 @@ const dialogflow = require("@google-cloud/dialogflow");
 const path = require("path");
 const uuid = require("uuid");
 
+const { credentials } = require("@gve/google").auth;
+
 const defaultIntent = "default";
-const { CREDENTIALS, INTENT_CONFIDENCE: CONFIDENCE_MIN } = require("./config");
+const { INTENT_CONFIDENCE: CONFIDENCE_MIN } = require("./config");
 const languageCode = "en-US";
 
 /**
@@ -38,7 +40,7 @@ class Intents {
    * @see https://cloud.google.com/dialogflow/es/docs/knowledge-connectors#detect_intent_with_knowledge_base
    */
   _getSessionsClient() {
-    const config = { credentials: CREDENTIALS };
+    const config = { credentials };
     // If a Knowledge Base ID is configured, use Beta.
     if (this.knowledgeBaseId) {
       return new dialogflow.v2beta1.SessionsClient(config);
