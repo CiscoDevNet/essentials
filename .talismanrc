@@ -74,6 +74,9 @@ fileignoreconfig:
 - filename: packages/gve/google/src/auth/index.js
   checksum: 7b9f4446739849a20e0ee708fdb9a1e7575460436745e1278119eb61800b2849
   ignore_detectors: [filecontent]
+- filename: packages/gve/google/src/auth/constants.js
+  checksum: 34369806fd4263dbc3f2efd3539276983ae31c991c4454dcf5b2a07bb0c19749
+  ignore_detectors: [filecontent]
 - filename: packages/gve/google/src/config.js
   checksum: 663f927986325e655491b286e0b5a44b6a67be1f2f92ae9ed0d8b931463f7ef2
   ignore_detectors: [filecontent]
