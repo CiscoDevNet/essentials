@@ -10,6 +10,7 @@ const dialogflow = require("@google-cloud/dialogflow");
 const path = require("path");
 const uuid = require("uuid");
 
+// TODO: DON'T do this here. Pass in the config instead.
 const { credentials } = require("@gve/google").auth;
 
 const defaultIntent = "default";
@@ -20,9 +21,10 @@ const languageCode = "en-US";
  * Text limit to avoid DialogFlow error:
  * INVALID_ARGUMENT: Input text exceeds 256 characters.
  */
-const textLimit = 256;
+const TEXT_LIMIT = 256;
 
 class Intents {
+  // TODO: pass a config object instead
   constructor(projectId, knowledgeBaseId) {
     this.projectId = projectId;
     this.knowledgeBaseId = knowledgeBaseId;
@@ -40,6 +42,7 @@ class Intents {
    * @see https://cloud.google.com/dialogflow/es/docs/knowledge-connectors#detect_intent_with_knowledge_base
    */
   _getSessionsClient() {
+    // TODO: remove this and use passed credentials
     const config = { credentials };
     // If a Knowledge Base ID is configured, use Beta.
     if (this.knowledgeBaseId) {
@@ -54,10 +57,11 @@ class Intents {
     const { id: botId } = reference.bot;
 
     if (rawText) {
-      if (senderId !== botId) {
+      const isBot = senderId === botId;
+      if (!isBot) {
         let text = rawText;
-        if (rawText.length > textLimit) {
-          text = rawText.slice(0, textLimit);
+        if (rawText.length > TEXT_LIMIT) {
+          text = rawText.slice(0, TEXT_LIMIT);
         }
 
         await this.getIntent(text, message);
@@ -80,7 +84,7 @@ class Intents {
       const updatedMessage = await this.getIntent("ping", mockMessage);
       isServiceReachable = updatedMessage.id === mockMessage.id;
     } catch (error) {
-      console.error(`intent detection ping failed: ${error.message}`);
+      console.error(`Intent detection failed. ${error.message}`);
     }
 
     return isServiceReachable;

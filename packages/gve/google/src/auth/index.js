@@ -6,8 +6,8 @@ var fs = require("fs");
 const { BEGIN_KEY, END_KEY } = require("./constants");
 const {
   GOOGLE_APPLICATION_CREDENTIALS,
-  GOOGLE_EMAIL,
-  GOOGLE_KEY,
+  GVE_GOOGLE_EMAIL,
+  GVE_GOOGLE_KEY,
 } = require("./config");
 
 /**
@@ -17,16 +17,10 @@ const {
 function getCredentials() {
   let credentials;
 
-  if (GOOGLE_APPLICATION_CREDENTIALS) {
+  try {
     credentials = parseCredentials(GOOGLE_APPLICATION_CREDENTIALS);
-  } else {
-    const client_email = GOOGLE_EMAIL;
-    const rawPrivateKey = GOOGLE_KEY;
-    let private_key;
-    if (rawPrivateKey) {
-      private_key = formatKey(rawPrivateKey);
-    }
-    credentials = { client_email, private_key };
+  } catch (_) {
+    credentials = getCredentialsFromSeparateEnvVariables();
   }
 
   return credentials;
@@ -71,6 +65,26 @@ function parseCredentials(credentials) {
   } catch (error) {
     throw new CredentialsError(error.message);
   }
+}
+
+function getCredentialsFromSeparateEnvVariables() {
+  const client_email = GVE_GOOGLE_EMAIL;
+  const rawPrivateKey = GVE_GOOGLE_KEY;
+  const private_key = formatKey(rawPrivateKey);
+
+  const missingProps = [client_email, private_key].filter(
+    (prop) => prop === undefined
+  );
+  const isMissingProps = !!missingProps.length;
+
+  if (isMissingProps) {
+    const missing = missingProps.join(", ");
+    throw new CredentialsError(
+      `Missing properties: ${missing}. Credentials must include client_email and private_key properties.`
+    );
+  }
+
+  return { client_email, private_key };
 }
 
 function formatKey(key) {
