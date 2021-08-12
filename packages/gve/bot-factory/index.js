@@ -23,20 +23,22 @@ class BotFactory {
     const { webhookUrl = MESSAGES_API_PATH } = config;
     const controller = new Botkit({ adapter, webhook_uri: webhookUrl });
     debug("controller: created");
-    const isConfigured = BotFactory.configureAdaptiveCards(controller);
-    debug("adaptive cards:", isConfigured ? "enabled" : "disabled");
-    controller._isAdaptiveCardsConfigured = isConfigured;
+    BotFactory.configureAdaptiveCards(controller);
     return controller;
   }
 
   static configureAdaptiveCards(controller) {
+    let isConfigured;
     const webhookUrl = controller.getConfig(CONFIG_WEBHOOK_URI);
     try {
       controller.adapter.registerAdaptiveCardWebhookSubscription(webhookUrl);
-      return true;
+      isConfigured = true;
     } catch (_) {
-      return false;
+      isConfigured = false;
     }
+
+    controller._isAdaptiveCardsConfigured = isConfigured;
+    return isConfigured;
   }
 
   /**
@@ -95,26 +97,39 @@ class BotFactory {
   }
 
   /**
+   * Intent configuration
+   * @typedef {Object} IntentConfig
+   * @property {String} projectId - the project ID
+   * @property {String} knowledgeBaseId - the knowledge base ID
+   * @property {CredentialBody} credentials - credentials needed to sign into the intent API
+   */
+
+  /**
    * Configures the intent middleware on the given controller.
    * @param {Botkit.Controller} controller - the bot controller
    * @returns {Botkit.Controller} the modified bot controller
    * @note Mutates the controller
    */
-  static async configureIntentMiddleware(controller, apiId, knowledgeBaseId) {
+  static async configureIntentMiddleware(controller, intentConfig) {
     const results = {
       controller,
       isConnected: false,
       isKnowledgeBaseConnected: false,
     };
 
-    if (apiId) {
-      const intents = new gveMiddleware.Intents(apiId, knowledgeBaseId);
-      controller.middleware.ingest.use(intents.get);
-      results.isConnected = await intents.ping();
+    if (intentConfig.projectId) {
+      const intents = new gveMiddleware.Intents(intentConfig);
+      const { isReachable: isConnected, error } = await intents.initialize();
+      results.isConnected = isConnected;
+      results.error = error;
+
+      const { knowledgeBaseId } = intentConfig;
       if (knowledgeBaseId && results.isConnected) {
         results.isKnowledgeBaseConnected = true;
         debug("intent knowledge base ID:", knowledgeBaseId);
       }
+
+      controller.middleware.ingest.use(intents.get);
     }
 
     return results;
