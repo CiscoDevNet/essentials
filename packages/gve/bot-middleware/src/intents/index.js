@@ -10,8 +10,7 @@ const dialogflow = require("@google-cloud/dialogflow");
 const path = require("path");
 const uuid = require("uuid");
 
-// TODO: DON'T do this here. Pass in the config instead.
-const { credentials } = require("@gve/google").auth;
+const { ServiceUnreachableError } = require("./errors");
 
 const defaultIntent = "default";
 const { INTENT_CONFIDENCE: CONFIDENCE_MIN } = require("./config");
@@ -23,12 +22,31 @@ const languageCode = "en-US";
  */
 const TEXT_LIMIT = 256;
 
+/**
+ * A Google Auth CredentialBody
+ * @typedef {Object} CredentialBody
+ * @property {String} client_email
+ * @property {String} private_key
+ * @see https://github.com/googleapis/google-cloud-node/blob/master/docs/authentication.md#the-config-object
+ * @see https://github.com/googleapis/google-auth-library-nodejs/blob/9ae2d30c15c9bce3cae70ccbe6e227c096005695/src/auth/credentials.ts#L81
+ */
+
+/**
+ * Intent configuration
+ * @typedef {Object} IntentConfig
+ * @property {String} projectId - the project ID
+ * @property {String} knowledgeBaseId - the knowledge base ID
+ * @property {CredentialBody} credentials - credentials needed to sign into the intent API
+ */
+
 class Intents {
-  // TODO: pass a config object instead
-  constructor(projectId, knowledgeBaseId) {
+  constructor(config) {
+    const { projectId, knowledgeBaseId, credentials } = config;
     this.projectId = projectId;
     this.knowledgeBaseId = knowledgeBaseId;
-    this.sessionClient = this._getSessionsClient();
+    this.credentials = credentials;
+    // TODO: Rename to sessionsClient
+    this.sessionsClient = this._getSessionsClient();
     this.get = this.get.bind(this);
 
     debug(`agent from project: ${projectId}`);
@@ -42,14 +60,11 @@ class Intents {
    * @see https://cloud.google.com/dialogflow/es/docs/knowledge-connectors#detect_intent_with_knowledge_base
    */
   _getSessionsClient() {
-    // TODO: remove this and use passed credentials
-    const config = { credentials };
-    // If a Knowledge Base ID is configured, use Beta.
-    if (this.knowledgeBaseId) {
-      return new dialogflow.v2beta1.SessionsClient(config);
-    }
-
-    return new dialogflow.SessionsClient(config);
+    const config = { credentials: this.credentials };
+    const sessionsClient = this.knowledgeBaseId
+      ? new dialogflow.v2beta1.SessionsClient(config)
+      : new dialogflow.SessionsClient(config);
+    return sessionsClient;
   }
 
   async get(bot, message, next) {
@@ -75,19 +90,40 @@ class Intents {
     next();
   }
 
+  async initialize() {
+    let isReachable = false;
+    let error;
+
+    // https://github.com/googleapis/nodejs-dialogflow/blob/fa420372a4dc6ec99e68df277050ed36b8c3091d/src/v2/sessions_client.ts#L318
+    let service;
+    try {
+      service = await this.sessionsClient.initialize();
+      isReachable = !!service;
+    } catch (initializeError) {
+      error = new ServiceUnreachableError(
+        `Intent detection failed. ${initializeError.message}`
+      );
+    }
+
+    return { isReachable, service, error };
+  }
+
   async ping() {
-    let isServiceReachable = false;
+    let isReachable = false;
+    let error;
     const mockMessage = { id: uuid.v4() };
     try {
       // If the message can make a roundtrip to the intent detection service
       // with no errors, we know we can reach the service.
       const updatedMessage = await this.getIntent("ping", mockMessage);
-      isServiceReachable = updatedMessage.id === mockMessage.id;
-    } catch (error) {
-      console.error(`Intent detection failed. ${error.message}`);
+      isReachable = updatedMessage.id === mockMessage.id;
+    } catch (pingError) {
+      error = new ServiceUnreachableError(
+        `Intent detection failed. ${pingError.message}`
+      );
     }
 
-    return isServiceReachable;
+    return { isReachable, error };
   }
 
   /**
@@ -99,7 +135,7 @@ class Intents {
    */
   async getIntent(text, message) {
     const { id: sessionId, _intentContexts: contexts } = message;
-    const sessionPath = this.sessionClient.projectAgentSessionPath(
+    const sessionPath = this.sessionsClient.projectAgentSessionPath(
       this.projectId,
       sessionId
     );
@@ -123,7 +159,7 @@ class Intents {
       queryParams,
     };
 
-    const responses = await this.sessionClient.detectIntent(request);
+    const responses = await this.sessionsClient.detectIntent(request);
     const result = responses[0].queryResult;
 
     const { intent } = result;

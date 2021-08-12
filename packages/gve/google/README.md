@@ -19,7 +19,7 @@ const { auth: googleAuth } = require("@gve/google");
 const dialogflow = require("@google-cloud/dialogflow");
 
 const config = { credentials: googleAuth.credentials };
-const sessionClient = new dialogflow.SessionsClient(config);
+const sessionsClient = new dialogflow.SessionsClient(config);
 ```
 
 ## License

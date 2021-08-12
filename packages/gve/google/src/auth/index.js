@@ -29,8 +29,8 @@ function getCredentials() {
 /**
  * A Google Auth CredentialBody
  * @typedef {Object} CredentialBody
- * @property client_email
- * @property private_key
+ * @property {String} client_email
+ * @property {String} private_key
  * @see https://github.com/googleapis/google-cloud-node/blob/master/docs/authentication.md#the-config-object
  * @see https://github.com/googleapis/google-auth-library-nodejs/blob/9ae2d30c15c9bce3cae70ccbe6e227c096005695/src/auth/credentials.ts#L81
  */
