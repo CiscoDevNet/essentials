@@ -1,25 +1,15 @@
-const { env, GVE_GOOGLE_PROJECT_ID } = require("../config");
+const { env, GOOGLE_CLOUD_PROJECT } = require("../config");
 
 const GOOGLE_APPLICATION_CREDENTIALS = env.get(
   "GOOGLE_APPLICATION_CREDENTIALS"
 );
-
-let GVE_GOOGLE_EMAIL;
-let GVE_GOOGLE_KEY;
-
-getCredentials();
-
-function getCredentials() {
-  if (!GOOGLE_APPLICATION_CREDENTIALS) {
-    GVE_GOOGLE_EMAIL = env.require("GVE_GOOGLE_EMAIL");
-    GVE_GOOGLE_KEY = env.require("GVE_GOOGLE_KEY");
-  }
-}
+const GVE_GOOGLE_EMAIL = env.get("GVE_GOOGLE_EMAIL");
+const GVE_GOOGLE_KEY = env.get("GVE_GOOGLE_KEY");
 
 module.exports = {
   env,
   GOOGLE_APPLICATION_CREDENTIALS,
   GVE_GOOGLE_EMAIL,
   GVE_GOOGLE_KEY,
-  GVE_GOOGLE_PROJECT_ID,
+  GOOGLE_CLOUD_PROJECT,
 };
