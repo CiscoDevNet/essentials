@@ -1,7 +1,9 @@
 const debug = require("debug")("google:auth");
 
-const { CredentialsError } = require("./errors");
-var fs = require("fs");
+const { auth: googleAuth } = require("google-auth-library");
+const fs = require("fs");
+
+const { AuthError, CredentialsError } = require("./errors");
 
 const { BEGIN_KEY, END_KEY } = require("./constants");
 const {
@@ -11,23 +13,7 @@ const {
 } = require("./config");
 
 /**
- * Gets the Google credentials from environment variables.
- * @returns {CredentialBody} credentials
- */
-function getCredentials() {
-  let credentials;
-
-  try {
-    credentials = parseCredentials(GOOGLE_APPLICATION_CREDENTIALS);
-  } catch (_) {
-    credentials = getCredentialsFromSeparateEnvVariables();
-  }
-
-  return credentials;
-}
-
-/**
- * A Google Auth CredentialBody
+ * Google Auth CredentialBody
  * @typedef {Object} CredentialBody
  * @property {String} client_email
  * @property {String} private_key
@@ -35,35 +21,69 @@ function getCredentials() {
  * @see https://github.com/googleapis/google-auth-library-nodejs/blob/9ae2d30c15c9bce3cae70ccbe6e227c096005695/src/auth/credentials.ts#L81
  */
 
-/**
- * Parses the credentials
- * @param {String} credentials - file path or JSON string containing credentials
- * @returns {CredentialBody} credentials needed to authorize
- */
-function parseCredentials(credentials) {
-  let isFile = false;
-  let credentialsSource;
-  let credentialsPath;
-
-  try {
-    credentialsPath = fs.statSync(credentials);
-    isFile = credentialsPath.isFile();
-    if (isFile) {
-      credentialsSource = fs.readFileSync(credentials, "utf8");
-    } else {
-      throw new Error("Invalid file path. Use credentials directly.");
-    }
-  } catch (_) {
-    credentialsSource = credentials;
+class Auth {
+  constructor(config) {
+    this.credentials = config.credentials;
+    this.client = googleAuth.fromJSON(this.credentials);
+    this.client.scopes = "https://www.googleapis.com/auth/cloud-platform";
   }
 
-  debug(`valid filepath: ${isFile}: ${credentials}`);
+  async authorize() {
+    let token;
+    try {
+      ({ token } = await this.client.getAccessToken());
+    } catch (error) {
+      throw new AuthError(error);
+    }
 
-  try {
-    const { client_email, private_key } = JSON.parse(credentialsSource);
-    return { client_email, private_key };
-  } catch (error) {
-    throw new CredentialsError(error.message);
+    return token;
+  }
+
+  /**
+   * Gets the authorization credentials.
+   * @param {String} credentials - file path or JSON string containing credentials
+   * @returns {CredentialBody} credentials
+   */
+  static getCredentials(credentials = GOOGLE_APPLICATION_CREDENTIALS) {
+    let parsedCredentials;
+    try {
+      parsedCredentials = Auth.parseCredentials(credentials);
+    } catch (_) {
+      parsedCredentials = getCredentialsFromSeparateEnvVariables();
+    }
+
+    return parsedCredentials;
+  }
+
+  /**
+   * Parses the given credentials.
+   * @param {String} credentials - file path or JSON string containing credentials
+   * @returns {CredentialBody} credentials needed to authorize
+   */
+  static parseCredentials(credentials = GOOGLE_APPLICATION_CREDENTIALS) {
+    let isFile = false;
+    let credentialsSource;
+
+    try {
+      const credentialsPath = fs.statSync(credentials);
+      isFile = credentialsPath.isFile();
+      if (isFile) {
+        credentialsSource = fs.readFileSync(credentials, "utf8");
+      } else {
+        throw new Error("Invalid file path. Use credentials directly.");
+      }
+    } catch (_) {
+      credentialsSource = credentials;
+    }
+
+    debug(`valid filepath: ${isFile}: ${credentials}`);
+
+    try {
+      const { client_email, private_key } = JSON.parse(credentialsSource);
+      return { client_email, private_key };
+    } catch (error) {
+      throw new CredentialsError(error.message);
+    }
   }
 }
 
@@ -102,6 +122,4 @@ function formatKey(key) {
   return formattedKey;
 }
 
-module.exports = {
-  credentials: getCredentials(),
-};
+module.exports = Auth;

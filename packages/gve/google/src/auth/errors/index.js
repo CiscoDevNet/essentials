@@ -1,3 +1,4 @@
+const AuthError = require("./auth-error");
 const CredentialsError = require("./credentials-error");
 
-module.exports = { CredentialsError };
+module.exports = { AuthError, CredentialsError };
