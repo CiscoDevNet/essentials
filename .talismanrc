@@ -62,6 +62,9 @@ fileignoreconfig:
 - filename: packages/gve/bot-middleware/src/intents/config/index.js
   checksum: 73262e76d2b6435d13cde6d57192e032869c0fa9ba80aa003b810aa91fe45233
   ignore_detectors: [filecontent]
+- filename: packages/gve/bot-middleware/src/intents/index.js
+  checksum: 84eee5c9ad346d21c4bf8489cbb9eaf6d83d8b8706be052b731b1dd7cb951e24
+  ignore_detectors: [filecontent]
 - filename: packages/gve/releases/CHANGELOG.md
   checksum: c869a6f14e9e03b8c14c6c5b56c27236a97a7fe65a327e60429bb630c6112aad
   ignore_detectors: [filecontent]
