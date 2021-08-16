@@ -9,10 +9,10 @@ const GOOGLE_CLOUD_PROJECT = getProjectId();
  */
 function getProjectId() {
   return (
-    env.get("GOOGLE_CLOUD_PROJECT") ||
-    env.get("GCLOUD_PROJECT") ||
-    env.get("gcloud_project") ||
-    env.get("google_cloud_project")
+    env.require("GOOGLE_CLOUD_PROJECT") ||
+    env.require("GCLOUD_PROJECT") ||
+    env.require("gcloud_project") ||
+    env.require("google_cloud_project")
   );
 }
 
