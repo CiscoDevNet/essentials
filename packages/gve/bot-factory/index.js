@@ -47,8 +47,9 @@ class BotFactory {
    * @property {String} friendlyName
    */
 
-  static configureCommand(controller, command) {
-    const friendlyName = BotFactory.getFriendlyCommandName(command);
+  static configureCommand(controller, command, commandName) {
+    const friendlyName =
+      commandName || BotFactory.getFriendlyCommandName(command);
 
     const results = {
       name: friendlyName,
