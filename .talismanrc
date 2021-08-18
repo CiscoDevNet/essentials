@@ -86,3 +86,6 @@ fileignoreconfig:
 - filename: packages/gve/google/src/config.js
   checksum: 663f927986325e655491b286e0b5a44b6a67be1f2f92ae9ed0d8b931463f7ef2
   ignore_detectors: [filecontent]
+- filename: packages/gve-google/poetry.lock
+  checksum: 7c96512f21fa23fe7a02553e493215d4647fddf80ecf2b8248efe88b2562e340
+  ignore_detectors: [filecontent]
