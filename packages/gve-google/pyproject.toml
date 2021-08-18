@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "gve-google"
+version = "0.1.0"
+description = ""
+authors = ["Matt <matnorri@cisco.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+python-dotenv = "^0.19.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+black = "^21.7b0"
+flake8 = "^3.9.2"
+flake8-colors = "^0.1.9"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
