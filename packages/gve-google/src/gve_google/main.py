@@ -1,6 +1,8 @@
-from gve_google import config
+from gve_google import config, auth
 import os
 import sys
+
+import gve_google.auth
 
 
 def main(*args):
@@ -8,6 +10,8 @@ def main(*args):
     print("Arguments Passed:", args)
     print("config:", config)
     print("environment:", os.environ.get("GOOGLE_CLOUD_PROJECT"))
+    auth_client = gve_google.auth.Auth()
+    print(auth_client.credentials, auth_client.project)
 
 
 # Check to see if this file is the "__main__" script being executed
