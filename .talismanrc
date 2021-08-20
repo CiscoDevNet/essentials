@@ -89,6 +89,18 @@ fileignoreconfig:
 - filename: packages/gve-google/poetry.lock
   checksum: 7c96512f21fa23fe7a02553e493215d4647fddf80ecf2b8248efe88b2562e340
   ignore_detectors: [filecontent]
+- filename: packages/gve-google/pyproject.toml
+  checksum: 28a131734c76eea2a9c645539347fd869a1b22f301b6df27b6d6b39413a0b68f
+  ignore_detectors: [filecontent]
+- filename: packages/gve-google/src/gve_google/auth/__init__.py
+  checksum: c9d570b9f8362fe443cd2c2e54b6765ded6a6dd7cf2c9c534ede24e73aeca811
+  ignore_detectors: [filecontent]
 - filename: packages/gve-google/src/gve_google/auth/config.py
   checksum: 53cea79d424b5aebf3c5e4bd116fdca3e806cc44c88114c535dc11292924557b
+  ignore_detectors: [filecontent]
+- filename: packages/gve-google/src/gve_google/main.py
+  checksum: 2bb392e8deee1e2ab85f0e0f4f762e3bc49437f38f6788cda9988fde742d5833
+  ignore_detectors: [filecontent]
+- filename: packages/gve-google/src/gve_google/secrets/__init__.py
+  checksum: 496e4d52435482dc464a0a0587dee4922beb20d95dfd1ba20c3dc445c87152f2
   ignore_detectors: [filecontent]
