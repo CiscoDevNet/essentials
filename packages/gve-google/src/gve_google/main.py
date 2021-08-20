@@ -23,9 +23,22 @@ def main(*args):
             "private_key": private_key,
         }
     )
-    print("Secrets client config:", secrets_client.config)
-    response = secrets_client.create_secret("my_secret_value")
-    print(f"Created secret: {response.name}")
+    # print("Secrets client config:", secrets_client.config)
+    SECRET_ID = "connection"
+    SECRET_VALUE = {
+        "client_id": None,
+        "client_secret": None,
+        "username": None,
+        "password": None,
+    }
+
+    secret_path = secrets_client.create_secret(SECRET_ID)
+    print(f"Created secret: {secret_path}")
+    print(f"Secret IDs:", secrets_client.secrets)
+
+    print(f"Updating secret:{secret_path}...")
+    response = secrets_client.update_secret(SECRET_ID, SECRET_VALUE)
+    print(response)
 
 
 # Check to see if this file is the "__main__" script being executed
