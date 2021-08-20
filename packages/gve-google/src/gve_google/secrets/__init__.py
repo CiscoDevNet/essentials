@@ -44,8 +44,7 @@ class Manager:
             # Get the secret ID from the error message:
             # "Secret [projects/{project_number}/secrets/{secret_id}] already exists."
             secret_path = e.message.split()[1].strip("[]")
-            secret_id = secret_path.split("/")[-1]
-            secret_id_name = secret_id
+            secret_id_name = secret_path.split("/")[-1]
 
         if secret_id_name:
             self.secrets.add(secret_id_name)
