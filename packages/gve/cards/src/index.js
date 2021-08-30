@@ -114,12 +114,32 @@ class Property {
   }
 }
 
+/**
+ * @typedef ChoicesConfig
+ * @param {Function} getChoiceTitle - determine the title displayed on the UI
+ * @param {Function} getChoiceValue - determine the value
+ */
+
 class Choices {
-  constructor(id, items, selected) {
+  constructor(id, items, selected, config = {}) {
     this.type = "Input.ChoiceSet";
     this.value = selected || "";
     this.id = id;
     this.isMultiSelect = false;
+    this._configure(config);
+  }
+
+  /**
+   * Configures Choices with the provided functions or sensible defaults.
+   * @param {ChoicesConfig} config - configuration options
+   * @private
+   */
+  _configure(config) {
+    const { getChoiceTitle, getChoiceValue } = config;
+    this.getChoiceTitle =
+      getChoiceTitle || this._getDefaultChoiceTitle.bind(this);
+    this.getChoiceValue =
+      getChoiceValue || this._getDefaultChoiceValue.bind(this);
   }
 
   /**
@@ -139,19 +159,26 @@ class Choices {
    * @param {String} delim - delimiter separating choices of a multiselect field
    */
   getChoice(choice, delim = "") {
-    const title =
-      choice.label || choice.title || choice.text || choice.toString();
-    const value = choice.value || choice.id || title;
+    const title = this.getChoiceTitle(choice);
+    const value = this.getChoiceValue(choice);
     return {
       title,
       value: `${value}${delim}`,
     };
   }
+
+  _getDefaultChoiceTitle(choice) {
+    return choice.label || choice.title || choice.text || choice.toString();
+  }
+
+  _getDefaultChoiceValue(choice) {
+    return choice.value || choice.id || this.getChoiceText(choice);
+  }
 }
 
 class Dropdown extends Choices {
-  constructor(id, items, selected) {
-    super(id, items, selected);
+  constructor(id, items, selected, config) {
+    super(id, items, selected, config);
     this.style = "compact";
     this.choices = items.map((item) => this.getChoice(item));
   }
