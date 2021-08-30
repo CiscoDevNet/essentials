@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/mattnorris/essentials/compare/@gve/cards@0.2.22...@gve/cards@0.4.0) (2021-08-30)
+
+
+### Features
+
+* **cards:** add ability to determine choice titles and values ([5b9d9de](https://github.com/mattnorris/essentials/commit/5b9d9de5a311830dcd21698c6cfa327c0dea88d3))
+
+
+
+
+
 # [0.3.0](https://github.com/mattnorris/essentials/compare/@gve/cards@0.2.22...@gve/cards@0.3.0) (2021-08-30)
 
 
