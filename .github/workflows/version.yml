@@ -10,6 +10,6 @@ jobs:
       - name: Version
         run: npm run lerna:version -- --yes
       - name: Push tags
-        run: echo "TODO: Push tags to repo"
+        run: echo "TODO - Push tags to repo"
       - name: Publish
-        run: echo "TODO: Publish to NPM"
+        run: echo "TODO - Publish to NPM"
