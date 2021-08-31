@@ -15,10 +15,6 @@ jobs:
         with:
           node-version: "lts/fermium"
 
-      - name: Install dependencies
-        if: ${{ false }}
-        run: npm install
-
       - name: Configure git credentials
         uses: OleksiyRudenko/gha-git-credentials@v2
         with:
