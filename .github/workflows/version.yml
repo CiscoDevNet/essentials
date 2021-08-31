@@ -19,6 +19,10 @@ jobs:
         if: ${{ false }}
         run: npm install
 
+      - name: Configure git
+        run: git config user.email "gve-app-support.gen@cisco.com"
+        run: git config user.name "GVE App Support"
+
       - name: Version the repository packages
         run: npm run lerna:version -- --yes
 
