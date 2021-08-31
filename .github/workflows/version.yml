@@ -19,9 +19,11 @@ jobs:
         if: ${{ false }}
         run: npm install
 
-      - name: Configure git
-        run: git config user.email "gve-app-support.gen@cisco.com"
-        run: git config user.name "GVE App Support"
+      - name: Configure git credentials
+        uses: OleksiyRudenko/gha-git-credentials@v2
+        with:
+          name: "GVE App Support"
+          email: "gve-app-support.gen@cisco.com"
 
       - name: Version the repository packages
         run: npm run lerna:version -- --yes
