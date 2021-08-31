@@ -7,9 +7,22 @@ jobs:
   Packages-Version-Publish-Push:
     runs-on: ubuntu-latest
     steps:
-      - name: Version
+      - name: Checkout repository
+        uses: actions/checkout
+
+      - name: Set up Node.js
+        uses: actions/setup-node
+        with:
+          node-version: "lts/fermium"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Version the repository packages
         run: npm run lerna:version -- --yes
-      - name: Push tags
+
+      - name: Push tags to the repository
         run: echo "TODO - Push tags to repo"
-      - name: Publish
+
+      - name: Publish the packages
         run: echo "TODO - Publish to NPM"
