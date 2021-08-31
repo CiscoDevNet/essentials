@@ -6,10 +6,10 @@ on:
 jobs:
   Packages-Version-Publish-Push:
     runs-on: ubuntu-latest
-      steps:
-        - name: Version
-          run: npm run lerna:version -- --yes
-        - name: Push tags
-          run: echo "TODO: Push tags to repo"
-        - name: Publish
-          run: echo "TODO: Publish to NPM"
+    steps:
+      - name: Version
+        run: npm run lerna:version -- --yes
+      - name: Push tags
+        run: echo "TODO: Push tags to repo"
+      - name: Publish
+        run: echo "TODO: Publish to NPM"
