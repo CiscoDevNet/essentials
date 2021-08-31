@@ -16,6 +16,7 @@ jobs:
           node-version: "lts/fermium"
 
       - name: Install dependencies
+        if: ${{ false }}
         run: npm install
 
       - name: Version the repository packages
