@@ -1,4 +1,4 @@
-name: "Packages: Version, Publish & Push"
+name: Packages - Version & Publish
 on:
   push:
     branches:
@@ -9,7 +9,7 @@ jobs:
       steps:
         - name: Version
           run: npm run lerna:version -- --yes
-        - name: "Push tags"
+        - name: Push tags
           run: echo "TODO: Push tags to repo"
         - name: Publish
           run: echo "TODO: Publish to NPM"
