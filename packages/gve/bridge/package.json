@@ -1,6 +1,6 @@
 {
   "name": "@gve/bridge",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Bridge two or more Lerna monorepos so you can develop in all of them simultaneously",
   "main": "src/index.js",
   "bin": "./src/cli.js",
