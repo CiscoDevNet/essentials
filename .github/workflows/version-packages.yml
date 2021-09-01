@@ -26,4 +26,8 @@ jobs:
 
       - name: Push tags to the repository
         if: contains(github.ref, 'main')
-        run: git push --follow-tags origin HEAD
+        uses: CasperWA/push-protected@v2
+        with:
+          token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN }}
+          branch: main
+          tags: True
