@@ -1,0 +1,29 @@
+name: Version Packages
+on:
+  push:
+    branches:
+      - gh-actions
+      - main
+jobs:
+  version-packages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "lts/fermium"
+
+      - name: Configure git credentials for Lerna
+        uses: OleksiyRudenko/gha-git-credentials@v2
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Version the repository packages
+        run: npm run lerna:version -- --yes
+
+      - name: Push tags to the repository
+        if: contains(github.ref, 'main')
+        run: git push --follow-tags origin HEAD
