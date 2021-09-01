@@ -1,0 +1,27 @@
+name: Publish Packages
+on:
+  release:
+    types: [created]
+    branches:
+      - main
+jobs:
+  publish-packages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "lts/fermium"
+
+      - name: Configure git credentials for Lerna
+        uses: OleksiyRudenko/gha-git-credentials@v2
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Publish packages to NPM 📦
+        run: npm run lerna:publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
