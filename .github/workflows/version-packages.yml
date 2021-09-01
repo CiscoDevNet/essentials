@@ -4,6 +4,7 @@ on:
     branches:
       - gh-actions
       - main
+  workflow_dispatch:
 jobs:
   version-packages:
     runs-on: ubuntu-latest
