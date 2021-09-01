@@ -24,11 +24,7 @@ jobs:
       - name: Version the repository packages
         run: npm run lerna:version -- --yes
 
-  push-tags:
-    runs-on: ubuntu-latest
-    needs: version-packages
-    steps:
-      - name: Push tags to repository
+      - name: Push tags to the repository
         run: git push --follow-tags origin HEAD
 
   publish-packages:
