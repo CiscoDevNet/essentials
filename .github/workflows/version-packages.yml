@@ -2,7 +2,7 @@ name: Version Packages
 on:
   push:
     branches:
-      - actions
+      - gh-actions
       - main
 jobs:
   version-packages:
