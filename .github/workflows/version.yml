@@ -1,10 +1,11 @@
-name: Packages - Version & Publish
+name: Version & Publish Packages
 on:
   push:
     branches:
       - actions
+      - main
 jobs:
-  Packages-Version-Publish-Push:
+  version-packages:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -15,7 +16,7 @@ jobs:
         with:
           node-version: "lts/fermium"
 
-      - name: Configure git credentials
+      - name: Configure git credentials for Lerna
         uses: OleksiyRudenko/gha-git-credentials@v2
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
@@ -23,8 +24,17 @@ jobs:
       - name: Version the repository packages
         run: npm run lerna:version -- --yes
 
-      - name: Push tags to the repository
-        run: echo "TODO - Push tags to repo"
+  push-tags:
+    runs-on: ubuntu-latest
+    needs: version-packages
+    steps:
+      - name: Push tags to repository
+        run: git push --follow-tags origin HEAD
 
+  publish-packages:
+    if: contains(github.ref, 'main')
+    runs-on: ubuntu-latest
+    needs: push-tags
+    steps:
       - name: Publish the packages
         run: echo "TODO - Publish to NPM"
