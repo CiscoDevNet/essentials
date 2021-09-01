@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/mattnorris/essentials/compare/@gve/releases@0.3.0...@gve/releases@0.3.1) (2021-09-01)
+
+**Note:** Version bump only for package @gve/releases
+
+
+
+
+
 # [0.3.0](https://github.com/mattnorris/essentials/compare/@gve/releases@0.1.42...@gve/releases@0.3.0) (2021-08-30)
 
 
