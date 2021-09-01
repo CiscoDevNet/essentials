@@ -1,6 +1,6 @@
 {
   "name": "@gve/bot-commands",
-  "version": "0.1.23",
+  "version": "0.1.24",
   "description": "Create responsive bot commands with ease",
   "main": "src/index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@giphy/js-fetch-api": "^2.4.0",
-    "@gve/analytics": "^0.1.23",
+    "@gve/analytics": "^0.1.24",
     "axios": "^0.21.1"
   },
   "devDependencies": {
