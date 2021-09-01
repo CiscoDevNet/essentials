@@ -1,4 +1,4 @@
-name: Version & Publish Packages
+name: Version Packages
 on:
   push:
     branches:
@@ -27,11 +27,3 @@ jobs:
       - name: Push tags to the repository
         if: contains(github.ref, 'main')
         run: git push --follow-tags origin HEAD
-
-  publish-packages:
-    if: contains(github.ref, 'main')
-    runs-on: ubuntu-latest
-    needs: version-packages
-    steps:
-      - name: Publish the packages
-        run: echo "TODO - Publish to NPM"
