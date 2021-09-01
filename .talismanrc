@@ -14,6 +14,9 @@ fileignoreconfig:
 - filename: packages/gve/bridge/package-lock.json
   checksum: 2aeb80a3257d3ca8263c3d6b829c4206025fa8dd1231ff216d6f795b4cdabc64
   ignore_detectors: [filecontent]
+- filename: packages/gve/cards/CHANGELOG.md
+  checksum: 6fcfad316700b69c4725f1ee6224bfbe08620d4cc74e7478fc060704dc7fc9e5
+  ignore_detectors: [filecontent]
 - filename: packages/gve/cards/package-lock.json
   checksum: 1190bdbe8d87c506ec6b6f66fe3b05ee72ef2cb9d6a7b4729c35c743b5f78484
   ignore_detectors: [filecontent]
