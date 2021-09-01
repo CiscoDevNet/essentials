@@ -25,6 +25,7 @@ jobs:
         run: npm run lerna:version -- --yes
 
       - name: Push tags to the repository
+        if: contains(github.ref, 'main')
         run: git push --follow-tags origin HEAD
 
   publish-packages:
