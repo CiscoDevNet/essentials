@@ -3,7 +3,7 @@
   "version": "independent",
   "command": {
     "version": {
-      "allowBranch": ["main", "actions"]
+      "allowBranch": ["main", "gh-actions"]
     }
   }
 }
