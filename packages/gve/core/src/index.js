@@ -50,11 +50,8 @@ function _normalizeMalformedUrl(url) {
   return normalizeUrl(sanitizedUrl);
 }
 
-const logger = require("./logger");
-
 module.exports = {
   getDefaultValue,
   getDomain,
-  logger,
   normalizeUrl: _normalizeMalformedUrl,
 };
