@@ -7,6 +7,7 @@ const debug = require("debug")("middleware:analytics");
 
 const axios = require("axios");
 const emailAddresses = require("email-addresses");
+const EventEmitter = require("events");
 const uuidv1 = require("uuid/v1");
 
 const { EVENTS, PROPERTY_VALUES } = require("@gve/analytics");
@@ -64,7 +65,7 @@ let spaces = new Map();
  * - Org names/domain names are reported (not org ID)
  * - Single event records do not include both sides of a communication
  */
-class Analytics {
+class Analytics extends EventEmitter {
   /**
    * @constructs Analtyics
    * @param {String} apiKey the analytics service API key
@@ -75,8 +76,7 @@ class Analytics {
    * @param {Array<String|UserProps>} config.userProps - the additional user properties to track
    */
   constructor(apiKey, config = {}) {
-    this.apiKey = apiKey;
-
+    super();
     const {
       environment = PROPERTY_VALUES.UNKNOWN,
       url = ANALYTICS_URL,
@@ -84,6 +84,7 @@ class Analytics {
       version = PROPERTY_VALUES.UNKOWN,
     } = config;
 
+    this.apiKey = apiKey;
     this.appEnvironment = environment;
     this.appVersion = version;
     this.url = url;
@@ -175,9 +176,9 @@ class Analytics {
         debug(`tracking user message to bot`);
         this._track(analyticsEvent);
       }
-    } catch (err) {
-      // Catch and log all errors rather than break the bot.
-      console.error(`bot receive: ${err.message}`);
+    } catch (error) {
+      // Don't block the application with analytics failures.
+      this.emit("error", error);
     }
 
     next();
@@ -255,9 +256,9 @@ class Analytics {
         debug(`tracking bot message to user`);
         this._track(analyticsEvent);
       }
-    } catch (err) {
-      // Catch and log all errors rather than break the bot.
-      console.error(`ERROR: send: ${err.message}`);
+    } catch (error) {
+      // Don't block the application with analytics failures.
+      this.emit("error", error);
     }
 
     next();
@@ -414,16 +415,14 @@ class Analytics {
 
     axios
       .post(this.url, body)
-      .then(function (response) {
+      .then((response) => {
         if (response.status !== 200) {
-          console.error(`tracking failure: ${response}`);
+          this.emit("error", new Error("Event not tracked."));
         } else {
-          debug(`tracking successful: ${event.insert_id}`);
+          this.emit("debug", "Event tracked.", { event: { insert_id } });
         }
       })
-      .catch(function (error) {
-        console.error(error);
-      });
+      .catch(() => this.emit("error", new Error("Event not tracked.")));
   }
 }
 

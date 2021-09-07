@@ -14,6 +14,9 @@ fileignoreconfig:
 - filename: packages/gve/bridge/package-lock.json
   checksum: 2aeb80a3257d3ca8263c3d6b829c4206025fa8dd1231ff216d6f795b4cdabc64
   ignore_detectors: [filecontent]
+- filename: packages/gve/cards/CHANGELOG.md
+  checksum: 6fcfad316700b69c4725f1ee6224bfbe08620d4cc74e7478fc060704dc7fc9e5
+  ignore_detectors: [filecontent]
 - filename: packages/gve/cards/package-lock.json
   checksum: 1190bdbe8d87c506ec6b6f66fe3b05ee72ef2cb9d6a7b4729c35c743b5f78484
   ignore_detectors: [filecontent]
@@ -50,9 +53,6 @@ fileignoreconfig:
 - filename: packages/gve/releases/src/config.js
   checksum: 392b041c1a910ac884ba5fe26fe8f7212b04c514df8b9ece6c567fa5344de306
   ignore_detectors: [filecontent]
-- filename: packages/gve/salesforce/src/index.test.js
-  checksum: 3a74a0661512624cda8cb82d15b70122504ccb1a846c774e21d30afed51cd4de
-  ignore_detectors: [filecontent]
 - filename: packages/gve/bot-middleware/README.md
   checksum: 3c2a8e37bd705deda35d8dca719740ea8336b0e28d6d8124cefa9914ac968943
   ignore_detectors: [filecontent]
@@ -61,6 +61,9 @@ fileignoreconfig:
   ignore_detectors: [filecontent]
 - filename: packages/gve/bot-middleware/src/intents/config/index.js
   checksum: 73262e76d2b6435d13cde6d57192e032869c0fa9ba80aa003b810aa91fe45233
+  ignore_detectors: [filecontent]
+- filename: packages/gve/bot-middleware/src/intents/index.js
+  checksum: 84eee5c9ad346d21c4bf8489cbb9eaf6d83d8b8706be052b731b1dd7cb951e24
   ignore_detectors: [filecontent]
 - filename: packages/gve/releases/CHANGELOG.md
   checksum: c869a6f14e9e03b8c14c6c5b56c27236a97a7fe65a327e60429bb630c6112aad
@@ -71,6 +74,15 @@ fileignoreconfig:
 - filename: packages/gve/releases/src/releases/release-openshift/index.js
   checksum: 75d6582c121c2fef87e74b19cc42db55c604fd1b2b2a03dc0bdbeba9d4229863
   ignore_detectors: [filecontent]
-- filename: packages/gve/cards/CHANGELOG.md
-  checksum: d372ffb2e6e880f320da4a0307c6fdfd8444f676a971a0195345f1a1244994c6
+- filename: packages/gve/google/src/auth/config.js
+  checksum: 263724865ecf0eb24fa85b0c10c4067b89fd71ed67c664a322b986a669001324
+  ignore_detectors: [filecontent]
+- filename: packages/gve/google/src/auth/constants.js
+  checksum: 34369806fd4263dbc3f2efd3539276983ae31c991c4454dcf5b2a07bb0c19749
+  ignore_detectors: [filecontent]
+- filename: packages/gve/google/src/auth/index.js
+  checksum: 7b9f4446739849a20e0ee708fdb9a1e7575460436745e1278119eb61800b2849
+  ignore_detectors: [filecontent]
+- filename: packages/gve/google/src/config.js
+  checksum: 663f927986325e655491b286e0b5a44b6a67be1f2f92ae9ed0d8b931463f7ef2
   ignore_detectors: [filecontent]

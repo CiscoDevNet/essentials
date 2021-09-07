@@ -1,14 +1,16 @@
 const debug = require("debug")("commands:opportunities:salesforce");
 
 const axios = require("axios");
+const EventEmitter = require("events");
 const path = require("path");
 
 const { SALESFORCE_OBJECTS_PATH } = require("../../../config");
 
 const filters = ["AND VDC_OPPTY_FLAG__c = true"];
 
-class Opportunities {
+class Opportunities extends EventEmitter {
   constructor(salesforce) {
+    super();
     this.salesforce = salesforce;
     this.update = async (id, data) => await this._updateOpportunity(id, data);
     debug("opportunities: initiated");
@@ -30,7 +32,7 @@ class Opportunities {
         );
         return await this.getByDealId(opportunityId);
       } else {
-        console.error(error);
+        this.emit("error", error);
       }
     }
     debug(opportunity);
@@ -83,16 +85,7 @@ class Opportunities {
       debug(`${records.length} Opportunities found`);
       opportunity = records[0];
     } catch (error) {
-      const { response } = error;
-      if (response) {
-        const { data } = response;
-        console.error(
-          `${error.message}: ${response.statusText}: ${data[0].errorCode}`
-        );
-      } else {
-        debug("no response");
-        console.error(error.code);
-      }
+      this.emit("error", error);
     }
 
     return opportunity;
