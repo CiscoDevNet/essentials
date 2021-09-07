@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/mattnorris/essentials/compare/@gve/releases@0.3.2...@gve/releases@0.4.0) (2021-09-07)
+
+
+### Features
+
+* **google:** add Google auth package ([cd18533](https://github.com/mattnorris/essentials/commit/cd185337daa5f2651d5d8e21eebad673de5c7f5d))
+
+
+
+
+
 ## [0.3.2](https://github.com/mattnorris/essentials/compare/@gve/releases@0.3.0...@gve/releases@0.3.2) (2021-09-01)
 
 **Note:** Version bump only for package @gve/releases
