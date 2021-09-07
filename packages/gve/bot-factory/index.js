@@ -7,6 +7,8 @@ const debug = require("debug")("bot-factory");
 const { Botkit } = require("botkit");
 const gveMiddleware = require("@gve/bot-middleware");
 
+const { MiddlewareConfigError } = require("./errors");
+
 const {
   ENABLED,
   DISABLED,
@@ -23,20 +25,22 @@ class BotFactory {
     const { webhookUrl = MESSAGES_API_PATH } = config;
     const controller = new Botkit({ adapter, webhook_uri: webhookUrl });
     debug("controller: created");
-    const isConfigured = BotFactory.configureAdaptiveCards(controller);
-    debug("adaptive cards:", isConfigured ? "enabled" : "disabled");
-    controller._isAdaptiveCardsConfigured = isConfigured;
+    BotFactory.configureAdaptiveCards(controller);
     return controller;
   }
 
   static configureAdaptiveCards(controller) {
+    let isConfigured;
     const webhookUrl = controller.getConfig(CONFIG_WEBHOOK_URI);
     try {
       controller.adapter.registerAdaptiveCardWebhookSubscription(webhookUrl);
-      return true;
+      isConfigured = true;
     } catch (_) {
-      return false;
+      isConfigured = false;
     }
+
+    controller._isAdaptiveCardsConfigured = isConfigured;
+    return isConfigured;
   }
 
   /**
@@ -45,8 +49,9 @@ class BotFactory {
    * @property {String} friendlyName
    */
 
-  static configureCommand(controller, command) {
-    const friendlyName = BotFactory.getFriendlyCommandName(command);
+  static configureCommand(controller, command, commandName) {
+    const friendlyName =
+      commandName || BotFactory.getFriendlyCommandName(command);
 
     const results = {
       name: friendlyName,
@@ -57,8 +62,8 @@ class BotFactory {
       // Treat command as a proper @gve/bot-commands.Command.
       command.controller = controller;
       results.isConfigured = true;
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      results.error = error;
     }
 
     if (!results.isConfigured) {
@@ -66,8 +71,8 @@ class BotFactory {
       try {
         controller.loadModule(command);
         results.isConfigured = true;
-      } catch (err) {
-        console.error(err);
+      } catch (error) {
+        results.error = error;
       }
     }
 
@@ -91,8 +96,17 @@ class BotFactory {
 
   static getCommandLog(commandName, isEnabled) {
     const status = isEnabled ? ENABLED : DISABLED;
-    return `command: ${commandName}: ${status}`;
+    const formattedName = commandName[0].toUpperCase() + commandName.substr(1);
+    return `${formattedName} command ${status}.`;
   }
+
+  /**
+   * Intent configuration
+   * @typedef {Object} IntentConfig
+   * @property {String} projectId - the project ID
+   * @property {String} knowledgeBaseId - the knowledge base ID
+   * @property {CredentialBody} credentials - credentials needed to sign into the intent API
+   */
 
   /**
    * Configures the intent middleware on the given controller.
@@ -100,24 +114,33 @@ class BotFactory {
    * @returns {Botkit.Controller} the modified bot controller
    * @note Mutates the controller
    */
-  static async configureIntentMiddleware(controller, apiId, knowledgeBaseId) {
-    const results = {
-      controller,
-      isConnected: false,
-      isKnowledgeBaseConnected: false,
-    };
+  static async configureIntentMiddleware(controller, intentConfig) {
+    const intents = new gveMiddleware.Intents(intentConfig);
 
-    if (apiId) {
-      const intents = new gveMiddleware.Intents(apiId, knowledgeBaseId);
+    try {
+      await intents.initialize();
       controller.middleware.ingest.use(intents.get);
-      results.isConnected = await intents.ping();
-      if (knowledgeBaseId && results.isConnected) {
-        results.isKnowledgeBaseConnected = true;
-        debug("intent knowledge base ID:", knowledgeBaseId);
+
+      // Get knowledge base details.
+      let knowledgeBase;
+      const { knowledgeBaseId } = intentConfig;
+      if (knowledgeBaseId) {
+        knowledgeBase = {
+          id: knowledgeBaseId,
+          isConnected: true,
+        };
       }
+
+      // Attach middleware details to the controller.
+      controller.middleware.$intents = {
+        isConnected: true,
+        knowledgeBase,
+      };
+    } catch (error) {
+      throw new MiddlewareConfigError(error.message);
     }
 
-    return results;
+    return controller;
   }
 }
 

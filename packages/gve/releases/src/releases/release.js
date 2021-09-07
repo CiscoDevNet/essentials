@@ -6,6 +6,7 @@
 const debug = require("debug")("releases");
 
 const colors = require("colors/safe");
+const EventEmitter = require("events");
 const { execSync, spawn: nodeSpawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
@@ -49,7 +50,7 @@ const DEFAULT_CONFIG = {
 const ENV_PROD = "production";
 const ENV_NON_PROD_MODIFIER = "--test";
 
-class Release {
+class Release extends EventEmitter {
   constructor(config = DEFAULT_CONFIG) {
     /**
      * hostName cannot be configured by default.
@@ -64,11 +65,10 @@ class Release {
       version = BOT_VERSION,
       releaseDir = RELEASES_DIRECTORY,
     } = config;
-
+    super();
     this.config = config;
-
-    this.name = name;
     this.environment = environment;
+    this.name = name;
     this.org = org;
     this.version = version;
     this.releasesDir = releaseDir;
@@ -85,13 +85,16 @@ class Release {
   }
 
   get envVariables() {
-    const hasLoadedEnvVars = !ENVIRONMENT_VARIABLES.error;
-
+    const isLoaded = !ENVIRONMENT_VARIABLES.error;
     let otherEnvVars = {};
-    if (hasLoadedEnvVars) {
+    if (isLoaded) {
       otherEnvVars = ENVIRONMENT_VARIABLES.parsed;
     } else {
-      console.warn("Error loading env variables");
+      this.emit(
+        "warn",
+        "Environment variables not loaded.",
+        ENVIRONMENT_VARIABLES.error
+      );
     }
 
     const releaseVars = {

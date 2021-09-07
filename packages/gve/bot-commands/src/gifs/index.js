@@ -1,6 +1,7 @@
 const debug = require("debug")("commands:gifs");
 
 const axios = require("axios");
+const EventEmitter = require("events");
 const fs = require("fs");
 const FormData = require("form-data");
 const { GiphyFetch } = require("@giphy/js-fetch-api");
@@ -49,8 +50,9 @@ const eventTemplate = {
   },
 };
 
-class Gifs {
+class Gifs extends EventEmitter {
   constructor(apiKey) {
+    super();
     this.apiKey = apiKey;
     this.fetch = new GiphyFetch(this.apiKey);
 
@@ -63,7 +65,6 @@ class Gifs {
   async createDownloadsDir(prefix = "tmp-gifs-") {
     const dirPath = path.join(os.tmpdir(), prefix);
     const dir = await mkdtemp(dirPath);
-    console.log(`GIF directory created: ${dir}`);
     this.downloads = dir;
     return dir;
   }
@@ -128,7 +129,7 @@ class Gifs {
 
       try {
         await pipeline(downloadStream, fileWriterStream);
-        console.log(`GIF downloaded to ${filePath}`);
+        this.emit("download", "GIF downloaded", { location: filePath });
 
         const fileReaderStream = fs.createReadStream(filePath, {
           displayName: title,
@@ -162,7 +163,7 @@ class Gifs {
         });
         debug(`uploaded ${filePath}`);
       } catch (error) {
-        console.error(error);
+        this.emit("error", error);
         await this.notifyFailure(bot, message, event);
       }
     } else {

@@ -3,9 +3,8 @@
  * @author Matt Norris <matnorri@cisco.com>
  */
 
+const EventEmitter = require("events");
 const { snakeCase } = require("snake-case");
-
-const { logger } = require("@gve/core");
 
 /**
  * Default event names, e.g., "Message Sent", "Message Received"
@@ -27,13 +26,14 @@ const { PROPERTY_NAMES } = require("./constants");
  * Creates a new AnalyticsEvent.
  * @class
  */
-class AnalyticsEvent {
+class AnalyticsEvent extends EventEmitter {
   /**
    * @constructs AnalyticsEvent
    * @param {String} name - Event name
    * @param {Object} properties - Event properties
    */
   constructor(name, properties = {}) {
+    super();
     this.name = name;
     this.properties = properties;
   }
@@ -75,7 +75,7 @@ function getLength(property, errorMessage = "error getting property length") {
   try {
     return property.length;
   } catch (_) {
-    logger.log(errorMessage);
+    this.emit("warn", errorMessage, { property });
     return PROPERTY_VALUES.UNKNOWN_NUMBER;
   }
 }

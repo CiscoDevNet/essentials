@@ -2,6 +2,7 @@
 const Command = require("./command");
 
 // Common commands
+const Diagnostic = require('./diagnostic')
 const Gifs = require("./gifs");
 const Help = require("./help");
 
@@ -12,6 +13,7 @@ module.exports = {
   ATTACHMENT_EVENT,
   STANDARD_MESSAGE_TYPES,
   Command,
+  Diagnostic,
   Gifs,
   Help,
 };

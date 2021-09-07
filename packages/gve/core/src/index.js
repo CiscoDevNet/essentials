@@ -44,26 +44,14 @@ function getDomain(url) {
  * @private
  */
 function _normalizeMalformedUrl(url) {
-  let normalizedUrl;
-
-  try {
-    // Handles URLs starting with special characters
-    // from malformed sources, e.g.,
-    // "://www.cisco.com/c/en/us/products/.../datasheet-c78-741988.html"
-    const wipUrl = url.replace(/^([^a-zA-Z0-9])*/, "");
-    normalizedUrl = normalizeUrl(wipUrl);
-  } catch (_) {
-    console.warn(`URL: not normalized: "${url}"`);
-  }
-
-  return normalizedUrl;
+  // Handle URLs starting with special characters from malformed sources,
+  // e.g., "://www.cisco.com/c/en/us/products/.../datasheet-c78-741988.html"
+  const sanitizedUrl = url.replace(/^([^a-zA-Z0-9])*/, "");
+  return normalizeUrl(sanitizedUrl);
 }
-
-const logger = require("./logger");
 
 module.exports = {
   getDefaultValue,
   getDomain,
-  logger,
   normalizeUrl: _normalizeMalformedUrl,
 };
