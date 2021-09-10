@@ -47,8 +47,9 @@ const DEFAULT_CONFIG = {
   releaseDir: RELEASES_DIRECTORY,
 };
 
-const ENV_PROD = "production";
-const ENV_NON_PROD_MODIFIER = "--test";
+const ENV_DEV_MODIFIER = "--test";
+const ENV_PRODUCTION = "production";
+const ENV_STAGING = "staging";
 
 class Release extends EventEmitter {
   constructor(config = DEFAULT_CONFIG) {
@@ -107,8 +108,9 @@ class Release extends EventEmitter {
   }
 
   get imageName() {
-    const isNotProd = this.environment !== ENV_PROD;
-    const modifier = isNotProd ? ENV_NON_PROD_MODIFIER : "";
+    const isDev =
+      this.environment !== ENV_PRODUCTION && this.environment !== ENV_STAGING;
+    const modifier = isDev ? ENV_DEV_MODIFIER : "";
     const tag = `${this.version}${modifier}`;
     return `${this.name}:${tag}`;
   }
