@@ -119,6 +119,7 @@ class BotFactory {
 
     try {
       await intents.initialize();
+      await intents.ping();
       controller.middleware.ingest.use(intents.get);
 
       // Get knowledge base details.
@@ -132,7 +133,7 @@ class BotFactory {
       }
 
       // Attach middleware details to the controller.
-      controller.middleware.$intents = {
+      controller.middleware._gve_intents = {
         isConnected: true,
         knowledgeBase,
       };
