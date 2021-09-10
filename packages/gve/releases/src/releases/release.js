@@ -108,8 +108,7 @@ class Release extends EventEmitter {
   }
 
   get imageName() {
-    const isDev =
-      this.environment !== ENV_PRODUCTION && this.environment !== ENV_STAGING;
+    const isDev = this.environment !== (ENV_PRODUCTION || ENV_STAGING);
     const modifier = isDev ? ENV_DEV_MODIFIER : "";
     const tag = `${this.version}${modifier}`;
     return `${this.name}:${tag}`;
