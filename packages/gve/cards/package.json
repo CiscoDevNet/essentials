@@ -1,6 +1,6 @@
 {
   "name": "@gve/cards",
-  "version": "0.5.9",
+  "version": "0.5.10",
   "description": "Create Adaptive Cards, components, and rich messages for bot platforms and more",
   "main": "src/index.js",
   "scripts": {
