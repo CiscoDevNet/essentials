@@ -1,6 +1,6 @@
 {
   "name": "@gve/bot-middleware",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "Middleware to intercept messages, e.g., gather and send analytics",
   "main": "src/index.js",
   "scripts": {
@@ -13,8 +13,8 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@google-cloud/dialogflow": "^3.4.0",
-    "@gve/analytics": "^0.2.8",
-    "@gve/google": "^0.1.8",
+    "@gve/analytics": "^0.2.9",
+    "@gve/google": "^0.1.9",
     "@humanwhocodes/env": "^2.2.0",
     "axios": "^0.21.1",
     "email-addresses": "^4.0.0",
