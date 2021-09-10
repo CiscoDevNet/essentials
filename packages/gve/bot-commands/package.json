@@ -13,7 +13,11 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@giphy/js-fetch-api": "^2.4.0",
+<<<<<<< HEAD
     "@gve/analytics": "^0.2.12",
+=======
+    "@gve/analytics": "^0.2.11",
+>>>>>>> Publish
     "axios": "^0.21.1"
   },
   "devDependencies": {
