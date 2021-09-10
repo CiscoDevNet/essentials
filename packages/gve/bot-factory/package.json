@@ -2,14 +2,13 @@
   "name": "@gve/bot-factory",
   "version": "0.2.4",
   "description": "Create Webex bot",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Matt Norris <matnorri@cisco.com>",
   "files": [
-    "index.js",
-    "constants.js"
+    "src/"
   ],
   "license": "Apache-2.0",
   "dependencies": {
