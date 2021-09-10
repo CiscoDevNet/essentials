@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.2.1 (2021-09-10)
+
+**Note:** Version bump only for package @gve/bot-middleware
+
+
+
+
+
 # [0.2.0](https://github.com/mattnorris/essentials/compare/@gve/bot-middleware@0.1.23...@gve/bot-middleware@0.2.0) (2021-09-07)
 
 

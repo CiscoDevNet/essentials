@@ -1,6 +1,6 @@
 {
   "name": "@gve/bot-factory",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Create Webex bot",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "@gve/bot-middleware": "^0.2.0",
+    "@gve/bot-middleware": "^0.2.1",
     "botbuilder-adapter-webex": "^1.0.8",
     "botkit": "^4.9.0"
   },
