@@ -1,6 +1,6 @@
 {
   "name": "@gve/analytics",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Analytics events and constants to track system usage",
   "main": "src/index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "@gve/core": "^0.2.1",
+    "@gve/core": "^0.2.2",
     "snake-case": "^3.0.4"
   },
   "devDependencies": {
