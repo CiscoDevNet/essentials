@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.2.12 (2021-09-15)
+
+**Note:** Version bump only for package @gve/core
+
+
+
+
+
 ## 0.2.11 (2021-09-10)
 
 **Note:** Version bump only for package @gve/core
