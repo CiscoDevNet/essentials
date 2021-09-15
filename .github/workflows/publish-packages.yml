@@ -24,6 +24,6 @@ jobs:
           token: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Publish packages to NPM 📦
-        run: npm run lerna:publish
+        run: npm run lerna:publish -- --yes
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
