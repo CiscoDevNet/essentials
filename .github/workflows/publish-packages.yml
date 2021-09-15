@@ -1,3 +1,7 @@
+# GitHub Action
+# description: Publish newly-versioned packages to NPM
+# author: Matt Norris <matnorri@cisco.com>
+
 name: Publish Packages
 on:
   workflow_run:
@@ -6,7 +10,7 @@ on:
     branches: [main]
 jobs:
   publish-packages:
-    # https://github.community/t/workflow-run-completed-event-triggered-by-failed-workflow/128001/2
+    # IS_VERSIONING_SUCCESSFUL
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
