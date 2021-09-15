@@ -1,11 +1,13 @@
 name: Publish Packages
 on:
-  release:
-    types: [created]
-    branches:
-      - main
+  workflow_run:
+    workflows: ["Version Packages"]
+    types: [completed]
+    branches: [main]
 jobs:
   publish-packages:
+    # https://github.community/t/workflow-run-completed-event-triggered-by-failed-workflow/128001/2
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
