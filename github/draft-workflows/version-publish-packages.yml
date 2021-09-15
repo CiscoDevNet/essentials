@@ -1,20 +1,11 @@
-# GitHub Action
-# description: Versions packages merged into main
-# author: Matt Norris <matnorri@cisco.com>
-# references:
-#    - [Trigger when PR is merged](https://stackoverflow.com/a/67833464/154065)
-
-name: Version Packages
+name: Version & Publish Packages
 on:
-  pull_request:
+  push:
     branches:
       - gh-actions
       - main
-    types: [closed]
 jobs:
   version-packages:
-    # IS_PR_MERGED
-    if: ${{ github.event.pull_request.merged }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -40,3 +31,24 @@ jobs:
           token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN }}
           branch: main
           tags: True
+  publish-packages:
+    needs: version-packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "lts/fermium"
+
+      - name: Configure git credentials for Lerna
+        uses: OleksiyRudenko/gha-git-credentials@v2
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Publish packages to NPM 📦
+        run: npm run lerna:publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
