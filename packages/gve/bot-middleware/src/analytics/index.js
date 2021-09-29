@@ -8,7 +8,7 @@ const debug = require("debug")("middleware:analytics");
 const axios = require("axios");
 const emailAddresses = require("email-addresses");
 const EventEmitter = require("events");
-const uuidv1 = require("uuid/v1");
+const { v4: uuidv4 } = require('uuid');
 
 const { EVENTS, PROPERTY_VALUES } = require("@gve/analytics");
 
@@ -404,7 +404,7 @@ class Analytics extends EventEmitter {
     // If no insert ID is given, create one to uniquely identify this event
     // in case the event is duplicated.
     // For example, an event can be POSTed twice during a retry.
-    const { insert_id = uuidv1() } = event;
+    const { insert_id = uuidv4() } = event;
     event.insert_id = insert_id;
 
     const events = [event];

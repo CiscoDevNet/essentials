@@ -11,14 +11,14 @@ const NODE_ENV_DEVELOPMENT = "development";
  * Use docker-compose to enable builds with ARGS.
  * @see https://stackoverflow.com/a/67853849/154065
  */
-const DOCKER_COMPOSE_BUILD_COMMAND = "docker-compose";
+const DOCKER_COMPOSE_ORIG = "docker-compose";
 
-const DOCKER_COMPOSE_UP_COMMAND = "docker compose";
+const DOCKER_COMPOSE_CLI = "docker compose";
 
 module.exports = {
   COMMAND_EVENTS,
-  DOCKER_COMPOSE_BUILD_COMMAND,
-  DOCKER_COMPOSE_UP_COMMAND,
+  DOCKER_COMPOSE_ORIG,
+  DOCKER_COMPOSE_CLI,
   EXEC_SYNC_OPTIONS,
   NODE_ENV_DEVELOPMENT,
   YAML_FILE_EXT,
