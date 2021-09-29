@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/mattnorris/essentials/compare/@gve/releases@0.4.12...@gve/releases@0.5.0) (2021-09-29)
+
+
+### Features
+
+* **releases:** add different ways to call Docker Compose ([f4c8d1f](https://github.com/mattnorris/essentials/commit/f4c8d1fb6d199ce673253b3909fcba5097401828))
+
+
+
+
+
 ## 0.4.12 (2021-09-15)
 
 **Note:** Version bump only for package @gve/releases
