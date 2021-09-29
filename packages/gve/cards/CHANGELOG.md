@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.13](https://github.com/mattnorris/essentials/compare/@gve/cards@0.5.12...@gve/cards@0.5.13) (2021-09-29)
+
+**Note:** Version bump only for package @gve/cards
+
+
+
+
+
 ## 0.5.12 (2021-09-15)
 
 **Note:** Version bump only for package @gve/cards

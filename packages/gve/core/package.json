@@ -1,6 +1,6 @@
 {
   "name": "@gve/core",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "description": "Helpful functions to reduce parsing and errors",
   "main": "src/index.js",
   "scripts": {
