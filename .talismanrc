@@ -37,7 +37,7 @@ fileignoreconfig:
 - filename: packages/gve/google/src/config.js
   checksum: e7fc847d5c585984ac66fa744a4e72feadf3247c1beaf244e39b66be628a4e4d
 - filename: packages/gve/releases/src/releases/release.js
-  checksum: 9afe038d7401f5a55e41baf02220e854cf22e25bc5926f07e64fbedc380f596c
+  checksum: cd3342939799fd2af8538cdf1064771405c9187afc118e9a39e935b6427eedd0
 - filename: packages/gve/releases/src/releases/release-openshift/index.js
   checksum: 2c164b4d6e25a1a0f1a8afb3ff2e1f5400a3c2ababb82b686a7713c63577384c
 - filename: packages/gve/releases/src/releases/release-openshift/config.js

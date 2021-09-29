@@ -15,7 +15,7 @@ const { NODE_ENV_DEVELOPMENT, YAML_FILE_EXT } = require("./constants");
 const DEFAULT_PLATFORM = {
   NAME: "docker",
   HOSTNAME: "docker.io",
-  ORG: "libary",
+  ORG: "library",
 };
 
 const env = new Env();

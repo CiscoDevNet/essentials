@@ -27,8 +27,8 @@ const {
 
 const {
   COMMAND_EVENTS,
-  DOCKER_COMPOSE_BUILD_COMMAND,
-  DOCKER_COMPOSE_UP_COMMAND,
+  DOCKER_COMPOSE_ORIG,
+  DOCKER_COMPOSE_CLI,
   EXEC_SYNC_OPTIONS,
   YAML_FILE_EXT,
 } = require("../constants");
@@ -45,6 +45,7 @@ const DEFAULT_CONFIG = {
   org: RELEASES_ORG,
   version: BOT_VERSION,
   releaseDir: RELEASES_DIRECTORY,
+  isBuildKitEnabled: true,
 };
 
 const ENV_DEV_MODIFIER = "--test";
@@ -65,6 +66,7 @@ class Release extends EventEmitter {
       org = RELEASES_ORG,
       version = BOT_VERSION,
       releaseDir = RELEASES_DIRECTORY,
+      isBuildKitEnabled = true,
     } = config;
     super();
     this.config = config;
@@ -73,8 +75,7 @@ class Release extends EventEmitter {
     this.org = org;
     this.version = version;
     this.releasesDir = releaseDir;
-
-    debug("initiated");
+    this.isBuildKitEnabled = isBuildKitEnabled;
   }
 
   set hostName(name) {
@@ -110,47 +111,187 @@ class Release extends EventEmitter {
   get imageName() {
     const isDev =
       this.environment !== ENV_PRODUCTION && this.environment !== ENV_STAGING;
-    debug(isDev);
-    debug(this.environment);
+
+    const imageType = isDev ? "development" : "production-ready";
+
     const modifier = isDev ? ENV_DEV_MODIFIER : "";
     const tag = `${this.version}${modifier}`;
-    return `${this.name}:${tag}`;
+    const imageName = `${this.name}:${tag}`;
+
+    debug(
+      `${this.environment} environment produces a ${imageType} image: ${imageName}`
+    );
+
+    return imageName;
   }
 
   get fullImageName() {
     return path.join(this.hostName, this.org, this.imageName);
   }
 
-  build() {
+  /**
+   * Returns the Docker command to remove all stopped containers.
+   * @returns {String} command to remove all stopped containers
+   * @see https://docs.docker.com/engine/reference/commandline/rm/#remove-all-stopped-containers
+   */
+  static get removeStoppedContainersCommand() {
+    return "docker rm $(docker ps --filter status=exited -q) || true";
+  }
+
+  /**
+   * Returns the command to remove containers with this image.
+   * @returns {String} command to remove containers with this image
+   * @see https://linuxconfig.org/remove-all-containners-based-on-docker-image-name
+   */
+  get removeContainerCommand() {
+    const commands = [
+      "docker ps -a",
+      "awk '{ print $1,$2 }'",
+      `grep ${this.fullImageName}`,
+      "awk '{print $1 }'",
+      "xargs -I {} docker rm --force --volumes {}",
+    ];
+    const command = commands.join(" | ");
+    return command;
+  }
+
+  get removeImageCommand() {
+    return `docker rmi --force ${this.fullImageName}`;
+  }
+
+  build(secret) {
     const commandParts = [
       ...this.commandPrefix,
-      DOCKER_COMPOSE_BUILD_COMMAND,
+      secret ? `--secret id=${secret}` : undefined,
+      DOCKER_COMPOSE_ORIG,
       ...this.commandFlags,
       "build",
-    ];
+    ].filter(Boolean);
     const command = commandParts.join(" ");
-    debug(command);
+
+    debug(`Build command: ${command}`);
+
     execSync(command, EXEC_SYNC_OPTIONS);
     console.log(this.getImageUploadInstructions());
   }
 
-  up() {
-    const commandParts = [
-      ...this.commandPrefix,
-      DOCKER_COMPOSE_UP_COMMAND,
-      ...this.commandFlags,
-      "up",
-      "--force-recreate",
-      "--build",
-      "--always-recreate-deps",
-      "--renew-anon-volumes",
-    ];
-    const command = commandParts.join(" ");
-    debug(command);
+  up(shouldUseComposeCli = true) {
+    let command;
+    if (shouldUseComposeCli) {
+      command = this._getComposeCLICommand();
+    } else {
+      command = this._getComposeCommand();
+    }
+
+    debug(`Use the Compose CLI: ${shouldUseComposeCli}`);
+    debug(`Compose command (pretty): ${command.replace(/&&/g, "&& \n")}`);
+
     execSync(command, EXEC_SYNC_OPTIONS);
   }
 
+  /**
+   * Return `docker-compose` command.
+   * @see https://stackoverflow.com/a/68598538/154065
+   * @see https://docs.docker.com/compose/reference/
+   * @returns {String} docker-compose command
+   * @private
+   */
+  _getComposeCommand(shouldUseComposeDown = true) {
+    const dockerCommand = [
+      ...this.commandPrefix,
+      DOCKER_COMPOSE_ORIG,
+      ...this.commandFlags,
+    ];
+
+    let down;
+    if (shouldUseComposeDown) {
+      down = [
+        ...dockerCommand,
+        "down",
+        "--rmi all",
+        "--volumes",
+        "--remove-orphans",
+      ];
+    } else {
+      down = [...dockerCommand, "build", "--force-rm", "--no-cache"];
+    }
+
+    const up = [...dockerCommand, "up"];
+    const commands = [
+      ...down,
+      "&&",
+      this.removeContainerCommand,
+      "&&",
+      this.removeImageCommand,
+      "&&",
+      ...up,
+    ];
+    return commands.join(" ");
+  }
+
+  /**
+   * Return `docker compose` command.
+   * @returns {String} docker compose command
+   * @private
+   */
+  _getComposeCLICommand(shouldUseComposeDown = true) {
+    const dockerCommand = [
+      ...this.commandPrefix,
+      DOCKER_COMPOSE_CLI,
+      ...this.commandFlags,
+    ];
+
+    let down = [];
+    if (shouldUseComposeDown) {
+      down = [
+        ...dockerCommand,
+        "down",
+        "--rmi all",
+        "--volumes",
+        "--remove-orphans",
+        "&&",
+      ];
+    }
+
+    const up = [
+      ...dockerCommand,
+      "up",
+      "--always-recreate-deps",
+      "--build",
+      "--force-recreate",
+      "--renew-anon-volumes",
+    ];
+
+    const commands = [
+      ...down,
+      this.removeContainerCommand,
+      "&&",
+      this.removeImageCommand,
+      "&&",
+      ...up,
+    ];
+    return commands.join(" ");
+  }
+
   get commandPrefix() {
+    let buildKitOption;
+    if (this.isBuildKitEnabled) {
+      buildKitOption = 1;
+    }
+
+    const envVariables = [
+      `DOCKER_BUILDKIT=${buildKitOption}`,
+      `IMAGE_NAME=${this.fullImageName}`,
+    ].filter((envVariable) => envVariable !== undefined);
+
+    return envVariables;
+  }
+
+  /**
+   * Get NPM registry info.
+   * @returns {Array<String>} npm environment variables
+   */
+  _getNPMVariables() {
     debug(`NPM_REGISTRY: ${NPM_REGISTRY}`);
 
     let npmUsername;
@@ -168,14 +309,9 @@ class Release extends EventEmitter {
       npmPassword = `NPM_PASSWORD=${NPM_PASSWORD}`;
     }
 
-    const envVariables = [
-      `IMAGE_NAME=${this.fullImageName}`,
-      `NPM_REGISTRY=${NPM_REGISTRY}`,
-      npmUsername,
-      npmPassword,
-    ].filter((envVariable) => envVariable !== undefined);
-
-    return envVariables;
+    return [`NPM_REGISTRY=${NPM_REGISTRY}`, npmUsername, npmPassword].filter(
+      Boolean
+    );
   }
 
   get commandFlags() {
