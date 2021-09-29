@@ -1,58 +1,57 @@
 scopeconfig:
   - scope: node
 fileignoreconfig:
-- filename: packages/gve/releases/CHANGELOG.md
-  checksum: a5f9e89b22ced49f86baa1a0adcb7cd03b2e1712e8fb3dd30ed45e472cd0ba05
-- filename: packages/gve/core/CHANGELOG.md
-  checksum: 43ce8bda4dcd235b47bdd1f09375202583a6363fc8032c183b8a1117d3173847
-- filename: packages/gve/bot-middleware/CHANGELOG.md
-  checksum: 6149ba006183e4a48b4d16fecba489bb40150fe332a9e28a1779bed7a75e0ed5
-- filename: packages/gve/bot-commands/CHANGELOG.md
-  checksum: 4fc11fdef72fc0046996d9d8b9213e3d8629ee73273fa92788cb3824b92be85c
-- filename: packages/gve/bridge/CHANGELOG.md
-  checksum: 7b8e6d8b108d08c2e9e721407bcfff58dff076d59eda66e376ba7b72c3fe85df
-- filename: packages/gve/google/CHANGELOG.md
-  checksum: bd778432b18fd5372fe5334080392117963f71f6df6275cb8b5b3f9427882861
-- filename: packages/gve/cards/CHANGELOG.md
-  checksum: 1423b57a5fdcbf0fe4f8c06a45970d5acadc9f31948fcc2cdd9eff22bdaec9cf
-- filename: packages/gve/salesforce/CHANGELOG.md
-  checksum: 37b18322d18f31700e9c0420bc556c2d5b1adb63172367c3d107ad231877bad4
-- filename: packages/gve/bot-factory/CHANGELOG.md
-  checksum: 1e6cf591ccbec8298f50db2a612e141ef1ef00a0462bc7f09adb29fcd3d6eec6
-- filename: packages/gve/analytics/CHANGELOG.md
-  checksum: b5621c29ecb3002eb2e83ed0872b8e4ce2e14b68d9f679bbaa99959ee5909f48
-- filename: packages/gve/bot-middleware/src/analytics/index.js
-  checksum: 3b947ce34d252ab2dc12ba145b79a7747123b31b604677f56081cb1cf2fbd555
-- filename: packages/gve/bot-middleware/src/intents/config/index.js
-  checksum: c66b1da98c94cdb11a4d0e9346801768959356b9574cd265e9ce6ca340ae0c84
-- filename: packages/gve/bot-middleware/src/intents/index.js
-  checksum: dafcd57e262d2836a4f8e5b421ae22c22884a86118c224b097e9130a41085396
-  checksum: b7fd65a0949bfb8bc1d9148231740818966e0395ab01b65675f2861ae7230d77
-- filename: packages/gve/google/src/auth/config.js
-  checksum: ac4f0ed588dc36aa28674696d152f98e487e9d9ad1b53598e07cfa72af7f700c
-- filename: packages/gve/google/src/auth/constants.js
-  checksum: 48d9274861faf4e74276ca6ad8660cd76b66c2f74b50d68dc19389a3d8321666
-- filename: packages/gve/google/src/auth/index.js
-  checksum: ffaed987fdfaed79a2cbc298ca3be9fa3cd06d8878053f215e9564fbf12d0d37
-- filename: packages/gve/google/src/config.js
-  checksum: e7fc847d5c585984ac66fa744a4e72feadf3247c1beaf244e39b66be628a4e4d
-- filename: packages/gve/releases/src/releases/release.js
-  checksum: cd3342939799fd2af8538cdf1064771405c9187afc118e9a39e935b6427eedd0
-- filename: packages/gve/releases/src/releases/release-openshift/index.js
-  checksum: 2c164b4d6e25a1a0f1a8afb3ff2e1f5400a3c2ababb82b686a7713c63577384c
-- filename: packages/gve/releases/src/releases/release-openshift/config.js
-  checksum: 2cc027ac418ba6ed57b7478355c57299550093855f2bea28b9f8aea790c524e0
-- filename: README.md
-  checksum: f054ff957ed76b5ae6f897f15e531c651775efdfab7dfceed0fa45be15c3506a
-- filename: packages/gve/bot-middleware/README.md
-  checksum: 3c2a8e37bd705deda35d8dca719740ea8336b0e28d6d8124cefa9914ac968943
-- filename: packages/gve/bot-commands/src/gifs/config.js
-  checksum: c7f61c3aa43052a0e7f8831c210dad56f8e8691868bfc69c7888058d48b54ba8
-- filename: packages/gve/salesforce/src/adapters/salesforce/index.js
-  checksum: e9fe7a6d4af79d9c4bff02ccd893a6edbae2c8486541aafe16290dae635b5a4a
-- filename: packages/gve/analytics/src/config.js
-  checksum: 0b57f21df3d3e8f1c6fe1d165f519e1f0322961a3825a011440754991bada6ec
-- filename: packages/gve/salesforce/src/adapters/direct/index.js
-  checksum: 4533ded5dfca4d6a1ffbc5c24148c82695e7f195a90a284086bd10e259a09f01
-- filename: packages/gve/releases/src/config.js
-  checksum: 21e8f123c0442ff0a1cb597fee7d22c2c958d3a3a292e425462517558a2bd8f0
+  - filename: packages/gve/bot-middleware/CHANGELOG.md
+    checksum: d3a6f7bad3e991c949447328030493165d15733ad6d4bd5dc4e4c95e14c94372
+  - filename: packages/gve/releases/CHANGELOG.md
+    checksum: a01c65bdb0aaec3c1a04b88ec4459dd40b0c1a8f1f51087ab85bd2327d2247b1
+  - filename: packages/gve/core/CHANGELOG.md
+    checksum: 43ce8bda4dcd235b47bdd1f09375202583a6363fc8032c183b8a1117d3173847
+  - filename: packages/gve/bot-commands/CHANGELOG.md
+    checksum: 4fc11fdef72fc0046996d9d8b9213e3d8629ee73273fa92788cb3824b92be85c
+  - filename: packages/gve/bridge/CHANGELOG.md
+    checksum: 7b8e6d8b108d08c2e9e721407bcfff58dff076d59eda66e376ba7b72c3fe85df
+  - filename: packages/gve/google/CHANGELOG.md
+    checksum: bd778432b18fd5372fe5334080392117963f71f6df6275cb8b5b3f9427882861
+  - filename: packages/gve/cards/CHANGELOG.md
+    checksum: 1423b57a5fdcbf0fe4f8c06a45970d5acadc9f31948fcc2cdd9eff22bdaec9cf
+  - filename: packages/gve/salesforce/CHANGELOG.md
+    checksum: 37b18322d18f31700e9c0420bc556c2d5b1adb63172367c3d107ad231877bad4
+  - filename: packages/gve/bot-factory/CHANGELOG.md
+    checksum: 1e6cf591ccbec8298f50db2a612e141ef1ef00a0462bc7f09adb29fcd3d6eec6
+  - filename: packages/gve/analytics/CHANGELOG.md
+    checksum: b5621c29ecb3002eb2e83ed0872b8e4ce2e14b68d9f679bbaa99959ee5909f48
+  - filename: packages/gve/bot-middleware/src/analytics/index.js
+    checksum: 3b947ce34d252ab2dc12ba145b79a7747123b31b604677f56081cb1cf2fbd555
+  - filename: packages/gve/bot-middleware/src/intents/config/index.js
+    checksum: c66b1da98c94cdb11a4d0e9346801768959356b9574cd265e9ce6ca340ae0c84
+  - filename: packages/gve/bot-middleware/src/intents/index.js
+    checksum: dafcd57e262d2836a4f8e5b421ae22c22884a86118c224b097e9130a41085396
+  - filename: packages/gve/google/src/auth/config.js
+    checksum: ac4f0ed588dc36aa28674696d152f98e487e9d9ad1b53598e07cfa72af7f700c
+  - filename: packages/gve/google/src/auth/constants.js
+    checksum: 48d9274861faf4e74276ca6ad8660cd76b66c2f74b50d68dc19389a3d8321666
+  - filename: packages/gve/google/src/auth/index.js
+    checksum: ffaed987fdfaed79a2cbc298ca3be9fa3cd06d8878053f215e9564fbf12d0d37
+  - filename: packages/gve/google/src/config.js
+    checksum: e7fc847d5c585984ac66fa744a4e72feadf3247c1beaf244e39b66be628a4e4d
+  - filename: packages/gve/releases/src/releases/release.js
+    checksum: cd3342939799fd2af8538cdf1064771405c9187afc118e9a39e935b6427eedd0
+  - filename: packages/gve/releases/src/releases/release-openshift/index.js
+    checksum: 2c164b4d6e25a1a0f1a8afb3ff2e1f5400a3c2ababb82b686a7713c63577384c
+  - filename: packages/gve/releases/src/releases/release-openshift/config.js
+    checksum: 2cc027ac418ba6ed57b7478355c57299550093855f2bea28b9f8aea790c524e0
+  - filename: README.md
+    checksum: f054ff957ed76b5ae6f897f15e531c651775efdfab7dfceed0fa45be15c3506a
+  - filename: packages/gve/bot-middleware/README.md
+    checksum: 3c2a8e37bd705deda35d8dca719740ea8336b0e28d6d8124cefa9914ac968943
+  - filename: packages/gve/bot-commands/src/gifs/config.js
+    checksum: c7f61c3aa43052a0e7f8831c210dad56f8e8691868bfc69c7888058d48b54ba8
+  - filename: packages/gve/salesforce/src/adapters/salesforce/index.js
+    checksum: e9fe7a6d4af79d9c4bff02ccd893a6edbae2c8486541aafe16290dae635b5a4a
+  - filename: packages/gve/analytics/src/config.js
+    checksum: 0b57f21df3d3e8f1c6fe1d165f519e1f0322961a3825a011440754991bada6ec
+  - filename: packages/gve/salesforce/src/adapters/direct/index.js
+    checksum: 4533ded5dfca4d6a1ffbc5c24148c82695e7f195a90a284086bd10e259a09f01
+  - filename: packages/gve/releases/src/config.js
+    checksum: 21e8f123c0442ff0a1cb597fee7d22c2c958d3a3a292e425462517558a2bd8f0
