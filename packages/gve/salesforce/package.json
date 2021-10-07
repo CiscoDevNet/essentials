@@ -18,6 +18,6 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
-    "jsforce": "^2.0.0-alpha.12"
+    "jsforce": "2.0.0-beta.8"
   }
 }
