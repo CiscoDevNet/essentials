@@ -13,6 +13,6 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@humanwhocodes/env": "^2.2.0",
-    "google-auth-library": "^7.5.0"
+    "google-auth-library": "^7.10.0"
   }
 }
