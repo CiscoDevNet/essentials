@@ -17,9 +17,9 @@
   "dependencies": {
     "@humanwhocodes/env": "^2.2.0",
     "colors": "^1.4.0",
-    "debug": "^4.1.1",
-    "dotenv": "^8.2.0",
-    "flat": "^5.0.0",
+    "debug": "^4.3.2",
+    "dotenv": "^10.0.0",
+    "flat": "^5.0.2",
     "lodash.pick": "^4.4.0"
   },
   "devDependencies": {
