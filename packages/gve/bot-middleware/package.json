@@ -16,7 +16,7 @@
     "@gve/analytics": "^0.2.13",
     "@gve/google": "^0.1.13",
     "@humanwhocodes/env": "^2.2.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "email-addresses": "^4.0.0",
     "lodash.mergewith": "^4.6.2",
     "lodash.union": "^4.6.0"
