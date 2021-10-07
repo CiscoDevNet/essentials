@@ -12,7 +12,7 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "@google-cloud/dialogflow": "^3.4.0",
+    "@google-cloud/dialogflow": "^4.4.0",
     "@gve/analytics": "^0.2.13",
     "@gve/google": "^0.1.13",
     "@humanwhocodes/env": "^2.2.0",
