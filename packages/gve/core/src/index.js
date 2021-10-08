@@ -9,6 +9,8 @@ const forceBoolean = require("force-boolean").default;
 const nodeUrl = require("url");
 const normalizeUrl = require("normalize-url");
 
+const URL_OPTIONS = { stripWWW: false };
+
 function getDefaultValue(envVariable, defaultValue) {
   let value = forceBoolean(envVariable);
   if (envVariable === undefined || envVariable === "") {
@@ -47,7 +49,7 @@ function _normalizeMalformedUrl(url) {
   // Handle URLs starting with special characters from malformed sources,
   // e.g., "://www.cisco.com/c/en/us/products/.../datasheet-c78-741988.html"
   const sanitizedUrl = url.replace(/^([^a-zA-Z0-9])*/, "");
-  return normalizeUrl(sanitizedUrl);
+  return normalizeUrl(sanitizedUrl, URL_OPTIONS);
 }
 
 module.exports = {
