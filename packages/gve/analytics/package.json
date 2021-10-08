@@ -3,9 +3,6 @@
   "version": "0.2.13",
   "description": "Analytics events and constants to track system usage",
   "main": "src/index.js",
-  "scripts": {
-    "test": "jest --setupFiles dotenv/config"
-  },
   "author": "Matt Norris <matnorri@cisco.com>",
   "files": [
     "src/"
