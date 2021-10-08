@@ -13,7 +13,7 @@
     "lerna:publish": "lerna publish from-package",
     "licenses": "license-checker --csv --production > output/licenses.csv",
     "licenses:gpl": "license-checker --production | grep GPL",
-    "lint": "eslint '**/{src,test}/**/*.{js,json}'",
+    "lint": "eslint '**/{scripts,src,test}/**/*.{js,json}'",
     "outdated": "npm outdated && lerna exec -- npm outdated",
     "outdated:prod": "npm outdated --only=prod && lerna exec -- npm outdated --only=prod",
     "talisman:checksum": "scripts/talisman/scan-cli.sh",
