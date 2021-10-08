@@ -2,3 +2,4 @@
 . "$(dirname "$0")/_/husky.sh"
 
 npm run talisman:precommit
+npx lerna run test --scope=@gve/core
