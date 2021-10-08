@@ -4,20 +4,9 @@
  */
 
 const debug = require("debug")("modules:core");
-
-const forceBoolean = require("force-boolean").default;
-const nodeUrl = require("url");
 const normalizeUrl = require("normalize-url");
 
 const URL_OPTIONS = { stripWWW: false };
-
-function getDefaultValue(envVariable, defaultValue) {
-  let value = forceBoolean(envVariable);
-  if (envVariable === undefined || envVariable === "") {
-    value = defaultValue;
-  }
-  return value;
-}
 
 /**
  * Returns the base domain from the given URL.
@@ -54,7 +43,6 @@ function _normalizeMalformedUrl(url, shouldPreserveWww = true) {
 }
 
 module.exports = {
-  getDefaultValue,
   getDomain,
   normalizeUrl: _normalizeMalformedUrl,
 };
