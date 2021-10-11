@@ -14,8 +14,8 @@
     "licenses": "license-checker --csv --production > output/licenses.csv",
     "licenses:gpl": "license-checker --production | grep GPL",
     "lint": "eslint '**/{scripts,src,test}/**/*.{js,json}'",
-    "outdated": "npm outdated && lerna exec -- npm outdated",
-    "outdated:prod": "npm outdated --only=prod && lerna exec -- npm outdated --only=prod",
+    "outdated": "npm outdated && lerna exec --ignore $npm_package_config_lerna_ignore -- npm outdated",
+    "outdated:prod": "npm outdated --only=prod && lerna exec --ignore $npm_package_config_lerna_ignore -- npm outdated --only=prod",
     "talisman:checksum": "scripts/talisman/scan-cli.sh",
     "talisman:scan": "scripts/talisman/scan.sh",
     "talisman:view": "scripts/talisman/view.sh",
@@ -41,6 +41,9 @@
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-lerna-changelog"
+    },
+    "lerna": {
+      "ignore": "@gve/bridge"
     },
     "reports": {
       "path": "./output/reports"
