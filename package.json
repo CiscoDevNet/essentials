@@ -16,6 +16,7 @@
     "lint": "eslint '**/{scripts,src,test}/**/*.{js,json}'",
     "audit": "npm audit && lerna exec --ignore $npm_package_config_lerna_ignore -- npm audit",
     "audit:prod": "npm audit --only=prod && lerna exec --ignore $npm_package_config_lerna_ignore -- npm audit --only=prod",
+    "audit:fix": "export $(cat .env | xargs) && scripts/lerna/audit-fix.sh",
     "outdated": "npm outdated && lerna exec --ignore $npm_package_config_lerna_ignore -- npm outdated",
     "outdated:prod": "npm outdated --only=prod && lerna exec --ignore $npm_package_config_lerna_ignore -- npm outdated --only=prod",
     "talisman:checksum": "scripts/talisman/scan-cli.sh",
