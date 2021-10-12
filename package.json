@@ -24,7 +24,8 @@
     "talisman:view": "scripts/talisman/view.sh",
     "talisman:precommit": "${TALISMAN_HOME}/talisman_hook_script pre-commit",
     "talisman:prepush": "${TALISMAN_HOME}/talisman_hook_script pre-push",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "lerna run test"
   },
   "author": "Matt Norris <matnorri@cisco.com>",
   "license": "Apache-2.0",

@@ -3,4 +3,4 @@
 
 npm run lint
 npm run talisman:precommit
-npx lerna run test --scope=@gve/core
+npm test
