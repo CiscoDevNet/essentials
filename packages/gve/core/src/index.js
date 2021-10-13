@@ -4,18 +4,9 @@
  */
 
 const debug = require("debug")("modules:core");
-
-const forceBoolean = require("force-boolean").default;
-const nodeUrl = require("url");
 const normalizeUrl = require("normalize-url");
 
-function getDefaultValue(envVariable, defaultValue) {
-  let value = forceBoolean(envVariable);
-  if (envVariable === undefined || envVariable === "") {
-    value = defaultValue;
-  }
-  return value;
-}
+const URL_OPTIONS = { stripWWW: false };
 
 /**
  * Returns the base domain from the given URL.
@@ -26,8 +17,8 @@ function getDomain(url) {
   let domain;
 
   try {
-    const normalizedUrl = _normalizeMalformedUrl(url);
-    ({ hostname: domain } = nodeUrl.parse(normalizedUrl));
+    const normalizedUrl = _normalizeMalformedUrl(url, false);
+    ({ hostname: domain } = new URL(normalizedUrl));
     debug(`domain: ${domain}: extracted from: "${url}"`);
   } catch (_) {
     debug(`domain: not extracted from: "${url}"`);
@@ -43,15 +34,15 @@ function getDomain(url) {
  * @returns {String} Normalized URL or empty string
  * @private
  */
-function _normalizeMalformedUrl(url) {
+function _normalizeMalformedUrl(url, shouldPreserveWww = true) {
   // Handle URLs starting with special characters from malformed sources,
   // e.g., "://www.cisco.com/c/en/us/products/.../datasheet-c78-741988.html"
   const sanitizedUrl = url.replace(/^([^a-zA-Z0-9])*/, "");
-  return normalizeUrl(sanitizedUrl);
+  const options = shouldPreserveWww ? URL_OPTIONS : undefined;
+  return normalizeUrl(sanitizedUrl, options);
 }
 
 module.exports = {
-  getDefaultValue,
   getDomain,
   normalizeUrl: _normalizeMalformedUrl,
 };
