@@ -2,9 +2,9 @@ scopeconfig:
   - scope: node
 fileignoreconfig:
   - filename: packages/gve/bot-middleware/CHANGELOG.md
-    checksum: d3a6f7bad3e991c949447328030493165d15733ad6d4bd5dc4e4c95e14c94372
+    checksum: 6acd975d39662496de8bde41d128210696efb49a41da959148cab99437b3e5e7
   - filename: packages/gve/releases/CHANGELOG.md
-    checksum: a01c65bdb0aaec3c1a04b88ec4459dd40b0c1a8f1f51087ab85bd2327d2247b1
+    checksum: 76112e08301a4238eee07dce1a0020ba37c076b2486c8d73faa016a61234e2d8
   - filename: packages/gve/core/CHANGELOG.md
     checksum: 43ce8bda4dcd235b47bdd1f09375202583a6363fc8032c183b8a1117d3173847
   - filename: packages/gve/bot-commands/CHANGELOG.md
