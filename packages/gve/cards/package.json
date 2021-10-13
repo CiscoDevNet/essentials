@@ -1,6 +1,6 @@
 {
   "name": "@gve/cards",
-  "version": "0.5.13",
+  "version": "0.5.14",
   "description": "Create Adaptive Cards, components, and rich messages for bot platforms and more",
   "main": "src/index.js",
   "author": "Matt Norris <matnorri@cisco.com>",

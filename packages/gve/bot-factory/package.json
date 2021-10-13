@@ -1,6 +1,6 @@
 {
   "name": "@gve/bot-factory",
-  "version": "0.2.13",
+  "version": "0.2.14",
   "description": "Create Webex bot",
   "main": "src/index.js",
   "author": "Matt Norris <matnorri@cisco.com>",
@@ -9,7 +9,7 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "@gve/bot-middleware": "^0.3.0",
+    "@gve/bot-middleware": "^0.4.0",
     "botbuilder-adapter-webex": "^1.0.9",
     "botkit": "^4.10.0"
   },

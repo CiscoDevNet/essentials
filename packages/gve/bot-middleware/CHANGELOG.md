@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/mattnorris/essentials/compare/@gve/bot-middleware@0.2.12...@gve/bot-middleware@0.4.0) (2021-10-13)
+
+
+### Features
+
+* **releases:** add different ways to call Docker Compose ([f4c8d1f](https://github.com/mattnorris/essentials/commit/f4c8d1fb6d199ce673253b3909fcba5097401828))
+
+
+
+
+
 # [0.3.0](https://github.com/mattnorris/essentials/compare/@gve/bot-middleware@0.2.12...@gve/bot-middleware@0.3.0) (2021-09-29)
 
 

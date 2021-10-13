@@ -1,6 +1,6 @@
 {
   "name": "@gve/analytics",
-  "version": "0.2.13",
+  "version": "0.2.14",
   "description": "Analytics events and constants to track system usage",
   "main": "src/index.js",
   "author": "Matt Norris <matnorri@cisco.com>",
@@ -9,7 +9,7 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "@gve/core": "^0.2.13",
+    "@gve/core": "^0.2.14",
     "snake-case": "^3.0.4"
   },
   "devDependencies": {
