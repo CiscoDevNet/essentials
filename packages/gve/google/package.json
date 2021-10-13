@@ -3,9 +3,6 @@
   "version": "0.1.13",
   "description": "",
   "main": "src/index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "Matt Norris <matnorri@cisco.com>",
   "files": [
     "src/"
@@ -13,6 +10,6 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@humanwhocodes/env": "^2.2.0",
-    "google-auth-library": "^7.5.0"
+    "google-auth-library": "^7.10.0"
   }
 }

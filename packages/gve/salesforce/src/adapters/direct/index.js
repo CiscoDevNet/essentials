@@ -5,19 +5,28 @@ const jsforce = require("jsforce");
 const SalesforceAdapter = require("../salesforce");
 const { SalesforceLoginError } = require("../../errors");
 
-const Cases = require("./cases");
-const Opportunities = require("./opportunities");
-const Users = require("./users");
+const DefaultAccounts = require("./accounts");
+const DefaultCases = require("./cases");
+const DefaultOpportunities = require("./opportunities");
+const DefaultUsers = require("./users");
 
 class DirectAdapter extends SalesforceAdapter {
-  constructor(username, password, url) {
+  constructor(username, password, url, options) {
     super(username, password, url);
+
+    const {
+      Accounts = DefaultAccounts,
+      Cases = DefaultCases,
+      Opportunities = DefaultOpportunities,
+      Users = DefaultUsers,
+    } = options;
 
     const connector = new jsforce.Connection({
       loginUrl: this.connection.url,
     });
     Object.assign(this.connection, { connector });
 
+    this.Accounts = Accounts;
     this.Cases = Cases;
     this.Opportunities = Opportunities;
     this.Users = Users;

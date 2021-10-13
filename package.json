@@ -3,6 +3,9 @@
   "description": "Essential packages to build, release, and run great software",
   "private": true,
   "scripts": {
+    "audit": "npm audit && lerna --no-bail exec --ignore $npm_package_config_lerna_ignore -- npm audit",
+    "audit:prod": "npm audit --only=prod && lerna --no-bail exec --ignore $npm_package_config_lerna_ignore -- npm audit --only=prod",
+    "audit:fix:prod": "export $(cat .env | xargs) && scripts/lerna/audit-fix.sh",
     "check-env": "node -e 'console.log(process.env)' | grep talisman",
     "git:commit": "cz",
     "lerna:ci": "npm ci && lerna clean --yes && lerna bootstrap",
@@ -13,32 +16,38 @@
     "lerna:publish": "lerna publish from-package",
     "licenses": "license-checker --csv --production > output/licenses.csv",
     "licenses:gpl": "license-checker --production | grep GPL",
-    "lint": "eslint '**/{src,test}/**/*.{js,json}'",
+    "lint": "eslint '**/{scripts,src,test}/**/*.{js,json}'",
+    "outdated": "npm outdated && lerna exec --ignore $npm_package_config_lerna_ignore -- npm outdated",
+    "outdated:prod": "npm outdated --only=prod && lerna exec --ignore $npm_package_config_lerna_ignore -- npm outdated --only=prod",
     "talisman:checksum": "scripts/talisman/scan-cli.sh",
     "talisman:scan": "scripts/talisman/scan.sh",
     "talisman:view": "scripts/talisman/view.sh",
     "talisman:precommit": "${TALISMAN_HOME}/talisman_hook_script pre-commit",
     "talisman:prepush": "${TALISMAN_HOME}/talisman_hook_script pre-push",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "lerna run test"
   },
   "author": "Matt Norris <matnorri@cisco.com>",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@babel/core": "^7.13.15",
-    "@babel/eslint-parser": "^7.13.14",
+    "@babel/core": "^7.15.8",
+    "@babel/eslint-parser": "^7.15.8",
     "commitizen": "^4.1.2",
-    "cz-lerna-changelog": "^2.0.2",
-    "eslint": "^7.23.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-sonar": "^0.5.0",
+    "cz-lerna-changelog": "^2.0.3",
+    "eslint": "^7.32.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-sonar": "^0.5.1",
     "husky": "^7.0.2",
     "lerna": "^3.22.1",
-    "prettier": "2.0.5",
-    "typescript": "^4.2.4"
+    "prettier": "^2.4.1",
+    "typescript": "^4.4.3"
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-lerna-changelog"
+    },
+    "lerna": {
+      "ignore": "@gve/bridge"
     },
     "reports": {
       "path": "./output/reports"

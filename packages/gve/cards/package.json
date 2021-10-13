@@ -3,9 +3,6 @@
   "version": "0.5.13",
   "description": "Create Adaptive Cards, components, and rich messages for bot platforms and more",
   "main": "src/index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "Matt Norris <matnorri@cisco.com>",
   "files": [
     "src/"
@@ -15,6 +12,6 @@
     "standard-version": "^9.3.0"
   },
   "dependencies": {
-    "moment": "^2.26.0"
+    "moment": "^2.29.1"
   }
 }
