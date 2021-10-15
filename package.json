@@ -20,6 +20,7 @@
     "outdated": "npm outdated && lerna exec --ignore $npm_package_config_lerna_ignore -- npm outdated",
     "outdated:prod": "npm outdated --only=prod && lerna exec --ignore $npm_package_config_lerna_ignore -- npm outdated --only=prod",
     "prepare": "husky install",
+    "secrets:scan": "gitleaks --path=. --repo-config-path=scripts/gitleaks/config.toml --append-repo-config  -v",
     "test": "lerna run test"
   },
   "author": "Matt Norris <matnorri@cisco.com>",
