@@ -19,11 +19,6 @@
     "lint": "eslint '**/{scripts,src,test}/**/*.{js,json}'",
     "outdated": "npm outdated && lerna exec --ignore $npm_package_config_lerna_ignore -- npm outdated",
     "outdated:prod": "npm outdated --only=prod && lerna exec --ignore $npm_package_config_lerna_ignore -- npm outdated --only=prod",
-    "talisman:checksum": "scripts/talisman/scan-cli.sh",
-    "talisman:scan": "scripts/talisman/scan.sh",
-    "talisman:view": "scripts/talisman/view.sh",
-    "talisman:precommit": "${TALISMAN_HOME}/talisman_hook_script pre-commit",
-    "talisman:prepush": "${TALISMAN_HOME}/talisman_hook_script pre-push",
     "prepare": "husky install",
     "test": "lerna run test"
   },
