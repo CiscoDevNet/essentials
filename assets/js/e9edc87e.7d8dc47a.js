@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[63],{6932:function(s){s.exports=JSON.parse('{"allTagsPath":"/pages/CiscoDevNet/essentials/blog/tags","slug":"/pages/CiscoDevNet/essentials/blog/tags/docusaurus","name":"docusaurus","count":4,"permalink":"/pages/CiscoDevNet/essentials/blog/tags/docusaurus"}')}}]);
