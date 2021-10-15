@@ -10,7 +10,7 @@ const lunrSearch = require.resolve("docusaurus-lunr-search");
     title: "CiscoDevNet Essentials",
     tagline: "Packages to build, release, and run great software",
     url: "https://github.com",
-    baseUrl: "/pages/CiscoDevNet/essentials/",
+    baseUrl: "/essentials/",
     onBrokenLinks: "warn",
     onBrokenMarkdownLinks: "throw",
     favicon: "img/favicon.ico",
