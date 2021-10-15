@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[658],{9965:function(s){s.exports=JSON.parse('{"allTagsPath":"/pages/CiscoDevNet/essentials/blog/tags","slug":"/pages/CiscoDevNet/essentials/blog/tags/facebook","name":"facebook","count":1,"permalink":"/pages/CiscoDevNet/essentials/blog/tags/facebook"}')}}]);
