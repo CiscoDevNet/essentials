@@ -6,7 +6,14 @@
     "audit": "npm audit && lerna --no-bail exec --ignore $npm_package_config_lerna_ignore -- npm audit",
     "audit:prod": "npm audit --only=prod && lerna --no-bail exec --ignore $npm_package_config_lerna_ignore -- npm audit --only=prod",
     "audit:fix:prod": "export $(cat .env | xargs) && scripts/lerna/audit-fix.sh",
-    "check-env": "node -e 'console.log(process.env)' | grep talisman",
+    "docs:make": "npm run docs:make:api && cd docs && npm run build",
+    "docs:make:api": "npx jsdoc2md packages/gve-private/**[^node_modules]/src/**/*.js > $npm_package_config_docsApi",
+    "postdocs:make:api": "echo \"---\nid: api\ntitle: API\nsidebar_position: 4\n---\n$(cat $npm_package_config_docsApi)\" > $npm_package_config_docsApi",
+    "docs:serve": "cd docs && npm run serve",
+    "docs:serve:dev": "cd docs && npx docusaurus start",
+    "docs:jsdoc": "jsdoc -c ./.jsdoc.json -R ./README.md -r packages/gve-private/**[^node_modules]/src -d output/jsdoc/docs",
+    "predocs:jsdoc": "mkdir -p output/jsdoc/docs",
+    "docs:publish": "cd docs && env-cmd --fallback -f .env.${NODE_ENV} npm run deploy",
     "git:commit": "cz",
     "lerna:ci": "npm ci && lerna clean --yes && lerna bootstrap",
     "lerna:version": "npx lerna version --conventional-commits --no-push",
@@ -31,9 +38,11 @@
     "commitizen": "^4.1.2",
     "cz-lerna-changelog": "^2.0.3",
     "eslint": "^7.32.0",
-    "eslint-plugin-import": "^2.24.2",
-    "eslint-plugin-sonar": "^0.5.1",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-sonar": "^0.6.1",
     "husky": "^7.0.2",
+    "jsdoc": "^3.6.7",
+    "jsdoc-to-markdown": "^7.1.0",
     "lerna": "^3.22.1",
     "prettier": "^2.4.1",
     "typescript": "^4.4.3"
@@ -47,8 +56,7 @@
     },
     "reports": {
       "path": "./output/reports"
-    },
-    "talisman": "${TALISMAN_HOME}/talisman_darwin_amd64"
+    }
   },
   "dependencies": {
     "license-checker": "^25.0.1"
