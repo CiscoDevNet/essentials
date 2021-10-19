@@ -1,63 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://github.com/essentials/blog</id>
-    <title>CiscoDevNet Essentials Blog</title>
-    <updated>2021-08-26T00:00:00.000Z</updated>
+    <id>https://ciscodevnet.github.io/essentials/blog</id>
+    <title>Essentials Blog</title>
+    <updated>2017-10-24T06:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://github.com/essentials/blog"/>
-    <subtitle>CiscoDevNet Essentials Blog</subtitle>
-    <icon>https://github.com/essentials/img/favicon.ico</icon>
+    <link rel="alternate" href="https://ciscodevnet.github.io/essentials/blog"/>
+    <subtitle>The best place to stay up-to-date with the latest Essentials news and events.</subtitle>
+    <logo>https://ciscodevnet.github.io/essentials/img/favicon.ico</logo>
+    <rights>Copyright © 2021 Cisco</rights>
     <entry>
-        <title type="html"><![CDATA[Welcome]]></title>
-        <id>welcome</id>
-        <link href="https://github.com/essentials/blog/welcome"/>
-        <updated>2021-08-26T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[Docusaurus blogging features are powered by the blog plugin.]]></summary>
-        <content type="html"><![CDATA[<p><a href="https://docusaurus.io/docs/blog">Docusaurus blogging features</a> are powered by the <a href="https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-blog">blog plugin</a>.</p><p>Simply add Markdown files (or folders) to the <code>blog</code> directory.</p><p>Regular blog authors can be added to <code>authors.yml</code>.</p><p>The blog post date can be extracted from filenames, such as:</p><ul><li><code>2019-05-30-welcome.md</code></li><li><code>2019-05-30-welcome/index.md</code></li></ul><p>A blog post folder can be convenient to co-locate blog post images:</p><p><img src="./docusaurus-plushie-banner.jpeg" alt="Docusaurus Plushie"/></p><p>The blog supports tags as well!</p><p><strong>And if you don&#x27;t want a blog</strong>: just delete this directory, and use <code>blog: false</code> in your Docusaurus config.</p>]]></content>
+        <title type="html"><![CDATA[New Version 1.0.0]]></title>
+        <id>https://ciscodevnet.github.io/essentials/blog/2017/10/24/new-version-1.0.0.html</id>
+        <link href="https://ciscodevnet.github.io/essentials/blog/2017/10/24/new-version-1.0.0.html"/>
+        <updated>2017-10-24T06:00:00.000Z</updated>
+        <summary type="html"><![CDATA[<p>This blog post will test file name parsing issues when periods are present.</p> ]]></summary>
         <author>
-            <name>Sébastien Lorber</name>
-            <uri>https://sebastienlorber.com</uri>
-        </author>
-        <author>
-            <name>Yangshun Tay</name>
-            <uri>https://github.com/yangshun</uri>
+            <name>Eric Nakagawa</name>
+            <uri>http://twitter.com/ericnakagawa</uri>
         </author>
     </entry>
     <entry>
-        <title type="html"><![CDATA[MDX Blog Post]]></title>
-        <id>mdx-blog-post</id>
-        <link href="https://github.com/essentials/blog/mdx-blog-post"/>
-        <updated>2021-08-01T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[Blog posts support Docusaurus Markdown features, such as MDX.]]></summary>
-        <content type="html"><![CDATA[<p>Blog posts support <a href="https://docusaurus.io/docs/markdown-features">Docusaurus Markdown features</a>, such as <a href="https://mdxjs.com/">MDX</a>.</p><p>:::tip</p><p>Use the power of React to create interactive blog posts.</p><pre><code class="language-js">&lt;button onClick={() =&gt; alert(&#x27;button clicked!&#x27;)}&gt;Click me!&lt;/button&gt;
-</code></pre><button>Click me!</button><p>:::</p>]]></content>
+        <title type="html"><![CDATA[Adding RSS Support]]></title>
+        <id>https://ciscodevnet.github.io/essentials/blog/2017/09/26/adding-rss.html</id>
+        <link href="https://ciscodevnet.github.io/essentials/blog/2017/09/26/adding-rss.html"/>
+        <updated>2017-09-26T06:00:00.000Z</updated>
+        <summary type="html"><![CDATA[<p>This is a test post.</p> <p>A whole bunch of other information.</p> ]]></summary>
         <author>
-            <name>Sébastien Lorber</name>
-            <uri>https://sebastienlorber.com</uri>
+            <name>Eric Nakagawa</name>
+            <uri>http://twitter.com/ericnakagawa</uri>
         </author>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Long Blog Post]]></title>
-        <id>long-blog-post</id>
-        <link href="https://github.com/essentials/blog/long-blog-post"/>
-        <updated>2019-05-29T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[This is the summary of a very long blog post,]]></summary>
-        <content type="html"><![CDATA[<p>This is the summary of a very long blog post,</p><p>Use a <code>&lt;!--</code> <code>truncate</code> <code>--&gt;</code> comment to limit blog post size in the list view.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p>]]></content>
+        <title type="html"><![CDATA[Adding RSS Support - RSS Truncation Test]]></title>
+        <id>https://ciscodevnet.github.io/essentials/blog/2017/09/25/testing-rss.html</id>
+        <link href="https://ciscodevnet.github.io/essentials/blog/2017/09/25/testing-rss.html"/>
+        <updated>2017-09-25T06:00:00.000Z</updated>
+        <summary type="html"><![CDATA[<p>1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890</p>
+<p>This should be truncated.</p>
+]]></summary>
         <author>
-            <name>Endilie Yacop Sucipto</name>
-            <uri>https://github.com/endiliey</uri>
+            <name>Eric Nakagawa</name>
+            <uri>http://twitter.com/ericnakagawa</uri>
         </author>
     </entry>
     <entry>
-        <title type="html"><![CDATA[First Blog Post]]></title>
-        <id>first-blog-post</id>
-        <link href="https://github.com/essentials/blog/first-blog-post"/>
-        <updated>2019-05-28T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet]]></summary>
-        <content type="html"><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p>]]></content>
+        <title type="html"><![CDATA[New Blog Post]]></title>
+        <id>https://ciscodevnet.github.io/essentials/blog/2017/04/10/blog-post-two.html</id>
+        <link href="https://ciscodevnet.github.io/essentials/blog/2017/04/10/blog-post-two.html"/>
+        <updated>2017-04-10T06:00:00.000Z</updated>
+        <summary type="html"><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus elementum massa eget nulla aliquet sagittis. Proin odio tortor, vulputate ut odio in, ultrices ultricies augue. Cras ornare ultrices lorem malesuada iaculis. Etiam sit amet libero tempor, pulvinar mauris sed, sollicitudin sapien.</p>
+]]></summary>
         <author>
-            <name>Gao Wei</name>
-            <uri>https://github.com/wgao19</uri>
+            <name>Blog Author</name>
+            <uri>http://twitter.com/</uri>
+        </author>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Blog Title]]></title>
+        <id>https://ciscodevnet.github.io/essentials/blog/2016/03/11/blog-post.html</id>
+        <link href="https://ciscodevnet.github.io/essentials/blog/2016/03/11/blog-post.html"/>
+        <updated>2016-03-11T06:00:00.000Z</updated>
+        <summary type="html"><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus elementum massa eget nulla aliquet sagittis. Proin odio tortor, vulputate ut odio in, ultrices ultricies augue. Cras ornare ultrices lorem malesuada iaculis. Etiam sit amet libero tempor, pulvinar mauris sed, sollicitudin sapien.</p>
+]]></summary>
+        <author>
+            <name>Blog Author</name>
+            <uri>http://twitter.com/</uri>
         </author>
     </entry>
 </feed>
