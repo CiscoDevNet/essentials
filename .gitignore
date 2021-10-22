@@ -89,6 +89,9 @@ secret-*
 .npmrc
 .npmrc-*
 
+## Allow Docusaurus .npmrc
+!docs/.npmrc
+
 ## Verdaccio
 .local
 htpasswd

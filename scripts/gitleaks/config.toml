@@ -1,9 +1,0 @@
-# [[rules]]
-#   description = "password text"
-#   regex = '''password'''
-#   tags = ["password"]
-
-# [[rules]]
-#   description = "secret text"
-#   regex = '''secret*'''
-#   tags = ["secret"]

@@ -1,0 +1,47 @@
+{
+  "name": "@gve/docs",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "docusaurus": "env-cmd --fallback -f .env.${NODE_ENV} docusaurus",
+    "prestart": "echo Environment: ${NODE_ENV:-development}",
+    "start": "env-cmd --fallback -f .env.${NODE_ENV} docusaurus start",
+    "build": "env-cmd --fallback -f .env.${NODE_ENV} docusaurus build",
+    "swizzle": "env-cmd --fallback -f .env.${NODE_ENV} docusaurus swizzle",
+    "deploy": "if [[ ${NODE_ENV:- } == 'production' ]]; then env-cmd -f .env.${NODE_ENV} docusaurus deploy; else scripts/docusaurus/deploy/print-error.sh; fi",
+    "clear": "env-cmd --fallback -f .env.${NODE_ENV} docusaurus clear",
+    "serve": "env-cmd --fallback -f .env.${NODE_ENV} docusaurus serve",
+    "write-translations": "env-cmd --fallback -f .env.${NODE_ENV} docusaurus write-translations",
+    "write-heading-ids": "env-cmd --fallback -f .env.${NODE_ENV} docusaurus write-heading-ids"
+  },
+  "dependencies": {
+    "@docusaurus/core": "^2.0.0-beta.7",
+    "@docusaurus/preset-classic": "^2.0.0-beta.7",
+    "@humanwhocodes/env": "^2.2.0",
+    "@mdx-js/react": "^1.6.21",
+    "@svgr/webpack": "^5.5.0",
+    "clsx": "^1.1.1",
+    "debug": "^4.3.2",
+    "docusaurus-lunr-search": "^2.1.14",
+    "file-loader": "^6.2.0",
+    "prism-react-renderer": "^1.2.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "url-loader": "^4.1.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "env-cmd": "^10.1.0"
+  }
+}
