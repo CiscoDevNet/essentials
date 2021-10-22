@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_gve_docs=self.webpackChunk_gve_docs||[]).push([[484],{8192:function(e){e.exports=JSON.parse('{"permalink":"/essentials/blog","page":1,"postsPerPage":10,"totalPages":1,"totalCount":4,"previousPage":null,"nextPage":null,"blogDescription":"Blog","blogTitle":"Blog"}')}}]);
