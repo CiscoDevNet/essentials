@@ -6,7 +6,13 @@
     "audit": "npm audit && lerna --no-bail exec --ignore $npm_package_config_lerna_ignore -- npm audit",
     "audit:prod": "npm audit --only=prod && lerna --no-bail exec --ignore $npm_package_config_lerna_ignore -- npm audit --only=prod",
     "audit:fix:prod": "export $(cat .env | xargs) && scripts/lerna/audit-fix.sh",
-    "check-env": "node -e 'console.log(process.env)' | grep talisman",
+    "docs:make": "npm run docs:make:api && cd docs && npm run build",
+    "docs:make:api": "node scripts/docs/make/api --destination $npm_package_config_docsApi",
+    "docs:make:jsdoc": "jsdoc packages/gve/analytics --configure ./.jsdoc.json --recurse --debug",
+    "predocs:make:jsdoc": "mkdir -p output/jsdoc/docs",
+    "docs:serve": "cd docs && npm run serve",
+    "docs:serve:dev": "cd docs && npm start",
+    "docs:deploy": "cd docs && npm run deploy",
     "git:commit": "cz",
     "lerna:ci": "npm ci && lerna clean --yes && lerna bootstrap",
     "lerna:version": "npx lerna version --conventional-commits --no-push",
@@ -20,7 +26,7 @@
     "outdated": "npm outdated && lerna exec --ignore $npm_package_config_lerna_ignore -- npm outdated",
     "outdated:prod": "npm outdated --only=prod && lerna exec --ignore $npm_package_config_lerna_ignore -- npm outdated --only=prod",
     "prepare": "husky install",
-    "secrets:scan": "gitleaks --path=. --repo-config-path=scripts/gitleaks/config.toml --append-repo-config  -v",
+    "secrets:scan": "scripts/secrets/scan.sh",
     "test": "lerna run test"
   },
   "author": "Matt Norris <matnorri@cisco.com>",
@@ -28,13 +34,17 @@
   "devDependencies": {
     "@babel/core": "^7.15.8",
     "@babel/eslint-parser": "^7.15.8",
+    "colors": "^1.0.3",
     "commitizen": "^4.1.2",
     "cz-lerna-changelog": "^2.0.3",
     "eslint": "^7.32.0",
-    "eslint-plugin-import": "^2.24.2",
-    "eslint-plugin-sonar": "^0.5.1",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-sonar": "^0.6.1",
     "husky": "^7.0.2",
+    "jsdoc": "^3.6.7",
+    "jsdoc-to-markdown": "^7.1.0",
     "lerna": "^3.22.1",
+    "minimist": "^1.2.5",
     "prettier": "^2.4.1",
     "typescript": "^4.4.3"
   },
@@ -42,13 +52,13 @@
     "commitizen": {
       "path": "./node_modules/cz-lerna-changelog"
     },
+    "docsApi": "docs/docs/api.md",
     "lerna": {
       "ignore": "@gve/bridge"
     },
     "reports": {
       "path": "./output/reports"
-    },
-    "talisman": "${TALISMAN_HOME}/talisman_darwin_amd64"
+    }
   },
   "dependencies": {
     "license-checker": "^25.0.1"

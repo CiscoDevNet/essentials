@@ -1,5 +1,5 @@
 {
-  "packages": ["packages/gve/*"],
+  "packages": ["docs/*", "packages/gve/*"],
   "version": "independent",
   "command": {
     "version": {

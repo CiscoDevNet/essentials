@@ -289,7 +289,7 @@ class Release extends EventEmitter {
 
   /**
    * Get NPM registry info.
-   * @returns {Array<String>} npm environment variables
+   * @returns {string[]} npm environment variables
    */
   _getNPMVariables() {
     debug(`NPM_REGISTRY: ${NPM_REGISTRY}`);
@@ -369,7 +369,7 @@ class Release extends EventEmitter {
    * Runs the given command and its args inside a Promise
    * so it can be unpacked later.
    * @param {String} commandName - the command name
-   * @param {Array[String]} args - the command arguments
+   * @param {string[]} args - the command arguments
    * @see https://stackoverflow.com/a/35896832/154065
    * @returns {Promise} string output
    */
