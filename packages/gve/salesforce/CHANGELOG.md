@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.15](https://github.com/mattnorris/essentials/compare/@gve/salesforce@0.4.14...@gve/salesforce@0.4.15) (2021-10-22)
+
+**Note:** Version bump only for package @gve/salesforce
+
+
+
+
+
 ## [0.4.14](https://github.com/mattnorris/essentials/compare/@gve/salesforce@0.4.12...@gve/salesforce@0.4.14) (2021-10-13)
 
 **Note:** Version bump only for package @gve/salesforce
