@@ -29,7 +29,7 @@ if (trackingID) {
     tagline: "Make great software. Run it in the Cloud.",
     url: "https://github.com",
     baseUrl: "/essentials/",
-    onBrokenLinks: "warn",
+    onBrokenLinks: "error",
     onBrokenMarkdownLinks: "throw",
     favicon: "img/favicon.ico",
     organizationName: "CiscoDevNet",
