@@ -11,9 +11,9 @@ sidebar_label: Home
 
 The documentation is inspired by [Django's documentation](https://docs.djangoproject.com/) and organized into the following types:
 
-- [Tutorials](tutorials/cae) take you by the hand through a series of steps. Start here if you’re new.
-- [How-to guides](how-to/develop-with-dialogflow) are recipes. They guide you through the steps involved in addressing key problems and use cases. They are more advanced than tutorials and assume some knowledge.
-- [Topic guides](topics/gve-apps/grover) discuss key topics and concepts at a fairly high level and provide useful background information and explanation.
+- [Tutorials](tutorials/cisco) take you by the hand through a series of steps. Start here if you’re new.
+- [How-to guides](how-to/use-gcloud) are recipes. They guide you through the steps involved in addressing key problems and use cases. They are more advanced than tutorials and assume some knowledge.
+- [Topic guides](topics/docker/what-is-docker/) discuss key topics and concepts at a fairly high level and provide useful background information and explanation.
 - [Reference guides](api) contain technical reference for **APIs**. They describe how it works and how to use it but assume that you have a basic understanding of key concepts.
 
 ---
