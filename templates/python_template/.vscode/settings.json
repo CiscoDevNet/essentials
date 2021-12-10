@@ -1,0 +1,14 @@
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "python.pythonPath": ".venv/bin/python",
+  "files.associations": {
+    ".env.*": "dotenv",
+    "*.Makefile": "makefile"
+  },
+  "files.trimTrailingWhitespace": true,
+  "files.trimFinalNewlines": true,
+  "python.formatting.provider": "black"
+}
