@@ -23,32 +23,6 @@ function HomepageHeader() {
   );
 }
 
-function PhotoAttribution() {
-  // <p>
-  //   Photo by{" "}
-  //   <a href="https://unsplash.com/@sharonmccutcheon?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">
-  //     Sharon McCutcheon
-  //   </a>{" "}
-  //   on{" "}
-  //   <a href="https://unsplash.com/s/photos/essential?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">
-  //     Unsplash
-  //   </a>
-  // </p>;
-
-  return (
-    <p>
-      Photo by{" "}
-      <a href="https://unsplash.com/@dsmacinnes?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">
-        Danielle MacInnes
-      </a>{" "}
-      on{" "}
-      <a href="https://unsplash.com/s/photos/developer-love?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">
-        Unsplash
-      </a>
-    </p>
-  );
-}
-
 export default function Home() {
   const { siteConfig } = useDocusaurusContext();
   return (
