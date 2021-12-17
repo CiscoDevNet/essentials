@@ -12,7 +12,8 @@
     "build-image": "src/index.js"
   },
   "repository": {
-    "url": "github:CiscoDevNet/essentials",
+    "type": "git",
+    "url": "https://github.com/CiscoDevNet/essentials.git",
     "directory": "packages/gve/releases"
   },
   "dependencies": {
