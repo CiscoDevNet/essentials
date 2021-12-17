@@ -27,7 +27,7 @@ jobs:
       # Configure git credentials for Lerna.
       - uses: OleksiyRudenko/gha-git-credentials@v2
         with:
-          token: "${{ secrets.GITHUB_TOKEN }}"
+          token: "${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN }}"
 
       - run: npm run lerna:ci
       - run: npm run lerna:version -- --yes
