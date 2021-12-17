@@ -9,6 +9,10 @@
     "src/"
   ],
   "license": "Apache-2.0",
+  "repository": {
+    "url": "github:CiscoDevNet/essentials",
+    "directory": "packages/gve/bridge"
+  },
   "devDependencies": {
     "debug": "^4.3.1",
     "standard-version": "^9.3.0"

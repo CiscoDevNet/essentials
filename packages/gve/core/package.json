@@ -11,6 +11,10 @@
     "src/"
   ],
   "license": "Apache-2.0",
+  "repository": {
+    "url": "github:CiscoDevNet/essentials",
+    "depository": "packages/gve/core"
+  },
   "dependencies": {
     "force-boolean": "^1.2.0",
     "normalize-url": "5.3.1"

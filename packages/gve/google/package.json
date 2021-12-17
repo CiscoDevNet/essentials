@@ -8,6 +8,10 @@
     "src/"
   ],
   "license": "Apache-2.0",
+  "repository": {
+    "url": "github:CiscoDevNet/essentials",
+    "depository": "packages/gve/google"
+  },
   "dependencies": {
     "@humanwhocodes/env": "^2.2.0",
     "google-auth-library": "^7.10.0"
