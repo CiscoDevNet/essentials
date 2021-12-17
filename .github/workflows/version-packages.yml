@@ -9,8 +9,8 @@ on:
   workflow_dispatch:
   pull_request:
     branches:
-      - gh-actions
       - main
+      - gh-actions
     types: [closed]
 jobs:
   version-packages:
@@ -18,26 +18,24 @@ jobs:
     if: ${{ github.event.pull_request.merged }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      # Configure git credentials for Lerna.
+      - uses: OleksiyRudenko/gha-git-credentials@v2
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/setup-node@v2
         with:
           node-version: "lts/fermium"
 
-      - name: Configure git credentials for Lerna
-        uses: OleksiyRudenko/gha-git-credentials@v2
-        with:
-          token: "${{ secrets.GITHUB_TOKEN }}"
-
       - run: npm run lerna:ci
-
-      - name: Version the repository packages
-        run: npm run lerna:version -- --yes
+      - run: npm run lerna:version -- --yes
 
       - name: Push tags to the repository
-        if: contains(github.ref, 'main')
+        if: |
+          contains(github.ref, 'main') ||
+          contains(github.ref, 'gh-actions')
         uses: CasperWA/push-protected@v2
         with:
           token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN }}
