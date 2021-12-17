@@ -23,11 +23,11 @@ jobs:
           node-version: "lts/fermium"
       - uses: actions/checkout@v2
         with:
-          persist-credentials: false
+          token: "${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN }}"
       # Configure git credentials for Lerna.
       - uses: OleksiyRudenko/gha-git-credentials@v2
         with:
-          token: "${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN }}"
+          token: "${{ secrets.GITHUB_TOKEN }}"
 
       - run: npm run lerna:ci
       - run: npm run lerna:version -- --yes
