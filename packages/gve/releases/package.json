@@ -11,6 +11,10 @@
   "bin": {
     "build-image": "src/index.js"
   },
+  "repository": {
+    "url": "github:CiscoDevNet/essentials",
+    "directory": "packages/gve/releases"
+  },
   "dependencies": {
     "@humanwhocodes/env": "^2.2.0",
     "colors": "^1.4.0",

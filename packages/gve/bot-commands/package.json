@@ -8,6 +8,10 @@
     "src/"
   ],
   "license": "Apache-2.0",
+  "repository": {
+    "url": "github:CiscoDevNet/essentials",
+    "directory": "packages/gve/bot-commands"
+  },
   "dependencies": {
     "@giphy/js-fetch-api": "^2.4.0",
     "@gve/analytics": "^0.2.15",

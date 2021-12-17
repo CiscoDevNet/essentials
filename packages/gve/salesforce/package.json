@@ -11,6 +11,10 @@
     "src/"
   ],
   "license": "Apache-2.0",
+  "repository": {
+    "url": "github:CiscoDevNet/essentials",
+    "directory": "packages/gve/salesforce"
+  },
   "devDependencies": {
     "dotenv": "^8.2.0",
     "jest": "^26.5.2",

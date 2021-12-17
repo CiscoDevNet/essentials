@@ -1,6 +1,7 @@
 # GitHub Action
 # description: Publish newly-versioned packages to NPM
 # author: Matt Norris <matnorri@cisco.com>
+# see:  https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages#publishing-packages-to-the-npm-registry
 
 name: Publish Packages
 on:
@@ -10,24 +11,18 @@ on:
     branches: [main]
 jobs:
   publish-packages:
-    # IS_VERSIONING_SUCCESSFUL
+    # Was the "Version Packages" workflow successful?
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
         with:
           node-version: "lts/fermium"
+      - run: npm run lerna:ci
 
-      - name: Configure git credentials for Lerna
-        uses: OleksiyRudenko/gha-git-credentials@v2
-        with:
-          token: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: Publish packages to NPM 📦
-        run: npm run lerna:publish -- --yes
+      # Publish using CI system automation.
+      # https://github.com/lerna/lerna/tree/main/commands/publish#--no-verify-access
+      - run: npm run lerna:publish:auto -- --yes
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}

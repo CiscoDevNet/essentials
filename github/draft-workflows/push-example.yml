@@ -1,0 +1,27 @@
+name: Push Example
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
+
+env:
+  BUILD_TYPE: core
+  DEFAULT_PYTHON: 3.8
+
+jobs:
+  any_name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Any Name Bash Test Step
+        shell: bash
+        run: |
+          echo "CI: $CI"
+          echo "GH_REPO: $GH_REPO"
+          echo "GH_REPO_O: $GH_REPO_O"
+          echo "GH_T: $GH_T"
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_REPO_O: ${{ github.repository_owner }}
+          GH_T: ${{ secrets.GITHUB_TOKEN }}

@@ -8,6 +8,10 @@
     "src/"
   ],
   "license": "Apache-2.0",
+  "repository": {
+    "url": "github:CiscoDevNet/essentials",
+    "directory": "packages/gve/analytics"
+  },
   "dependencies": {
     "@gve/core": "^0.2.15",
     "snake-case": "^3.0.4"
