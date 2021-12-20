@@ -2,7 +2,7 @@
 const Command = require("./command");
 
 // Common commands
-const Diagnostic = require('./diagnostic')
+const Diagnostic = require("./diagnostic");
 const Gifs = require("./gifs");
 const Help = require("./help");
 
