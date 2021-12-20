@@ -24,9 +24,12 @@ jobs:
           node-version: lts/fermium
 
       - name: Configure git credentials for Lerna
-        uses: OleksiyRudenko/gha-git-credentials@v2
+        uses: OleksiyRudenko/gha-git-credentials@v2-latest
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          global: true
+          actor: gveappsupport
+          email: gve-app-support.gen@cisco.com
+          token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN }}
 
       - name: Version the packages
         run: npm run lerna:ci &&
