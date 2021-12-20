@@ -21,16 +21,17 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "lts/fermium"
-      - uses: actions/checkout@v2
-        with:
-          token: "${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN }}"
       # Configure git credentials for Lerna.
       - uses: OleksiyRudenko/gha-git-credentials@v2
         with:
           token: "${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN }}"
 
-      - run: npm run lerna:ci
-      - run: npm run lerna:version -- --yes
+      - name: Checkout local repository
+        uses: actions/checkout@v2
+
+      - name: Version the packages
+        run: npm run lerna:ci &&
+          npm run lerna:version -- --yes
 
       - name: Push tags to the repository
         if: |

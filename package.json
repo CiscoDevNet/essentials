@@ -3,6 +3,7 @@
   "description": "Essential packages to build, release, and run great software",
   "private": true,
   "scripts": {
+    "act:version": "act pull_request --secret-file .env -e act/pull-request.json",
     "audit": "npm audit && lerna --no-bail exec --ignore $npm_package_config_lerna_ignore -- npm audit",
     "audit:prod": "npm audit --only=prod && lerna --no-bail exec --ignore $npm_package_config_lerna_ignore -- npm audit --only=prod",
     "audit:fix:prod": "export $(cat .env | xargs) && scripts/lerna/audit-fix.sh",
