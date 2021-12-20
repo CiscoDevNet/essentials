@@ -22,8 +22,6 @@ jobs:
         with:
           node-version: lts/fermium
       - uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN }}
 
       - name: Version the packages
         run: npm run lerna:ci &&
