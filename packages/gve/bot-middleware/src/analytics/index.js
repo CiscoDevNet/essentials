@@ -8,7 +8,7 @@ const debug = require("debug")("middleware:analytics");
 const axios = require("axios");
 const emailAddresses = require("email-addresses");
 const EventEmitter = require("events");
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 
 const { EVENTS, PROPERTY_VALUES } = require("@gve/analytics");
 
@@ -223,10 +223,8 @@ class Analytics extends EventEmitter {
           const analyticsEvent =
             messageData._analyticsEvent || messageData.event;
           try {
-            ({
-              name: event_type,
-              properties: additionalProperties,
-            } = analyticsEvent);
+            ({ name: event_type, properties: additionalProperties } =
+              analyticsEvent);
           } catch (_) {
             debug(`no analytics event`);
           }
@@ -366,9 +364,8 @@ class Analytics extends EventEmitter {
     let domain = PROPERTY_VALUES.UNKNOWN;
 
     try {
-      ({ domain = PROPERTY_VALUES.UNKNOWN } = emailAddresses.parseOneAddress(
-        email
-      ));
+      ({ domain = PROPERTY_VALUES.UNKNOWN } =
+        emailAddresses.parseOneAddress(email));
     } catch (_) {
       debug(`domain: not found from email: ${email}`);
     }

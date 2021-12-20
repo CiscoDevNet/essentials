@@ -15,11 +15,8 @@ const pipeline = promisify(stream.pipeline);
 const mkdtemp = promisify(fs.mkdtemp);
 
 const { BOT_ACCESS_TOKEN } = require("./config");
-const {
-  UNKNOWN,
-  UNKNOWN_NUMBER,
-  FAILURE,
-} = require("@gve/analytics").PROPERTY_VALUES;
+const { UNKNOWN, UNKNOWN_NUMBER, FAILURE } =
+  require("@gve/analytics").PROPERTY_VALUES;
 
 /**
  * Giphy search options
