@@ -18,17 +18,11 @@ jobs:
     if: ${{ github.event.pull_request.merged }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
           node-version: lts/fermium
-
-      - name: Configure git credentials for Lerna
-        uses: OleksiyRudenko/gha-git-credentials@v2-latest
+      - uses: actions/checkout@v2
         with:
-          global: true
-          actor: gveappsupport
-          email: gve-app-support.gen@cisco.com
           token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN }}
 
       - name: Version the packages
