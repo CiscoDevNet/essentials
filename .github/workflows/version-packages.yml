@@ -21,10 +21,11 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: lts/fermium
-      # Configure git credentials for Lerna.
-      - uses: OleksiyRudenko/gha-git-credentials@v2
+
+      - name: Configure git credentials for Lerna
+        uses: OleksiyRudenko/gha-git-credentials@v2
         with:
-          token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout local repository
         uses: actions/checkout@v2
