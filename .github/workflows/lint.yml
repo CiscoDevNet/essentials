@@ -10,7 +10,7 @@ on:
 
 jobs:
   run-linters:
-    name: Lint files
+    name: Run linters v2
     runs-on: ubuntu-latest
 
     steps:
