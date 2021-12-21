@@ -1,4 +1,3 @@
-
 repos:
   - repo: local
     hooks:
@@ -8,8 +7,8 @@ repos:
         language: system
         entry: echo
         args:
-          - 'Running pre-commit check...'
-        files: ''
+          - "Running pre-commit check..."
+        files: ""
       - id: test
         name: pytest
         description: Run tests with pytest

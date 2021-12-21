@@ -103,9 +103,8 @@ class Auth {
     debug(`valid filepath: ${isFile}: ${credentials}`);
 
     try {
-      const { client_email, private_key, project_id } = JSON.parse(
-        credentialsSource
-      );
+      const { client_email, private_key, project_id } =
+        JSON.parse(credentialsSource);
       return { client_email, private_key, project_id };
     } catch (error) {
       throw new CredentialsError(error.message);
