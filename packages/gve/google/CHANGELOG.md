@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.17](https://github.com/CiscoDevNet/essentials/compare/@gve/google@0.1.16...@gve/google@0.1.17) (2021-12-21)
+
+**Note:** Version bump only for package @gve/google
+
+
+
+
+
 ## [0.1.16](https://github.com/CiscoDevNet/essentials/compare/@gve/google@0.1.14...@gve/google@0.1.16) (2021-12-21)
 
 **Note:** Version bump only for package @gve/google
