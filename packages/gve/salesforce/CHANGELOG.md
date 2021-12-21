@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.17](https://github.com/CiscoDevNet/essentials/compare/@gve/salesforce@0.4.16...@gve/salesforce@0.4.17) (2021-12-21)
+
+**Note:** Version bump only for package @gve/salesforce
+
+
+
+
+
 ## [0.4.16](https://github.com/CiscoDevNet/essentials/compare/@gve/salesforce@0.4.14...@gve/salesforce@0.4.16) (2021-12-21)
 
 **Note:** Version bump only for package @gve/salesforce

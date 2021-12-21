@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.3](https://github.com/CiscoDevNet/essentials/compare/@gve/releases@0.6.2...@gve/releases@0.6.3) (2021-12-21)
+
+**Note:** Version bump only for package @gve/releases
+
+
+
+
+
 ## [0.6.2](https://github.com/CiscoDevNet/essentials/compare/@gve/releases@0.6.0...@gve/releases@0.6.2) (2021-12-21)
 
 **Note:** Version bump only for package @gve/releases
