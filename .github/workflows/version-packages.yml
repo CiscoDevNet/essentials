@@ -19,9 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        # with:
-        #   token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN }}
-        #   persist-credentials: false
+        with:
+          token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN }}
+          persist-credentials: false
       - uses: actions/setup-node@v2
         with:
           node-version: lts/fermium
@@ -37,5 +37,5 @@ jobs:
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
-        # with:
-        #   token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN }}
+        with:
+          token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN }}
