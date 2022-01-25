@@ -13,16 +13,16 @@ const path = require("path");
 const yaml = require("js-yaml");
 
 const {
-  BOT_NAME,
-  BOT_VERSION,
+  NAME,
+  VERSION,
   ENVIRONMENT_VARIABLES,
   NODE_ENV,
   NPM_REGISTRY,
   NPM_USERNAME,
   NPM_PASSWORD,
   RELEASES_DIRECTORY,
-  RELEASES_HOSTNAME,
-  RELEASES_ORG,
+  HOSTNAME,
+  ORG,
 } = require("../config");
 
 const {
@@ -39,12 +39,12 @@ const {
  * @property {String} releasesDir - path to a releases directory
  */
 const DEFAULT_CONFIG = {
-  hostName: RELEASES_HOSTNAME,
-  name: BOT_NAME,
+  name: NAME,
+  hostName: HOSTNAME,
   environment: NODE_ENV,
-  org: RELEASES_ORG,
-  version: BOT_VERSION,
-  releaseDir: RELEASES_DIRECTORY,
+  org: ORG,
+  version: VERSION,
+  releasesDir: RELEASES_DIRECTORY,
   isBuildKitEnabled: true,
 };
 
@@ -53,7 +53,7 @@ const ENV_PRODUCTION = "production";
 const ENV_STAGING = "staging";
 
 class Release extends EventEmitter {
-  constructor(config = DEFAULT_CONFIG) {
+  constructor(projectName, config = DEFAULT_CONFIG) {
     /**
      * hostName cannot be configured by default.
      * Subclasses may require a particular hostName structure,
@@ -61,20 +61,23 @@ class Release extends EventEmitter {
      */
 
     const {
-      name = BOT_NAME,
       environment = NODE_ENV,
-      org = RELEASES_ORG,
-      version = BOT_VERSION,
-      releaseDir = RELEASES_DIRECTORY,
+      org = ORG,
+      name = NAME,
+      version = VERSION,
+      releasesDir = RELEASES_DIRECTORY,
       isBuildKitEnabled = true,
     } = config;
+
     super();
+    this.projectName = projectName;
+
     this.config = config;
     this.environment = environment;
-    this.name = name;
     this.org = org;
+    this.name = name;
     this.version = version;
-    this.releasesDir = releaseDir;
+    this.releasesDir = releasesDir;
     this.isBuildKitEnabled = isBuildKitEnabled;
   }
 
@@ -100,8 +103,8 @@ class Release extends EventEmitter {
     }
 
     const releaseVars = {
-      BOT_NAME: this.name,
-      BOT_VERSION: this.version,
+      NAME: this.name,
+      VERSION: this.version,
       NODE_ENV: this.environment,
     };
 
@@ -319,8 +322,8 @@ class Release extends EventEmitter {
   }
 
   createDir(dirPath) {
-    const releaseDir = dirPath || this.releaseDir;
-    return Release.createReleasesDir(releaseDir);
+    const releasesDir = dirPath || this.releasesDir;
+    return Release.createReleasesDir(releasesDir);
   }
 
   static createReleasesDir(dirPath = RELEASES_DIRECTORY) {

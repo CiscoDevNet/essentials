@@ -16,26 +16,17 @@ const {
   EXEC_SYNC_OPTIONS,
   HOSTNAME_BASE,
   HOSTNAME_LOCATION,
-  PROJECT_ID,
-  PROJECT_NAME,
 } = require("./config");
 
 class GoogleRelease extends Release {
-  constructor(config) {
-    super(config);
+  constructor(projectId, config) {
+    super(projectId, config);
+    this.projectId = projectId;
 
-    const {
-      location = HOSTNAME_LOCATION,
-      projectId = PROJECT_ID,
-      projectName = PROJECT_NAME,
-    } = this.config;
-    if (!projectId && !projectName) {
-      throw new Error("projectId or projectName needed to create image.");
-    }
-    this.projectId = projectId || projectName;
+    const { location = HOSTNAME_LOCATION } = this.config;
 
     if (!location) {
-      throw new Error("location needed to create image.");
+      throw new Error("location required to create image.");
     }
     this.location = location;
 
