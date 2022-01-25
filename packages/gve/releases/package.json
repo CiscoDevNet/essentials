@@ -3,6 +3,9 @@
   "version": "0.6.3",
   "description": "Build Docker images and deploy containers to Google Cloud or OpenShift",
   "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
   "author": "Matt Norris <matnorri@cisco.com>",
   "files": [
     "src/"
@@ -28,6 +31,7 @@
     "lodash.pick": "^4.4.0"
   },
   "devDependencies": {
+    "jest": "^27.4.7",
     "standard-version": "^9.3.0"
   }
 }

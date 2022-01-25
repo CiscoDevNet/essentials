@@ -16,9 +16,8 @@ npm i @gve/releases
 const { OpenShiftRelease } = require("@gve/releases");
 
 // Create the release.
-const RELEASES_PROJECT_NAME =
-  "OpenShift project name or Google Cloud project ID";
-const release = new OpenShiftRelease({ projectName: RELEASES_PROJECT_NAME });
+const projectName = "OpenShift project name or Google Cloud project ID";
+const release = new OpenShiftRelease(projectName);
 
 // Build its Docker image.
 release.build();

@@ -16,15 +16,13 @@ const {
   BOT_URL,
   EXEC_SYNC_OPTIONS,
   PORT,
-  RELEASES_DEPLOYMENT,
-  RELEASES_DEPLOYMENT_TEMPLATE,
-  RELEASES_HOSTNAME,
-  IMAGE_PULL_SECRET,
-  RELEASES_PROJECT_NAME,
-  RELEASES_ROUTE,
-  RELEASES_ROUTE_TEMPLATE,
-  RELEASES_SECRET,
-  RELEASES_SERVICE,
+  DEPLOYMENT,
+  DEPLOYMENT_TEMPLATE,
+  HOSTNAME,
+  ROUTE,
+  ROUTE_TEMPLATE,
+  SECRET,
+  SERVICE,
 } = require("./config");
 
 /**
@@ -36,25 +34,17 @@ const OPENSHIFT_DEPLOYMENT_CONFIG = "DeploymentConfig";
 const { DeploymentError } = require("./errors");
 
 class OpenShiftRelease extends Release {
-  constructor(config) {
-    super(config);
+  constructor(projectName, imagePullSecret, config) {
+    super(projectName, config);
+    this.imagePullSecret = imagePullSecret;
 
     const {
-      hostName = RELEASES_HOSTNAME,
-      projectName = RELEASES_PROJECT_NAME,
+      hostName = HOSTNAME,
       deploymentKind = OPENSHIFT_DEPLOYMENT_CONFIG,
     } = this.config;
 
     this.hostName = hostName;
     this.deploymentKind = deploymentKind;
-
-    // Require an explicit project name so that code isn't released
-    // to the implicit, active project.
-    if (!projectName) {
-      throw new Error("projectName or projectId is required.");
-    }
-
-    this.projectName = projectName;
 
     debug("initiated");
   }
@@ -84,10 +74,7 @@ class OpenShiftRelease extends Release {
 
     // Generate the template.
     const releasesDir = Release.createReleasesDir();
-    const deploymentTemplatePath = path.join(
-      releasesDir,
-      RELEASES_DEPLOYMENT_TEMPLATE
-    );
+    const deploymentTemplatePath = path.join(releasesDir, DEPLOYMENT_TEMPLATE);
     const isDeploymentConfig =
       this.deploymentKind === OPENSHIFT_DEPLOYMENT_CONFIG;
 
@@ -113,15 +100,15 @@ class OpenShiftRelease extends Release {
     debug("reading template: ", deploymentTemplatePath);
     const deploymentTemplate = Release.read(deploymentTemplatePath);
 
-    debug(`adding secret ${IMAGE_PULL_SECRET} to deployment...`);
+    debug(`adding secret ${this.imagePullSecret} to deployment...`);
     const deploymentData = this._getDeploymentData(deploymentTemplate);
     if (!deploymentData) {
       throw new DeploymentError("deployment data not found");
     }
     const { spec } = deploymentData.spec.template;
-    spec.imagePullSecrets = [{ name: IMAGE_PULL_SECRET }];
+    spec.imagePullSecrets = [{ name: this.imagePullSecret }];
 
-    const deploymentPath = path.join(releasesDir, RELEASES_DEPLOYMENT);
+    const deploymentPath = path.join(releasesDir, DEPLOYMENT);
     debug("writing config: ", deploymentPath);
     Release.write(deploymentTemplate, deploymentPath);
 
@@ -163,7 +150,7 @@ class OpenShiftRelease extends Release {
     const service = `svc/${name}`;
 
     const releasesDir = Release.createReleasesDir();
-    const routeTemplatePath = path.join(releasesDir, RELEASES_ROUTE_TEMPLATE);
+    const routeTemplatePath = path.join(releasesDir, ROUTE_TEMPLATE);
 
     const exposeRouteCommandParts = [
       "oc expose",
@@ -185,7 +172,7 @@ class OpenShiftRelease extends Release {
       insecureEdgeTerminationPolicy: "None",
     };
 
-    const routeConfig = path.join(releasesDir, RELEASES_ROUTE);
+    const routeConfig = path.join(releasesDir, ROUTE);
     Release.write(contents, routeConfig);
 
     const instructions = [
@@ -206,7 +193,7 @@ class OpenShiftRelease extends Release {
     console.log("Creating Service configuration...");
     const serviceTemplate = this._getServiceTemplate();
     const releasesDir = Release.createReleasesDir();
-    const servicePath = path.join(releasesDir, RELEASES_SERVICE);
+    const servicePath = path.join(releasesDir, SERVICE);
     Release.write(serviceTemplate, servicePath);
     console.log(colors.green("Created Service configuration.\n"));
   }
@@ -269,16 +256,16 @@ class OpenShiftRelease extends Release {
     this.activate();
     console.log();
 
-    const secretPath = path.join(process.cwd(), RELEASES_SECRET);
+    const secretPath = path.join(process.cwd(), SECRET);
     console.log("Releasing secret:", secretPath);
     await this._releaseFile(secretPath);
 
     debug("releases directory:", this.releasesDir);
-    const deploymentPath = path.join(this.releasesDir, RELEASES_DEPLOYMENT);
+    const deploymentPath = path.join(this.releasesDir, DEPLOYMENT);
     console.log("Releasing deployment:", deploymentPath);
     await this._releaseFile(deploymentPath);
 
-    const servicePath = path.join(this.releasesDir, RELEASES_SERVICE);
+    const servicePath = path.join(this.releasesDir, SERVICE);
     console.log("Releasing service:", servicePath);
     await this._releaseFile(servicePath);
   }
@@ -305,7 +292,7 @@ class OpenShiftRelease extends Release {
     this.activate();
     console.log();
 
-    const routePath = path.join(this.releasesDir, RELEASES_ROUTE);
+    const routePath = path.join(this.releasesDir, ROUTE);
     console.log("Releasing route:", routePath);
     await this._releaseFile(routePath);
   }

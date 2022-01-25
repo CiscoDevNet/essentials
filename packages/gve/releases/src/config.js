@@ -23,7 +23,6 @@ const env = new Env();
 const NODE_ENV = env.get("NODE_ENV", NODE_ENV_DEVELOPMENT);
 
 const currentDir = process.cwd();
-
 let envFilePath = path.join(currentDir, `.env.${NODE_ENV}`);
 
 // Get the .env file path.
@@ -40,7 +39,8 @@ debug(`env file: ${envFilePath}`);
 const ENVIRONMENT_VARIABLES = dotenv.config({ path: envFilePath });
 
 /**
- * Release configuration directory.
+ * Local releases directory.
+ * This is temporary directory to store configuration YAML files, etc.
  * @type {String}
  */
 const DEFAULT_RELEASES_DIRECTORY = path.join(currentDir, ".releases");
@@ -49,82 +49,80 @@ const RELEASES_DIRECTORY = env.get(
   DEFAULT_RELEASES_DIRECTORY
 );
 
-const {
-  RELEASES_PLATFORM = DEFAULT_PLATFORM.NAME,
-  RELEASES_HOSTNAME = DEFAULT_PLATFORM.HOSTNAME,
-  RELEASES_ORG = DEFAULT_PLATFORM.ORG,
-} = process.env;
-const imageNamespace = path.join(RELEASES_HOSTNAME, RELEASES_ORG);
+const PLATFORM = env.first(
+  ["CISCO_RELEASES_PLATFORM", "RELEASES_PLATFORM"],
+  DEFAULT_PLATFORM.NAME
+);
+const HOSTNAME = env.first(
+  ["CISCO_RELEASES_HOSTNAME", "RELEASES_HOSTNAME"],
+  DEFAULT_PLATFORM.HOSTNAME
+);
+const ORG = env.first(
+  ["CISCO_RELEASES_ORG", "RELEASES_ORG"],
+  DEFAULT_PLATFORM.ORG
+);
+
+const imageNamespace = path.join(HOSTNAME, ORG);
 debug("image namespace:", imageNamespace);
 
-const RELEASES_PROJECT_ID = process.env.RELEASES_PROJECT_ID;
-const RELEASES_PROJECT_NAME =
-  process.env.RELEASES_PROJECT_NAME || RELEASES_PROJECT_ID;
+const SERVICE_NAME = "service";
+const defaultPackageName = env.get("npm_package_name", SERVICE_NAME);
+const packageName = env.first(
+  ["CISCO_RELEASES_NAME", "BOT_NAME"],
+  defaultPackageName
+);
+const NAME = path.basename(packageName);
 
-debug("project name:", RELEASES_PROJECT_NAME);
-
-const BOT_NAME =
-  process.env.BOT_NAME || path.basename(process.env.npm_package_name || "bot");
-const BOT_VERSION =
-  process.env.BOT_VERSION || process.env.npm_package_version || "0.0.0";
+const version = env.get("npm_package_version", "0.0.0");
+const VERSION = env.first(["CISCO_RELEASES_VERSION", "BOT_VERSION"], version);
 
 const TEMPLATE_SUFFIX = "-template";
 
 // Configure deployment file names.
 const DEPLOYMENT_NAME = "deployment";
-const RELEASES_DEPLOYMENT = `${DEPLOYMENT_NAME}.${YAML_FILE_EXT}`;
-const RELEASES_DEPLOYMENT_TEMPLATE = `${DEPLOYMENT_NAME}${TEMPLATE_SUFFIX}.${YAML_FILE_EXT}`;
+const DEPLOYMENT = `${DEPLOYMENT_NAME}.${YAML_FILE_EXT}`;
+const DEPLOYMENT_TEMPLATE = `${DEPLOYMENT_NAME}${TEMPLATE_SUFFIX}.${YAML_FILE_EXT}`;
 
 // Configure route file names.
 const ROUTE_NAME = "route";
-const RELEASES_ROUTE = `${ROUTE_NAME}.${YAML_FILE_EXT}`;
-const RELEASES_ROUTE_TEMPLATE = `${ROUTE_NAME}${TEMPLATE_SUFFIX}.${YAML_FILE_EXT}`;
+const ROUTE = `${ROUTE_NAME}.${YAML_FILE_EXT}`;
+const ROUTE_TEMPLATE = `${ROUTE_NAME}${TEMPLATE_SUFFIX}.${YAML_FILE_EXT}`;
 
 // Configure secret file names.
 const SECRET_NAME = "secret";
-const RELEASES_SECRET = `${SECRET_NAME}.${YAML_FILE_EXT}`;
+const SECRET = `${SECRET_NAME}.${YAML_FILE_EXT}`;
 
 // Configure service file names.
-const SERVICE_NAME = "service";
-const RELEASES_SERVICE = `${SERVICE_NAME}.${YAML_FILE_EXT}`;
-
-/**
- * The releases deployment URL.
- * @constant {String}
- */
-const { RELEASES_URL } = process.env;
+const SERVICE = `${SERVICE_NAME}.${YAML_FILE_EXT}`;
 
 module.exports = {
   env,
 
-  BOT_NAME,
-  BOT_VERSION,
-  BOT_URL: process.env.BOT_URL,
+  NAME,
+  VERSION,
+
+  // TODO: Move to a subclass and (probably) require it.
+  BOT_URL: env.get("BOT_URL"),
 
   ENVIRONMENT_VARIABLES,
   NODE_ENV,
-  PORT: process.env.PORT || 3000,
+  PORT: env.get("PORT", 3000),
 
   NPM_REGISTRY: env.get("NPM_REGISTRY", "https://registry.npmjs.org"),
   NPM_USERNAME: env.get("NPM_USERNAME"),
   NPM_PASSWORD: env.get("NPM_PASSWORD"),
 
   RELEASES_DIRECTORY,
-  RELEASES_DEPLOYMENT,
-  RELEASES_DEPLOYMENT_TEMPLATE,
+  DEPLOYMENT,
+  DEPLOYMENT_TEMPLATE,
 
-  RELEASES_ROUTE,
-  RELEASES_ROUTE_TEMPLATE,
+  ROUTE,
+  ROUTE_TEMPLATE,
 
-  RELEASES_SECRET,
-  RELEASES_SERVICE,
+  SECRET,
+  SERVICE,
 
-  RELEASES_HOSTNAME,
-  RELEASES_ORG,
-  RELEASES_PLATFORM,
-
-  RELEASES_PROJECT_ID,
-  RELEASES_PROJECT_NAME,
-
-  RELEASES_URL,
+  PLATFORM,
+  HOSTNAME,
+  ORG,
 };
