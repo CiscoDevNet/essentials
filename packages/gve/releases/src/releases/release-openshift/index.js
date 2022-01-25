@@ -19,7 +19,7 @@ const {
   RELEASES_DEPLOYMENT,
   RELEASES_DEPLOYMENT_TEMPLATE,
   RELEASES_HOSTNAME,
-  RELEASES_IMAGE_PULL_SECRET,
+  IMAGE_PULL_SECRET,
   RELEASES_PROJECT_NAME,
   RELEASES_ROUTE,
   RELEASES_ROUTE_TEMPLATE,
@@ -113,13 +113,13 @@ class OpenShiftRelease extends Release {
     debug("reading template: ", deploymentTemplatePath);
     const deploymentTemplate = Release.read(deploymentTemplatePath);
 
-    debug(`adding secret ${RELEASES_IMAGE_PULL_SECRET} to deployment...`);
+    debug(`adding secret ${IMAGE_PULL_SECRET} to deployment...`);
     const deploymentData = this._getDeploymentData(deploymentTemplate);
     if (!deploymentData) {
       throw new DeploymentError("deployment data not found");
     }
     const { spec } = deploymentData.spec.template;
-    spec.imagePullSecrets = [{ name: RELEASES_IMAGE_PULL_SECRET }];
+    spec.imagePullSecrets = [{ name: IMAGE_PULL_SECRET }];
 
     const deploymentPath = path.join(releasesDir, RELEASES_DEPLOYMENT);
     debug("writing config: ", deploymentPath);

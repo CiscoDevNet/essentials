@@ -18,7 +18,10 @@ const {
   RELEASES_SERVICE,
 } = require("../config");
 
-const RELEASES_IMAGE_PULL_SECRET = env.require("RELEASES_IMAGE_PULL_SECRET");
+const IMAGE_PULL_SECRET = env.requireFirst(
+  "CISCO_RELEASES_IMAGE_PULL_SECRET",
+  "RELEASES_IMAGE_PULL_SECRET"
+);
 
 module.exports = {
   BOT_URL,
@@ -32,5 +35,5 @@ module.exports = {
   RELEASES_ROUTE_TEMPLATE,
   RELEASES_SECRET,
   RELEASES_SERVICE,
-  RELEASES_IMAGE_PULL_SECRET,
+  IMAGE_PULL_SECRET,
 };
