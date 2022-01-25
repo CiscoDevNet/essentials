@@ -38,6 +38,14 @@ class OpenShiftRelease extends Release {
     super(projectName, config);
     this.imagePullSecret = imagePullSecret;
 
+    if (!this.projectName) {
+      throw new Error("projectName required to create a release.");
+    }
+
+    if (!this.imagePullSecret) {
+      throw new Error("imagePullSecret required to create a release.");
+    }
+
     const {
       hostName = HOSTNAME,
       deploymentKind = OPENSHIFT_DEPLOYMENT_CONFIG,
