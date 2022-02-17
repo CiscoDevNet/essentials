@@ -330,8 +330,7 @@ class Bridge {
       throw new CopyError(error.message);
     }
 
-    const ultimateDest = path.join(destination, path.basename(source));
-    return ultimateDest;
+    return path.join(destination, path.basename(source));
   }
 
   static async rsync(source, destination, dryRun) {

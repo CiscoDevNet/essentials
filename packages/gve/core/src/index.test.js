@@ -1,3 +1,5 @@
+/* eslint-disable sonarjs/no-duplicate-string */
+
 const { getDomain, normalizeUrl } = require("./index");
 
 const URL = "http://www.cisco.com/c/en/us/products/datasheet-c78-741988.html";

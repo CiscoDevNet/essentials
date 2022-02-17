@@ -148,8 +148,7 @@ class OpenShiftRelease extends Release {
     const { items = [] } = deploymentTemplate;
     const deploymentConfigs = items.filter((item) => {
       const { kind: deploymentKind } = item;
-      const isDeploymentKind = deploymentKind === this.deploymentKind;
-      return isDeploymentKind;
+      return deploymentKind === this.deploymentKind;
     });
     return deploymentConfigs[0];
   }

@@ -63,8 +63,9 @@ class Opportunities extends EventEmitter {
 
     // Salesforce requires spaces to be converted to pluses.
     const spacer = "+";
+    const selectedFields = fields.join(`,${spacer}`);
     const queryParts = [
-      `SELECT ${fields.join(`,${spacer}`)}`,
+      `SELECT ${selectedFields}`,
       "FROM Opportunity",
       `WHERE DealID__c='${dealId}'`,
     ].concat(filters);

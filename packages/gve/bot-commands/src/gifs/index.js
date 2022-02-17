@@ -18,6 +18,8 @@ const { BOT_ACCESS_TOKEN } = require("./config");
 const { UNKNOWN, UNKNOWN_NUMBER, FAILURE } =
   require("@gve/analytics").PROPERTY_VALUES;
 
+const GIPHY_URL = "https://giphy.com";
+
 /**
  * Giphy search options
  *
@@ -42,7 +44,7 @@ const eventTemplate = {
   name: "GIF Viewed",
   properties: {
     query_length: UNKNOWN_NUMBER,
-    source: "https://giphy.com",
+    source: GIPHY_URL,
     status: FAILURE,
   },
 };
@@ -135,9 +137,9 @@ class Gifs extends EventEmitter {
           mimeType: "image/gif",
           type: "image/gif",
           objectType: "file",
-          url: "https://giphy.com",
+          url: GIPHY_URL,
           image: {
-            url: "https://giphy.com",
+            url: GIPHY_URL,
           },
         });
 
