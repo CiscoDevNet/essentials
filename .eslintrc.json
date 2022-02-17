@@ -9,7 +9,7 @@
     "eslint:recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
-    "plugin:sonar/recommended"
+    "plugin:sonarjs/recommended"
   ],
   "parser": "@babel/eslint-parser",
   "parserOptions": {

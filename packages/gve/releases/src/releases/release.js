@@ -151,8 +151,7 @@ class Release extends EventEmitter {
       "awk '{print $1 }'",
       "xargs -I {} docker rm --force --volumes {}",
     ];
-    const command = commands.join(" | ");
-    return command;
+    return commands.join(" | ");
   }
 
   get removeImageCommand() {
@@ -279,12 +278,10 @@ class Release extends EventEmitter {
       buildKitOption = 1;
     }
 
-    const envVariables = [
+    return [
       `DOCKER_BUILDKIT=${buildKitOption}`,
       `IMAGE_NAME=${this.fullImageName}`,
     ].filter((envVariable) => envVariable !== undefined);
-
-    return envVariables;
   }
 
   /**
