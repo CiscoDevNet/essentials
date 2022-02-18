@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.5](https://github.com/CiscoDevNet/essentials/compare/@gve/bot-middleware@0.4.4...@gve/bot-middleware@0.4.5) (2022-02-18)
+
+**Note:** Version bump only for package @gve/bot-middleware
+
+
+
+
+
 ## [0.4.4](https://github.com/CiscoDevNet/essentials/compare/@gve/bot-middleware@0.4.3...@gve/bot-middleware@0.4.4) (2021-12-21)
 
 **Note:** Version bump only for package @gve/bot-middleware
