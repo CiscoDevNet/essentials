@@ -4,8 +4,8 @@
  */
 
 const debug = require("debug")("commands");
-
 const { ControllerAssignError } = require("./errors");
+const EventEmitter = require("events");
 
 /**
  * Confidence threshold - if the confidence falls below
@@ -42,24 +42,26 @@ const REGEX_NEVER_MATCH = /.^/;
  */
 
 /**
+ * Default message types.
+ */
+const DEFAULT_MESSAGE_TYPES = Object.values(STANDARD_MESSAGE_TYPES);
+
+/**
  * Creates a new base Command that handles a particular intent.
  * Specific commands
  * @class
  */
-class Command {
+class Command extends EventEmitter {
   /**
    * Creates a new command.
    * Listens to direct and group messages by default.
    * @param {CommandConfig} config - optional configuration
    */
-  constructor(
-    config = {
-      messageTypes: Object.values(STANDARD_MESSAGE_TYPES),
-    }
-  ) {
+  constructor(config = { messageTypes: DEFAULT_MESSAGE_TYPES }) {
+    super();
     const {
       intent,
-      messageTypes = Object.values(STANDARD_MESSAGE_TYPES),
+      messageTypes = DEFAULT_MESSAGE_TYPES,
       handleText = this.defaultHandleText.bind(this),
       handleAttachment = this.defaultHandleAttachment.bind(this),
     } = config;
