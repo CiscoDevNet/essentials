@@ -6,8 +6,6 @@ name: Lint
 on:
   workflow_dispatch:
   pull_request:
-  # Custom event name to run this action locally
-  _lint:
 jobs:
   lint:
     runs-on: ubuntu-latest
