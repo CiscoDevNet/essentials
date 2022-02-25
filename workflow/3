@@ -1,0 +1,2 @@
+npm run lerna:ci
+npm run lerna:version -- --yes
