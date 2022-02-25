@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/CiscoDevNet/essentials/compare/@gve/bot-commands@0.2.18...@gve/bot-commands@0.4.0) (2022-02-25)
+
+
+### Features
+
+* **bot-commands:** allow Commands to emit events ([8a9d4f9](https://github.com/CiscoDevNet/essentials/commit/8a9d4f9c4130864c2ed4f8697c664f2343d635da))
+
+
+
+
+
 # [0.3.0](https://github.com/CiscoDevNet/essentials/compare/@gve/bot-commands@0.2.18...@gve/bot-commands@0.3.0) (2022-02-18)
 
 

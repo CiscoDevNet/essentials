@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/CiscoDevNet/essentials/compare/@gve/releases@0.6.3...@gve/releases@0.7.0) (2022-02-25)
+
+
+### Features
+
+* **releases:** add support for CISCO-prefixed environment variables ([6f2075b](https://github.com/CiscoDevNet/essentials/commit/6f2075bdf451a841cd4abeb43508022d0cab7658))
+
+
+
+
+
 ## [0.6.4](https://github.com/CiscoDevNet/essentials/compare/@gve/releases@0.6.3...@gve/releases@0.6.4) (2022-02-18)
 
 **Note:** Version bump only for package @gve/releases
