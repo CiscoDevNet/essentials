@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.7.1 (2022-02-28)
+
+**Note:** Version bump only for package @gve/releases
+
+
+
+
+
 ## [0.6.4](https://github.com/CiscoDevNet/essentials/compare/@gve/releases@0.6.3...@gve/releases@0.6.4) (2022-02-18)
 
 **Note:** Version bump only for package @gve/releases
