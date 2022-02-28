@@ -121,17 +121,8 @@ class OpenShiftRelease extends Release {
     Release.write(deploymentTemplate, deploymentPath);
 
     console.log(colors.green("Created Deployment configuration.\n"));
-
     this.buildService();
-
-    const instructions = [
-      `Deploy these configurations with:`,
-      "",
-      `  npm run release`,
-      "",
-    ];
-
-    console.log(instructions.join("\n"));
+    console.log("You can now deploy these configurations.\n");
   }
 
   /**
@@ -184,9 +175,9 @@ class OpenShiftRelease extends Release {
     Release.write(contents, routeConfig);
 
     const instructions = [
-      `${colors.green("Created Route configuration.")} Deploy it with:`,
+      `${colors.green("Created Route configuration.")}`,
       "",
-      "  npm run release:route",
+      "You can now deploy this route.",
       "",
       `${colors.yellow(
         "WARN: You will need to update and provision the route policy after deploying."

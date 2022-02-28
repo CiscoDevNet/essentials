@@ -67,15 +67,7 @@ class GoogleRelease extends Release {
     Release.write(fileContent, deploymentPath);
 
     console.log(colors.green("Created Deployment configuration.\n"));
-
-    const instructions = [
-      "Deploy this configuration with:",
-      "",
-      `  npm run release:google`,
-      "",
-    ];
-
-    console.log(instructions.join("\n"));
+    console.log("You can now deploy this configuration.\n");
   }
 
   async release() {
