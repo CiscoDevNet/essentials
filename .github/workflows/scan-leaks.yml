@@ -1,0 +1,15 @@
+# GitHub Action
+# description: Scan the code for secrets, etc.
+# author: Matt Norris <matnorri@cisco.com>
+
+name: Scan for leaks
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: gitleaks-action
+        uses: zricethezav/gitleaks-action@master

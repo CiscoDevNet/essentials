@@ -1,0 +1,28 @@
+#!/bin/bash
+PATH=./node_modules/.bin:$PATH
+
+function default {
+    scan
+}
+
+function scan {
+    scripts/sast/gitleaks/scan.sh
+}
+
+# Scan with the gitleaks Github Action
+function scan:action {
+    act -j gitleaks
+}
+
+function protect {
+    scripts/sast/gitleaks/protect.sh
+}
+
+function help {
+    echo "$0 <task> <args>"
+    echo "Tasks:"
+    compgen -A function | cat -n
+}
+
+TIMEFORMAT="Task completed in %3lR"
+time ${@:-default}
