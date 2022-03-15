@@ -14,8 +14,9 @@ on:
     types: [closed]
 jobs:
   version-packages:
-    # Version the packages if the PR is merged.
-    if: ${{ github.event.pull_request.merged }}
+    # Version the packages if the PR merged was not a PR created by this workflow.
+    # Otherwise, PRs are created in an endless loop.
+    if: ${{ github.event.pull_request.merged && github.event.label.name != 'automated' }}
 
     runs-on: ubuntu-latest
     steps:

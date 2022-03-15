@@ -8,8 +8,8 @@ name: Publish Packages
 on:
   workflow_run:
     workflows: ["Version Packages"]
-    types: [completed]
     branches: [main]
+    types: [completed]
 jobs:
   publish-packages:
     # Publish the packages if the "Version Packages" workfow succeeded.
