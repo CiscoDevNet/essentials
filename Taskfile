@@ -5,6 +5,12 @@ function default {
     scan
 }
 
+function publish {
+    act -j publish-packages \
+        --secret-file .env \
+        -e act/complete-version-packages.json
+}
+
 function scan {
     scripts/sast/gitleaks/scan.sh
 }
