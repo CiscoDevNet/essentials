@@ -1,5 +1,5 @@
 {
-  "packages": ["docs/*", "packages/gve/*"],
+  "packages": ["docs/*", "packages/gve/*", "packages/cisco/*"],
   "version": "independent",
   "command": {
     "version": {
