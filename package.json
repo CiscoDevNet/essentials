@@ -44,6 +44,7 @@
     "commitizen": "^4.1.2",
     "cz-lerna-changelog": "^2.0.3",
     "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-sonar": "^0.6.1",
     "eslint-plugin-sonarjs": "^0.11.0",

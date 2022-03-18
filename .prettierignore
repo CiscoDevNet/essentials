@@ -3,5 +3,7 @@
 docs/
 output/
 
+.docusaurus
+
 CHANGELOG.md
 package-lock.json
