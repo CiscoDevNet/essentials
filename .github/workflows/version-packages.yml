@@ -16,14 +16,15 @@ jobs:
   print-pr-info:
     runs-on: ubuntu-latest
     steps:
-      - name: print PR info
+      - name: print if labeled
+        if: contains(github.event.pull_request.labels.*.name, 'automated')
         run: |
-          echo "Pull request info: ${{ github.event.pull_request }}"
+          echo "has label: automated"
 
   version-packages:
-    # Version the packages if the PR merged was not a PR created by this workflow.
-    # Otherwise, PRs are created in an endless loop.
-    if: ${{ github.event.pull_request.merged && github.event.pull_request.label.name != 'automated' }}
+    # Version the packages if the PR merged was not created by this workflow.
+    # Otherwise, this job will create PRs in an endless loop.
+    if: github.event.pull_request.merged && !contains(github.event.pull_request.labels.*.name, 'automated')
 
     runs-on: ubuntu-latest
     steps:

@@ -1,0 +1,14 @@
+{
+  "pull_request": {
+    "labels": [
+      {
+        "name": "automated"
+      }
+    ],
+    "head": {
+      "ref": "main"
+    },
+    "type": "closed",
+    "merged": true
+  }
+}
