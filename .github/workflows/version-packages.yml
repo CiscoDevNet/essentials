@@ -10,7 +10,6 @@ on:
   pull_request:
     branches:
       - main
-      - gh-actions
     types: [closed]
 jobs:
   print-pr-info:

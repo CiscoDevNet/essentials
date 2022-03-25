@@ -8,12 +8,14 @@ name: Publish Packages
 on:
   workflow_run:
     workflows: ["Version Packages"]
-    branches: [main]
+    branches:
+      - main
+      - version-packages
     types: [completed]
 jobs:
   publish-packages:
     # Publish the packages if the "Version Packages" workfow succeeded.
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: github.event.workflow_run.conclusion == 'success'
 
     runs-on: ubuntu-latest
     steps:

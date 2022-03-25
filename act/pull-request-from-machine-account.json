@@ -1,0 +1,13 @@
+{
+  "pull_request": {
+    "labels": [
+      {
+        "name": "automated"
+      }
+    ],
+    "user": { "login": "gveappsupport" },
+    "head": {
+      "ref": "main"
+    }
+  }
+}
