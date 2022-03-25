@@ -4,12 +4,17 @@
 const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
-const { basicConfig, repoUrl } = require("./config");
-const { title } = basicConfig;
-
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  ...basicConfig,
+  title: "My Site",
+  tagline: "Dinosaurs are cool",
+  url: "https://your-docusaurus-test-site.com",
+  baseUrl: "/",
+  onBrokenLinks: "throw",
+  onBrokenMarkdownLinks: "warn",
+  favicon: "img/favicon.ico",
+  organizationName: "facebook", // Usually your GitHub org/user name.
+  projectName: "docusaurus", // Usually your repo name.
 
   presets: [
     [
@@ -39,9 +44,9 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title,
+        title: "My Site",
         logo: {
-          alt: `${title} Logo`,
+          alt: "My Site Logo",
           src: "img/logo.svg",
         },
         items: [
@@ -53,7 +58,7 @@ const config = {
           },
           { to: "/blog", label: "Blog", position: "left" },
           {
-            href: repoUrl,
+            href: "https://github.com/facebook/docusaurus",
             label: "GitHub",
             position: "right",
           },
@@ -97,7 +102,7 @@ const config = {
               },
               {
                 label: "GitHub",
-                href: repoUrl,
+                href: "https://github.com/facebook/docusaurus",
               },
             ],
           },

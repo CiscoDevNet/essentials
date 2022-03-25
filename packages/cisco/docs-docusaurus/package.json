@@ -1,0 +1,28 @@
+{
+  "name": "@cisco/docs-docusaurus",
+  "version": "0.0.0",
+  "description": "Docusaurus config and utilities to help write documentation",
+  "main": "src/index.js",
+  "files": [
+    "src/"
+  ],
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Matt Norris <matnorri@cisco.com>",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CiscoDevNet/essentials.git",
+    "directory": "packages/cisco/docs-docusaurus"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.8",
+    "@babel/preset-env": "^7.16.11",
+    "babel-jest": "^27.5.1",
+    "jest": "^27.5.1"
+  }
+}
