@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/CiscoDevNet/essentials/compare/@gve/salesforce@0.4.18...@gve/salesforce@0.6.0) (2022-03-30)
+
+
+### Features
+
+* **@cisco/docs-docusaurus:** add package for working with Docusaurus ([d19a147](https://github.com/CiscoDevNet/essentials/commit/d19a1472b2dbc0f79a38d31aac9a2b2bcc8a99f1))
+
+
+
+
+
 ## 0.5.7 (2022-03-25)
 
 **Note:** Version bump only for package @gve/salesforce

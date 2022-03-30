@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/CiscoDevNet/essentials/compare/@gve/bot-commands@0.3.0...@gve/bot-commands@0.5.0) (2022-03-30)
+
+
+### Features
+
+* **@cisco/docs-docusaurus:** add package for working with Docusaurus ([d19a147](https://github.com/CiscoDevNet/essentials/commit/d19a1472b2dbc0f79a38d31aac9a2b2bcc8a99f1))
+* **bot-commands:** allow Commands to emit events ([8a9d4f9](https://github.com/CiscoDevNet/essentials/commit/8a9d4f9c4130864c2ed4f8697c664f2343d635da))
+
+
+
+
+
 ## 0.4.7 (2022-03-25)
 
 **Note:** Version bump only for package @gve/bot-commands
