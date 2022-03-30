@@ -15,6 +15,9 @@ jobs:
   print-pr-info:
     runs-on: ubuntu-latest
     steps:
+      - name: print ref
+        run: |
+          echo "ref: ${{ github.event.pull_request.head.ref }}"
       - name: print if labeled
         if: contains(github.event.pull_request.labels.*.name, 'automated')
         run: |
