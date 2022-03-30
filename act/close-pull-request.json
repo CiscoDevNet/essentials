@@ -3,7 +3,12 @@
     "head": {
       "ref": "main"
     },
-    "type": "closed",
-    "merged": true
+    "labels": [
+      {
+        "name": "normal label"
+      }
+    ],
+    "merged": true,
+    "type": "closed"
   }
 }

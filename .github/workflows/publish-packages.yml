@@ -20,14 +20,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN || github.token }}
       - uses: actions/setup-node@v2
         with:
           node-version: lts/fermium
 
+      # Configure git so Lerna can function properly.
+      - name: Configure git for Lerna
+        run: |
+          git config user.name "GVE App Support"
+          git config user.email "<>"
+
+      - name: Install
+        run: npm run lerna:ci
+
+      - name: Push tags to repository
+        run: npm run lerna:push
+
       # Publish using CI system automation.
       # https://github.com/lerna/lerna/tree/main/commands/publish#--no-verify-access
-      - run: |
-          npm run lerna:ci
-          npm run lerna:publish:auto -- --yes
+      - name: Publish packages to npm
+      - run: npm run lerna:publish:auto -- --yes
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}

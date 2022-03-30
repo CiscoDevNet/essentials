@@ -2,10 +2,10 @@
   "pull_request": {
     "labels": [
       {
-        "name": "normal label"
+        "name": "automated"
       }
     ],
-    "user": { "login": "normaluser" },
+    "user": { "login": "malicioususer" },
     "head": {
       "ref": "main"
     }
