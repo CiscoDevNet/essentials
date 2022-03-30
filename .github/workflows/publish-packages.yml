@@ -41,6 +41,6 @@ jobs:
       # Publish using CI system automation.
       # https://github.com/lerna/lerna/tree/main/commands/publish#--no-verify-access
       - name: Publish packages to npm
-      - run: npm run lerna:publish:auto -- --yes
+        run: npm run lerna:publish:auto -- --yes
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
