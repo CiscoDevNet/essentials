@@ -10,7 +10,6 @@ on:
   pull_request:
     branches:
       - main
-      - gh-actions
     types: [closed]
 jobs:
   print-pr-info:
@@ -48,4 +47,14 @@ jobs:
         run: npm run lerna:ci
 
       - name: Version the packages
-        run: npx lerna version --conventional-commits
+        run: npm run lerna:version -- --yes
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN || github.token }}
+          commit-message: "chore: version packages"
+          branch: version-packages
+          delete-branch: true
+          title: "update the versions of the packages"
+          labels: automated
