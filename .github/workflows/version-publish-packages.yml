@@ -1,10 +1,10 @@
 # GitHub Action
-# description: Versions packages merged into main
+# description: Versions and publish packages
 # author: Matt Norris <matnorri@cisco.com>
 # references:
 #    - [Trigger when PR is merged](https://stackoverflow.com/a/67833464/154065)
 
-name: Version Packages
+name: Version & Publish Packages
 on:
   workflow_dispatch:
   pull_request:
