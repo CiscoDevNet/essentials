@@ -19,6 +19,7 @@ jobs:
       - name: Print the triggering branch
         run: |
           echo "PR triggered by this branch: ${{ github.event.pull_request.head.ref }}"
+          echo "github.ref: ${{ github.ref }}"
       - name: Print if this is an automated PR
         if: contains(github.event.pull_request.labels.*.name, 'automated')
         run: |
@@ -27,7 +28,10 @@ jobs:
   version-packages:
     # Version the packages if the PR merged was not created by this workflow.
     # Otherwise, this job will create PRs in an endless loop.
-    if: github.event.pull_request.merged && !contains(github.event.pull_request.labels.*.name, 'automated')
+    if: |
+      github.event.pull_request.merged &&
+      contains(github.event.pull_request.head.ref, 'main') &&
+      !contains(github.event.pull_request.labels.*.name, 'automated')
 
     runs-on: ubuntu-latest
     steps:
@@ -48,4 +52,11 @@ jobs:
         run: npm run lerna:ci
 
       - name: Version the packages
-        run: npx lerna version --conventional-commits --yes
+        run: npm run lerna:version -- --yes
+
+      - name: Push tags to the repository
+        uses: CasperWA/push-protected@v2
+        with:
+          token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN }}
+          branch: main
+          tags: True
