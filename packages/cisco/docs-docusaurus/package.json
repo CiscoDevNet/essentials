@@ -1,6 +1,6 @@
 {
   "name": "@cisco/docs-docusaurus",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Docusaurus config and utilities to help write documentation",
   "main": "src/index.js",
   "files": [
