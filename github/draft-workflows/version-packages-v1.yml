@@ -15,9 +15,10 @@ jobs:
   print-pr-info:
     runs-on: ubuntu-latest
     steps:
-      - name: Print the triggering branch
+      - name: Print the triggering branch and ref
         run: |
           echo "PR triggered by this branch: ${{ github.event.pull_request.head.ref }}"
+          echo "github.ref: ${{ github.ref }}"
       - name: Print if this is an automated PR
         if: contains(github.event.pull_request.labels.*.name, 'automated')
         run: |

@@ -6,6 +6,7 @@
 
 name: Publish Packages
 on:
+  workflow_dispatch:
   workflow_run:
     workflows: ["Version Packages"]
     branches:
@@ -14,11 +15,15 @@ on:
     types: [completed]
 jobs:
   publish-packages:
+    runs-on: ubuntu-latest
+
     # Publish the packages if the "Version Packages" workfow succeeded.
     if: github.event.workflow_run.conclusion == 'success'
-
-    runs-on: ubuntu-latest
     steps:
+      #
+      # Set up
+      #
+
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN || github.token }}
@@ -35,10 +40,11 @@ jobs:
       - name: Install
         run: npm run lerna:ci
 
-      - name: Push tags to repository
-        run: npm run lerna:push
+      #
+      # Publish
+      #
 
-      # Publish using CI system automation.
+      # Use CI system automation.
       # https://github.com/lerna/lerna/tree/main/commands/publish#--no-verify-access
       - name: Publish packages to NPM 📦
         run: npm run lerna:publish:auto -- --yes
