@@ -20,21 +20,19 @@ jobs:
         run: |
           echo "PR triggered by this branch: ${{ github.event.pull_request.head.ref }}"
           echo "github.ref: ${{ github.ref }}"
-      - name: Print if this is an automated PR
-        if: contains(github.event.pull_request.labels.*.name, 'automated')
-        run: |
-          echo "PR has this label: automated"
 
   version-packages:
-    # Version the packages if the PR merged was not created by this workflow.
-    # Otherwise, this job will create PRs in an endless loop.
+    runs-on: ubuntu-latest
+
+    # Version the packages if the PR was merged.
     if: |
       github.event.pull_request.merged &&
-      contains(github.ref, 'main') &&
-      !contains(github.event.pull_request.labels.*.name, 'automated')
-
-    runs-on: ubuntu-latest
+      contains(github.ref, 'main')
     steps:
+      #
+      # Set up
+      #
+
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN || github.token }}
@@ -50,6 +48,10 @@ jobs:
 
       - name: Install
         run: npm run lerna:ci
+
+      #
+      # Version
+      #
 
       - name: Version the packages
         run: npm run lerna:version -- --yes
