@@ -48,4 +48,4 @@ jobs:
         run: npm run lerna:ci
 
       - name: Version the packages
-        run: npx lerna version --conventional-commits
+        run: npx lerna version --conventional-commits --yes
