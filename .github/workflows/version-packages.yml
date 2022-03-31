@@ -62,3 +62,15 @@ jobs:
           token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN }}
           branch: main
           tags: True
+
+      #
+      # Publish
+      #
+
+      # Use CI system automation.
+      # https://github.com/lerna/lerna/tree/main/commands/publish#--no-verify-access
+      - name: Publish packages to NPM 📦
+        if: success()
+        run: npm run lerna:publish:auto -- --yes
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
