@@ -63,6 +63,32 @@ jobs:
           branch: main
           tags: True
 
+  publish-packages:
+    runs-on: ubuntu-latest
+
+    # Publish the packages if the "Version Packages" workfow succeeded.
+    needs: version-packages
+    steps:
+      #
+      # Set up
+      #
+
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN || github.token }}
+      - uses: actions/setup-node@v2
+        with:
+          node-version: lts/fermium
+
+      # Configure git so Lerna can function properly.
+      - name: Configure git for Lerna
+        run: |
+          git config user.name "GVE App Support"
+          git config user.email "<>"
+
+      - name: Install
+        run: npm run lerna:ci
+
       #
       # Publish
       #
@@ -70,7 +96,6 @@ jobs:
       # Use CI system automation.
       # https://github.com/lerna/lerna/tree/main/commands/publish#--no-verify-access
       - name: Publish packages to NPM 📦
-        if: success()
         run: npm run lerna:publish:auto -- --yes
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
