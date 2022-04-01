@@ -68,11 +68,11 @@ basicConfig.themeConfig =
           items: [
             {
               label: "Stack Overflow",
-              href: "https://stackoverflow.com/questions/tagged/docusaurus",
+              href: "https://stackoverflow.com/questions/tagged/cisco+javascript",
             },
             {
               label: "Twitter",
-              href: "https://twitter.com/docusaurus",
+              href: "https://twitter.com/ciscodevnet",
             },
           ],
         },
