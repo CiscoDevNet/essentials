@@ -1,25 +1,32 @@
 const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
-
 const { docusaurus } = require("./config");
 
-const { basicConfig } = docusaurus;
+const { basicConfig, title, repoPath, repoTreePath } = docusaurus;
 
-const { title, repoPath, repoTreePath } = docusaurus;
+const DOCS_ENABLED = {
+  sidebarPath: require.resolve("./sidebars.js"),
+  editUrl: repoTreePath,
+};
+
+const BLOG_ENABLED = {
+  showReadingTime: true,
+  editUrl: repoTreePath,
+};
+
+const docs = DOCS_ENABLED;
+// const docs = false;
+
+const blog = BLOG_ENABLED;
+// const blog = false;
 
 basicConfig.presets = [
   [
     "classic",
     /** @type {import('@docusaurus/preset-classic').Options} */
     ({
-      docs: {
-        sidebarPath: require.resolve("./sidebars.js"),
-        editUrl: repoTreePath,
-      },
-      blog: {
-        showReadingTime: true,
-        editUrl: repoTreePath,
-      },
+      docs,
+      blog,
       theme: {
         customCss: require.resolve("./src/css/custom.css"),
       },
