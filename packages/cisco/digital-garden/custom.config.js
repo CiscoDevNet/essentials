@@ -12,24 +12,7 @@ const DOCS_ENABLED = {
 const docs = DOCS_ENABLED;
 // const docs = false;
 
-const BLOG_ITEM = {
-  label: "Blog",
-  to: "/blog",
-};
-
-let blog = false;
-let blogNavBarItem;
-let blogFooterItem;
-
-if (blogConfig.isEnabled) {
-  blog = {
-    showReadingTime: true,
-    editUrl: repoTreePath,
-  };
-
-  blogNavBarItem = { ...BLOG_ITEM, position: "left" };
-  blogFooterItem = { ...BLOG_ITEM };
-}
+const { blog } = docusaurus;
 
 basicConfig.presets = [
   [
@@ -37,7 +20,7 @@ basicConfig.presets = [
     /** @type {import('@docusaurus/preset-classic').Options} */
     ({
       docs,
-      blog,
+      blog: blog.isEnabled ? blog.basicConfig : false,
       theme: {
         customCss: require.resolve("./src/css/custom.css"),
       },
@@ -61,7 +44,7 @@ basicConfig.themeConfig =
           position: "left",
           label: "Tutorial",
         },
-        blogNavBarItem,
+        blog.navBarItem,
         {
           href: repoPath,
           label: "GitHub",
@@ -97,7 +80,7 @@ basicConfig.themeConfig =
         {
           title: "More",
           items: [
-            blogFooterItem,
+            blog.footerItem,
             {
               label: "GitHub",
               href: repoPath,
