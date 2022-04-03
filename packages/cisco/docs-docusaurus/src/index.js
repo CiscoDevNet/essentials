@@ -1,19 +1,20 @@
 const path = require("path");
+const Blog = require("./blog");
 
 // Required by Docusaurus.
 const DEFAULT_SITE_TITLE = "My Site";
 const DEFAULT_SITE_BASE_PATH = "/";
 
 // Not required, but good to have.
-const DEFAULT_SITE_ON_BROKEN_LINKS = "throw";
-const DEFAULT_SITE_ON_BROKEN_MARKDOWN_LINKS = "warn";
 const DEFAULT_SITE_FAVICON_PATH = "img/favicon.ico";
+const DEFAULT_SITE_ON_BROKEN_BEHAVIOR = "throw";
 
 const DEFAULT_STANDARD_CONFIG = {
   title: DEFAULT_SITE_TITLE,
   baseUrl: DEFAULT_SITE_BASE_PATH,
-  onBrokenLinks: DEFAULT_SITE_ON_BROKEN_LINKS,
-  onBrokenMarkdownLinks: DEFAULT_SITE_ON_BROKEN_MARKDOWN_LINKS,
+  onBrokenLinks: DEFAULT_SITE_ON_BROKEN_BEHAVIOR,
+  onBrokenMarkdownLinks: DEFAULT_SITE_ON_BROKEN_BEHAVIOR,
+  onDuplicateRoutes: DEFAULT_SITE_ON_BROKEN_BEHAVIOR,
   favicon: DEFAULT_SITE_FAVICON_PATH,
 };
 
@@ -40,6 +41,7 @@ class Docusaurus {
       favicon,
       onBrokenLinks,
       onBrokenMarkdownLinks,
+      onDuplicateRoutes,
       tagline,
       repoBranch,
       repoDirPath,
@@ -49,8 +51,9 @@ class Docusaurus {
       title = DEFAULT_SITE_TITLE,
       baseUrl = DEFAULT_SITE_BASE_PATH,
       favicon = DEFAULT_SITE_FAVICON_PATH,
-      onBrokenLinks = DEFAULT_SITE_ON_BROKEN_LINKS,
-      onBrokenMarkdownLinks = DEFAULT_SITE_ON_BROKEN_MARKDOWN_LINKS,
+      onBrokenLinks = DEFAULT_SITE_ON_BROKEN_BEHAVIOR,
+      onBrokenMarkdownLinks = DEFAULT_SITE_ON_BROKEN_BEHAVIOR,
+      onDuplicateRoutes = DEFAULT_SITE_ON_BROKEN_BEHAVIOR,
       tagline,
       repoBranch = DEFAULT_REPO_BRANCH,
       repoDirPath,
@@ -63,12 +66,15 @@ class Docusaurus {
     this.favicon = favicon;
     this.onBrokenLinks = onBrokenLinks;
     this.onBrokenMarkdownLinks = onBrokenMarkdownLinks;
+    this.onDuplicateRoutes = onDuplicateRoutes;
     this.tagline = tagline;
 
     // Custom props
     this.repoUrlBase = repoUrlBase;
     this.repoBranch = repoBranch;
     this.repoDirPath = repoDirPath;
+
+    this.blog = new Blog(this.repoTreePath);
   }
 
   get basicConfig() {

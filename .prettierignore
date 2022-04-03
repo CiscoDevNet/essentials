@@ -1,10 +1,12 @@
 .pytest_cache/
 .venv/
-docs/
 output/
-
-.docusaurus/
-coverage/
 
 CHANGELOG.md
 package-lock.json
+
+# Docusaurus
+.docusaurus/
+docs/
+build/
+coverage/

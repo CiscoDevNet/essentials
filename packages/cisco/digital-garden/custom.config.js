@@ -1,6 +1,6 @@
 const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
-const { docusaurus } = require("./config");
+const { blog: blogConfig, docusaurus } = require("./config");
 
 const { basicConfig, title, repoPath, repoTreePath } = docusaurus;
 
@@ -9,16 +9,27 @@ const DOCS_ENABLED = {
   editUrl: repoTreePath,
 };
 
-const BLOG_ENABLED = {
-  showReadingTime: true,
-  editUrl: repoTreePath,
-};
-
 const docs = DOCS_ENABLED;
 // const docs = false;
 
-const blog = BLOG_ENABLED;
-// const blog = false;
+const BLOG_ITEM = {
+  label: "Blog",
+  to: "/blog",
+};
+
+let blog = false;
+let blogNavBarItem;
+let blogFooterItem;
+
+if (blogConfig.isEnabled) {
+  blog = {
+    showReadingTime: true,
+    editUrl: repoTreePath,
+  };
+
+  blogNavBarItem = { ...BLOG_ITEM, position: "left" };
+  blogFooterItem = { ...BLOG_ITEM };
+}
 
 basicConfig.presets = [
   [
@@ -50,13 +61,13 @@ basicConfig.themeConfig =
           position: "left",
           label: "Tutorial",
         },
-        { to: "/blog", label: "Blog", position: "left" },
+        blogNavBarItem,
         {
           href: repoPath,
           label: "GitHub",
           position: "right",
         },
-      ],
+      ].filter(Boolean),
     },
     footer: {
       style: "dark",
@@ -86,15 +97,12 @@ basicConfig.themeConfig =
         {
           title: "More",
           items: [
-            {
-              label: "Blog",
-              to: "/blog",
-            },
+            blogFooterItem,
             {
               label: "GitHub",
               href: repoPath,
             },
-          ],
+          ].filter(Boolean),
         },
       ],
       copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,

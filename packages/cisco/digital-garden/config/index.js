@@ -1,4 +1,6 @@
-const docusaurus = require("./docusaurus");
 const env = require("./env");
 
-module.exports = { docusaurus, env };
+const blog = require("./blog");
+const docusaurus = require("./docusaurus");
+
+module.exports = { blog, docusaurus, env };
