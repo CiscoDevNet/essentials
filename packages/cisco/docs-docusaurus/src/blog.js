@@ -27,6 +27,11 @@ class Blog {
     this.showReadingTime = showReadingTime;
   }
 
+  get basicConfig() {
+    const { editUrl, showReadingTime } = this;
+    return { editUrl, showReadingTime };
+  }
+
   get navBarItem() {
     return this.isEnabled ? { ...BLOG_ITEM, position: "left" } : undefined;
   }
