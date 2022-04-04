@@ -1,4 +1,4 @@
-const Docusaurus = require("./index");
+const Docusaurus = require("./docusaurus");
 
 const MAIN_URL = "https://cisco.com";
 
@@ -16,9 +16,15 @@ function expectDefaultConfig(docusaurus) {
   expect(docusaurus.repoEditPath).toBe(
     "https://github.com/cisco/project/edit/main"
   );
+
   expect(docusaurus.repoTreePath).toContain("tree");
   expect(docusaurus.repoTreePath).toBe(
     "https://github.com/cisco/project/tree/main"
+  );
+
+  expect(docusaurus.repoBlobPath).toContain("blob");
+  expect(docusaurus.repoBlobPath).toBe(
+    "https://github.com/cisco/project/blob/main"
   );
 }
 

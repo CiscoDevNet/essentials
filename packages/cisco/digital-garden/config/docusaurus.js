@@ -1,4 +1,4 @@
-const Docusaurus = require("@cisco/docs-docusaurus");
+const { Docusaurus } = require("@cisco/docs-docusaurus");
 const env = require("./env");
 
 const organizationName = env.require("CONFIG_SITE_REPO_ORG_NAME");
@@ -12,6 +12,7 @@ const repoBranch = env.get("CONFIG_SITE_REPO_BRANCH");
 const repoDirPath = env.get("CONFIG_SITE_REPO_DIR_PATH");
 
 const additionalConfig = { title, tagline, repoBranch, repoDirPath };
+
 let docusaurus = new Docusaurus(
   organizationName,
   projectName,
