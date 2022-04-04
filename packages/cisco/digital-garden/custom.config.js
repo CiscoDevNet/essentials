@@ -1,6 +1,8 @@
 const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
+
 const { blog: blogConfig, docusaurus } = require("./config");
+const { Blog } = require("@cisco/docs-docusaurus");
 
 const { basicConfig, title, repoPath, repoTreePath } = docusaurus;
 
@@ -12,7 +14,8 @@ const DOCS_ENABLED = {
 const docs = DOCS_ENABLED;
 // const docs = false;
 
-const { blog } = docusaurus;
+const { isEnabled: isBlogEnabled } = blogConfig;
+const blog = new Blog(docusaurus.repoEditPath, { isEnabled: isBlogEnabled });
 
 basicConfig.presets = [
   [
