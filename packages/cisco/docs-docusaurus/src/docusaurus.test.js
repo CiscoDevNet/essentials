@@ -76,5 +76,16 @@ describe("Docusaurus", () => {
     expect(docusaurus.repoTreePath).toBe(
       `${customConfig.repoUrlBase}/cisco/project/tree/${customConfig.repoBranch}/${customConfig.repoDirPath}`
     );
+
+    expect(docusaurus.repoBlobPath).toContain("blob");
+    expect(docusaurus.repoBlobPath).toBe(
+      `${customConfig.repoUrlBase}/cisco/project/blob/${customConfig.repoBranch}/${customConfig.repoDirPath}`
+    );
+
+    // Expect properties grouped into customFields to be the same.
+    const { customFields } = docusaurus;
+    expect(customFields.repoUrlBase).toBe(docusaurus.repoUrlBase);
+    expect(customFields.repoBranch).toBe(docusaurus.repoBranch);
+    expect(customFields.repoDirPath).toBe(docusaurus.repoDirPath);
   });
 });
