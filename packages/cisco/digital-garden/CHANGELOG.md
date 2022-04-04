@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.1.7 (2022-04-04)
+
+**Note:** Version bump only for package @cisco/digital-garden
+
+
+
+
+
 ## 0.1.6 (2022-03-31)
 
 **Note:** Version bump only for package @cisco/digital-garden
