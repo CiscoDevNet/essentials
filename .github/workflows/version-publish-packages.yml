@@ -67,6 +67,9 @@ jobs:
 
   publish-packages:
     runs-on: ubuntu-latest
+    # https://stackoverflow.com/a/67581515/154065
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
 
     # Publish the packages if the "Version Packages" workfow succeeded.
     needs: version-packages
@@ -82,12 +85,15 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: lts/fermium
+          registry-url: https://registry.npmjs.org
 
-      # Configure git so Lerna can function properly.
       - name: Configure git for Lerna
         run: |
           git config user.name "GVE App Support"
           git config user.email "<>"
+
+      - name: Check if able to publish changes
+        run: npm whoami
 
       - name: Install
         run: npm run lerna:ci
@@ -100,5 +106,3 @@ jobs:
       # https://github.com/lerna/lerna/tree/main/commands/publish#--no-verify-access
       - name: Publish packages to NPM 📦
         run: npm run lerna:publish:auto -- --yes
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
