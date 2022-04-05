@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.5.0 (2022-04-05)
+
+
+### Features
+
+* **packages/cisco:** move [@gve](https://github.com/gve) org packages into [@cisco](https://github.com/cisco) ([becbcc3](https://github.com/CiscoDevNet/essentials/commit/becbcc3a5fe61210783eedbee73aeab874533503))
+
+
+
+
+
 ## 0.4.6 (2022-04-04)
 
 **Note:** Version bump only for package @gve/analytics
