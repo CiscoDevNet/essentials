@@ -2,7 +2,7 @@
 # description: Audit the packages matching the given filter
 # author: Matt Norris <matnorri@cisco.com>
 
-package_filter="${1:-@gve/*}"
+package_filter="${1:-@cisco/*}"
 environment="${2:-prod}"
 
 npx lerna \
