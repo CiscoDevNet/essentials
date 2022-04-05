@@ -61,9 +61,6 @@
       "path": "./node_modules/cz-lerna-changelog"
     },
     "docsApi": "docs/docs/api.md",
-    "lerna": {
-      "ignore": "@cisco/bridge"
-    },
     "reports": {
       "path": "./output/reports"
     }
