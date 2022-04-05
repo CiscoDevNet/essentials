@@ -1,0 +1,23 @@
+{
+  "name": "@cisco/google",
+  "version": "0.3.6",
+  "description": "",
+  "main": "src/index.js",
+  "author": "Matt Norris <matnorri@cisco.com>",
+  "files": [
+    "src/"
+  ],
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CiscoDevNet/essentials.git",
+    "directory": "packages/gve/google"
+  },
+  "dependencies": {
+    "@humanwhocodes/env": "^2.2.0",
+    "google-auth-library": "^7.10.0"
+  }
+}

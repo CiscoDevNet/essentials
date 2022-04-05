@@ -3,13 +3,13 @@
 # author: Matt Norris <matnorri@cisco.com>
 # see: https://stackoverflow.com/a/61231856/154065
 
-npm unpublish @gve/analytics --force
-npm unpublish @gve/bot-commands --force
-npm unpublish @gve/bot-factory --force
-npm unpublish @gve/bot-middleware --force
-npm unpublish @gve/bridge --force
-npm unpublish @gve/cards --force
-npm unpublish @gve/core --force
-npm unpublish @gve/google --force
-npm unpublish @gve/releases --force
-npm unpublish @gve/salesforce --force
+npm unpublish @cisco/analytics --force
+npm unpublish @cisco/bot-commands --force
+npm unpublish @cisco/bot-factory --force
+npm unpublish @cisco/bot-middleware --force
+npm unpublish @cisco/bridge --force
+npm unpublish @cisco/cards --force
+npm unpublish @cisco/core --force
+npm unpublish @cisco/google --force
+npm unpublish @cisco/releases --force
+npm unpublish @cisco/salesforce --force

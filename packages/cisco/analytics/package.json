@@ -1,0 +1,26 @@
+{
+  "name": "@cisco/analytics",
+  "version": "0.4.6",
+  "description": "Analytics events and constants to track system usage",
+  "main": "src/index.js",
+  "author": "Matt Norris <matnorri@cisco.com>",
+  "files": [
+    "src/"
+  ],
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CiscoDevNet/essentials.git",
+    "directory": "packages/gve/analytics"
+  },
+  "dependencies": {
+    "@cisco/core": "^0.4.6",
+    "snake-case": "^3.0.4"
+  },
+  "devDependencies": {
+    "standard-version": "^9.3.0"
+  }
+}

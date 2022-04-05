@@ -1,0 +1,31 @@
+{
+  "name": "@cisco/salesforce",
+  "version": "0.6.6",
+  "description": "Query and update Salesforcewith built-in retries",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest --setupFiles dotenv/config"
+  },
+  "author": "Matt Norris <matnorri@cisco.com>",
+  "files": [
+    "src/"
+  ],
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CiscoDevNet/essentials.git",
+    "directory": "packages/gve/salesforce"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "jest": "^26.5.2",
+    "standard-version": "^9.3.0"
+  },
+  "dependencies": {
+    "axios": "^0.21.4",
+    "jsforce": "2.0.0-beta.8"
+  }
+}

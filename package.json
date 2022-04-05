@@ -62,7 +62,7 @@
     },
     "docsApi": "docs/docs/api.md",
     "lerna": {
-      "ignore": "@gve/bridge"
+      "ignore": "@cisco/bridge"
     },
     "reports": {
       "path": "./output/reports"
