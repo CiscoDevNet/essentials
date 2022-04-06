@@ -7,6 +7,8 @@ const { Blog } = require("@cisco/docs-docusaurus");
 const { basicConfig, title, repoPath, repoTreePath } = docusaurus;
 
 const DOCS_ENABLED = {
+  path: "docs",
+  routeBasePath: "docs",
   sidebarPath: require.resolve("./sidebars.js"),
   editUrl: repoTreePath,
 };
@@ -28,6 +30,18 @@ basicConfig.presets = [
         customCss: require.resolve("./src/css/custom.css"),
       },
     }),
+  ],
+];
+
+basicConfig.plugins = [
+  [
+    "@docusaurus/plugin-content-docs",
+    {
+      id: "other",
+      path: "docs-other",
+      routeBasePath: "docs-other",
+      sidebarPath: require.resolve("./sidebars-other.js"),
+    },
   ],
 ];
 
