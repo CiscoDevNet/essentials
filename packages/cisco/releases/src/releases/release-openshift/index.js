@@ -25,6 +25,8 @@ const {
   SERVICE,
 } = require("./config");
 
+const { SERVICE_TEMPLATE } = require("../../config");
+
 /**
  * Deployment kinds
  */
@@ -195,6 +197,17 @@ class OpenShiftRelease extends Release {
     const servicePath = path.join(releasesDir, SERVICE);
     Release.write(serviceTemplate, servicePath);
     console.log(colors.green("Created Service configuration.\n"));
+  }
+
+  /**
+   * Gets a service template from querying the OpenShift CLI.
+   * @returns {Object} service template
+   */
+  _getServiceTemplateFromDryRun(releasesDir) {
+    const templatePath = path.join(releasesDir, SERVICE_TEMPLATE);
+    // oc create service clusterip ${ appName} --tcp=3000  --dry-run=server -o yaml
+    // TODO: Query the oc endpoint via CLI and get the YAML
+    console.log(templatePath);
   }
 
   /**
