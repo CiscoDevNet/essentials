@@ -15,7 +15,6 @@ const Release = require("../release");
 const {
   BOT_URL,
   EXEC_SYNC_OPTIONS,
-  PORT,
   DEPLOYMENT,
   DEPLOYMENT_TEMPLATE,
   HOSTNAME,
@@ -25,11 +24,15 @@ const {
   SERVICE,
 } = require("./config");
 
+const { PORT, SERVICE_TEMPLATE } = require("../../config");
+
 /**
  * Deployment kinds
  */
-const KUBERNETES_DEPLOYMENT = "Deployment";
-const OPENSHIFT_DEPLOYMENT_CONFIG = "DeploymentConfig";
+const DEPLOYMENT_KINDS = {
+  KUBERNETES: "Deployment",
+  OPENSHIFT: "DeploymentConfig",
+};
 
 const { DeploymentError } = require("./errors");
 
@@ -46,10 +49,8 @@ class OpenShiftRelease extends Release {
       throw new Error("imagePullSecret required to create a release.");
     }
 
-    const {
-      hostName = HOSTNAME,
-      deploymentKind = OPENSHIFT_DEPLOYMENT_CONFIG,
-    } = this.config;
+    const { hostName = HOSTNAME, deploymentKind = DEPLOYMENT_KINDS.OPENSHIFT } =
+      this.config;
 
     this.hostName = hostName;
     this.deploymentKind = deploymentKind;
@@ -84,7 +85,7 @@ class OpenShiftRelease extends Release {
     const releasesDir = Release.createReleasesDir();
     const deploymentTemplatePath = path.join(releasesDir, DEPLOYMENT_TEMPLATE);
     const isDeploymentConfig =
-      this.deploymentKind === OPENSHIFT_DEPLOYMENT_CONFIG;
+      this.deploymentKind === DEPLOYMENT_KINDS.OPENSHIFT;
 
     /**
      * Label to set in all resources for this application.
@@ -121,8 +122,6 @@ class OpenShiftRelease extends Release {
     Release.write(deploymentTemplate, deploymentPath);
 
     console.log(colors.green("Created Deployment configuration.\n"));
-    this.buildService();
-    console.log("You can now deploy these configurations.\n");
   }
 
   /**
@@ -188,67 +187,51 @@ class OpenShiftRelease extends Release {
     console.log(instructions.join("\n"));
   }
 
-  buildService() {
+  buildService(port = PORT) {
     console.log("Creating Service configuration...");
-    const serviceTemplate = this._getServiceTemplate();
     const releasesDir = Release.createReleasesDir();
-    const servicePath = path.join(releasesDir, SERVICE);
-    Release.write(serviceTemplate, servicePath);
-    console.log(colors.green("Created Service configuration.\n"));
-  }
+    const serviceTemplatePath = path.join(releasesDir, SERVICE_TEMPLATE);
 
-  /**
-   * Gets a service template.
-   * @returns {Object} service template
-   * @see https://gist.github.com/bmaupin/d5be3ca882345ff92e8336698230dae0
-   */
-  _getServiceTemplate() {
-    let apiVersion = "v1";
-    const selector = {
-      app: this.name,
-    };
+    const commandParts = [
+      "oc create service clusterip",
+      this.name,
+      `--tcp=${port}`,
+      "--dry-run=server",
+      `-o yaml > ${serviceTemplatePath}`,
+    ];
 
-    switch (this.deploymentKind) {
-      case OPENSHIFT_DEPLOYMENT_CONFIG:
-        selector.deploymentconfig = this.name;
-        break;
+    try {
+      // Read the dry-run to use as a template.
+      execSync(commandParts.join(" "));
+      const service = Release.read(serviceTemplatePath);
 
-      case KUBERNETES_DEPLOYMENT:
-        apiVersion = "apps/v1";
-        break;
+      // Update the values.
+      const { spec } = service;
+      spec.ports[0].name = `${port}-tcp`;
+      spec.selector[this.deploymentKind.toLowerCase()] = this.name;
+
+      // Write the deployment file.
+      const servicePath = path.join(releasesDir, SERVICE);
+      Release.write(service, servicePath);
+
+      const instructions = [
+        `${colors.green("Created Service configuration file.")}`,
+        "",
+        "You can now deploy this service.",
+        "",
+      ];
+
+      console.log(instructions.join("\n"));
+    } catch (error) {
+      const { message = "" } = error;
+      const _message = message.trim();
+      const doesExist = _message.toLowerCase().includes("already exists");
+      if (doesExist) {
+        console.warn(colors.yellow(_message));
+      } else {
+        console.error(colors.red(_message));
+      }
     }
-
-    return {
-      apiVersion,
-      items: [
-        {
-          apiVersion,
-          kind: "Service",
-          metadata: {
-            labels: {
-              app: this.name,
-            },
-            name: this.name,
-          },
-          spec: {
-            ports: [
-              {
-                name: `${PORT}-tcp`,
-                port: PORT,
-                protocol: "TCP",
-                targetPort: PORT,
-              },
-            ],
-            selector,
-          },
-          status: {
-            loadBalancer: {},
-          },
-        },
-      ],
-      kind: "List",
-      metadata: {},
-    };
   }
 
   async release() {
@@ -263,6 +246,11 @@ class OpenShiftRelease extends Release {
     const deploymentPath = path.join(this.releasesDir, DEPLOYMENT);
     console.log("Releasing deployment:", deploymentPath);
     await this._releaseFile(deploymentPath);
+  }
+
+  async releaseService() {
+    this.activate();
+    console.log();
 
     const servicePath = path.join(this.releasesDir, SERVICE);
     console.log("Releasing service:", servicePath);

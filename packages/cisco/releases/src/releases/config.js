@@ -6,7 +6,6 @@
 const {
   env,
   BOT_URL,
-  PORT,
   DEPLOYMENT,
   DEPLOYMENT_TEMPLATE,
   ROUTE,
@@ -22,7 +21,6 @@ module.exports = {
   BOT_URL,
   COMMAND_EVENTS,
   EXEC_SYNC_OPTIONS,
-  PORT,
   DEPLOYMENT,
   DEPLOYMENT_TEMPLATE,
   ROUTE,
