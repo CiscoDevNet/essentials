@@ -94,6 +94,7 @@ const SECRET = `${SECRET_NAME}.${YAML_FILE_EXT}`;
 
 // Configure service file names.
 const SERVICE = `${SERVICE_NAME}.${YAML_FILE_EXT}`;
+const SERVICE_TEMPLATE = `${SERVICE_NAME}${TEMPLATE_SUFFIX}.${YAML_FILE_EXT}`;
 
 module.exports = {
   env,
@@ -121,6 +122,7 @@ module.exports = {
 
   SECRET,
   SERVICE,
+  SERVICE_TEMPLATE,
 
   PLATFORM,
   HOSTNAME,
