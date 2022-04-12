@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/CiscoDevNet/essentials/compare/@cisco/releases@0.9.0...@cisco/releases@0.10.0) (2022-04-12)
+
+
+### Features
+
+* **releases:** add commands to build and deploy services separately ([71070cb](https://github.com/CiscoDevNet/essentials/commit/71070cbf8b29965e0a1383487b052b04bc41966b))
+
+
+
+
+
 # 0.9.0 (2022-04-05)
 
 
