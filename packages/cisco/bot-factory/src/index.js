@@ -97,7 +97,7 @@ class BotFactory {
   static getCommandLog(commandName, isEnabled) {
     const status = isEnabled ? ENABLED : DISABLED;
     const formattedName = commandName[0].toUpperCase() + commandName.substr(1);
-    return `${formattedName} command ${status}.`;
+    return `${formattedName} skill ${status}.`;
   }
 
   /**
