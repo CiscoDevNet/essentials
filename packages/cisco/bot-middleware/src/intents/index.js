@@ -100,7 +100,11 @@ class Intents {
    */
   get client() {
     if (!this._client) {
-      const { client_email, private_key, project_id } = this.credentials;
+      const {
+        client_email,
+        private_key,
+        project_id = this.projectId,
+      } = this.credentials;
       const isValidCredentials = !!(client_email && private_key && project_id);
 
       if (!isValidCredentials) {
