@@ -193,7 +193,7 @@ class Intents {
 
     if (intent && !intent.isFallback) {
       let { displayName: name } = intent;
-      const { parameters } = intent;
+      const { parameters } = result;
 
       debug(
         `"${text}": intent matched: "${name}" with ${confidence} confidence`
