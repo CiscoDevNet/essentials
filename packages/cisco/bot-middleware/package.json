@@ -1,6 +1,6 @@
 {
   "name": "@cisco/bot-middleware",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Middleware to intercept messages, e.g., gather and send analytics",
   "main": "src/index.js",
   "author": "Matt Norris <matnorri@cisco.com>",

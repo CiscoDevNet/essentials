@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/CiscoDevNet/essentials/compare/@cisco/bot-middleware@0.7.0...@cisco/bot-middleware@0.8.0) (2022-04-19)
+
+
+### Bug Fixes
+
+* **intents:** extract the parameters found by Dialogflow ([cfcc898](https://github.com/CiscoDevNet/essentials/commit/cfcc898b95d4650540af5507eff50ba46fb3de52))
+
+
+### Features
+
+* **intent detection:** default to the middleware's project ID if it is not provided in credentials ([9fc5a02](https://github.com/CiscoDevNet/essentials/commit/9fc5a0295a36b03b97f9d548dc1ce6c3943092b6))
+
+
+
+
+
 # 0.7.0 (2022-04-05)
 
 
