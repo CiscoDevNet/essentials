@@ -191,8 +191,8 @@ class Intents {
       ({ answers } = knowledgeAnswers);
     }
 
-    if (intent && !intent.isFallback) {
-      let { displayName: name } = intent;
+    if (intent) {
+      let { displayName: name, isFallback } = intent;
       const { parameters } = result;
 
       debug(
@@ -214,6 +214,7 @@ class Intents {
         sentiment,
         parameters,
         answers,
+        isFallback,
       };
     } else {
       debug(`"${text}": intent matched: none`);
