@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/CiscoDevNet/essentials/compare/@cisco/bot-middleware@0.8.0...@cisco/bot-middleware@0.9.0) (2022-04-26)
+
+
+### Features
+
+* **intent middleware:** allow fallback intents ([83b0afd](https://github.com/CiscoDevNet/essentials/commit/83b0afdc874012f7163a73d74bd3ac0d6b39e1a5))
+
+
+
+
+
 # [0.8.0](https://github.com/CiscoDevNet/essentials/compare/@cisco/bot-middleware@0.7.0...@cisco/bot-middleware@0.8.0) (2022-04-19)
 
 
