@@ -1,0 +1,14 @@
+{
+  "name": "@cisco/containers",
+  "version": "1.0.0",
+  "description": "Create containers for various platforms",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Matt Norris <matnorri@cisco.com>",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "jest": "^28.0.2"
+  }
+}
