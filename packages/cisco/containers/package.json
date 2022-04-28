@@ -4,7 +4,7 @@
   "description": "Create containers for various platforms",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --coverage --collectCoverageFrom='./src/**'"
   },
   "author": "Matt Norris <matnorri@cisco.com>",
   "license": "Apache-2.0",

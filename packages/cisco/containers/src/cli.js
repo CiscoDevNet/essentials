@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 
 const { execSync } = require("child_process");
-const DockerImage = require("./docker-image");
+const Image = require("./image");
 const { program } = require("commander");
 
-const COMPOSE_FILES = ["docker-compose.yml", "docker-compose.non-dev.yml"];
 const EXEC_SYNC_OPTIONS = { stdio: "inherit" };
 const VERSION = "0.1.0";
 const OPTIONS = {
@@ -40,30 +39,30 @@ function main() {
   program.parse();
 }
 
-function buildImage(image, options) {
-  const dockerImage = getDockerImage(image, options);
-  const envVar = getImageEnvVar(dockerImage);
-  const buildCommand = [envVar, dockerImage.buildCommand].join(" ");
+function buildImage(imageBaseName, options) {
+  const image = getImage(imageBaseName, options);
+  const envVar = getImageEnvVar(image);
+  const buildCommand = [envVar, image.buildCommand].join(" ");
   execSync(buildCommand, EXEC_SYNC_OPTIONS);
 }
 
-function startContainer(image, service, options) {
-  const dockerImage = getDockerImage(image, options);
-  const envVar = getImageEnvVar(dockerImage);
-  const startCommand = [envVar, dockerImage.getRunCommand(service)].join(" ");
+function startContainer(imageBaseName, service, options) {
+  const image = getImage(imageBaseName, options);
+  const envVar = getImageEnvVar(image);
+  const startCommand = [envVar, image.getRunCommand(service)].join(" ");
   execSync(startCommand, EXEC_SYNC_OPTIONS);
 }
 
-function getDockerImage(image, options) {
-  const { tag, registry, project } = options;
-  return new DockerImage(image, {
+function getImage(imageBaseName, options) {
+  const { tag, registry, project, files } = options;
+  return new Image(imageBaseName, {
     tag,
     registry,
     project,
-    files: COMPOSE_FILES,
+    files,
   });
 }
 
-function getImageEnvVar(dockerImage) {
-  return `IMAGE=${dockerImage.addressableName}`;
+function getImageEnvVar(image) {
+  return `IMAGE=${image.addressableName}`;
 }
