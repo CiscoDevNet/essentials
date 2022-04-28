@@ -49,6 +49,7 @@
     "eslint-plugin-sonar": "^0.6.1",
     "eslint-plugin-sonarjs": "^0.11.0",
     "husky": "^7.0.2",
+    "jest": "^28.0.2",
     "jsdoc": "^3.6.7",
     "jsdoc-to-markdown": "^7.1.0",
     "lerna": "^3.22.1",
