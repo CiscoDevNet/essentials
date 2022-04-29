@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/CiscoDevNet/essentials/compare/@cisco/digital-garden@0.2.0...@cisco/digital-garden@0.3.0) (2022-04-29)
+
+
+### Features
+
+* **digital-garden:** create multiple sidebars ([3090692](https://github.com/CiscoDevNet/essentials/commit/30906928dad435c3f579bb05b387d99966df5845))
+
+
+
+
+
 # [0.2.0](https://github.com/CiscoDevNet/essentials/compare/@cisco/digital-garden@0.1.7...@cisco/digital-garden@0.2.0) (2022-04-05)
 
 
