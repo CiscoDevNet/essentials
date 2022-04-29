@@ -90,6 +90,11 @@ basicConfig.themeConfig =
           title: "More",
           items: [
             blog.footerItem,
+            { label: "Projects", href: "/projects" },
+            {
+              label: "Packages",
+              href: "https://www.npmjs.com/search?q=%40cisco",
+            },
             {
               label: "GitHub",
               href: repoPath,

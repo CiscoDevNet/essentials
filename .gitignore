@@ -112,3 +112,7 @@ output
 
 # System files
 .DS_Store
+
+# Local Netlify folder
+.netlify
+netlify.toml
