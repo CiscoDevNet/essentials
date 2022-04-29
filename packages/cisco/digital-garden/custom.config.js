@@ -43,9 +43,15 @@ basicConfig.themeConfig =
       items: [
         {
           type: "doc",
-          docId: "intro",
+          docId: "tutorials/starter/intro",
           position: "left",
           label: "Tutorial",
+        },
+        {
+          type: "doc",
+          docId: "tutorials/git/delete-branches",
+          position: "left",
+          label: "Snippets",
         },
         blog.navBarItem,
         {
@@ -63,7 +69,7 @@ basicConfig.themeConfig =
           items: [
             {
               label: "Tutorial",
-              to: "/docs/intro",
+              to: "docs/tutorials/starter/",
             },
           ],
         },
