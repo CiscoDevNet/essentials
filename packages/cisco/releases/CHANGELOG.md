@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.10.1](https://github.com/CiscoDevNet/essentials/compare/@cisco/releases@0.10.0...@cisco/releases@0.10.1) (2022-05-02)
+
+**Note:** Version bump only for package @cisco/releases
+
+
+
+
+
 # [0.10.0](https://github.com/CiscoDevNet/essentials/compare/@cisco/releases@0.9.0...@cisco/releases@0.10.0) (2022-04-12)
 
 

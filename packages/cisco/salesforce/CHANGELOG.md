@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.1](https://github.com/CiscoDevNet/essentials/compare/@cisco/salesforce@0.7.0...@cisco/salesforce@0.7.1) (2022-05-02)
+
+**Note:** Version bump only for package @cisco/salesforce
+
+
+
+
+
 # 0.7.0 (2022-04-05)
 
 

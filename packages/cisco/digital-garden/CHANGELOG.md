@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/CiscoDevNet/essentials/compare/@cisco/digital-garden@0.3.0...@cisco/digital-garden@0.4.0) (2022-05-02)
+
+
+### Features
+
+* **digital-garden:** add project pages ([a5827a5](https://github.com/CiscoDevNet/essentials/commit/a5827a51e9057cf7db1a5b3d0fdca98dc43c1d1a))
+
+
+
+
+
 # [0.3.0](https://github.com/CiscoDevNet/essentials/compare/@cisco/digital-garden@0.2.0...@cisco/digital-garden@0.3.0) (2022-04-29)
 
 
