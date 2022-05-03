@@ -30,8 +30,18 @@ const DEPLOYMENT_KINDS = {
   OPENSHIFT: "DeploymentConfig",
 };
 
+const SECRETS_VOLUME_NAME = "secrets";
+const SECRETS_MOUNT_PATH = "/app/secrets";
+
 const { DeploymentError } = require("./errors");
 const { REGISTRY } = require("../../config");
+
+/**
+ * A Kubernetes secret
+ * @typedef {Object} Secret
+ * @property {string} secretName - the secret name
+ * @property {string} mountPath - optional path in which to mount the secret in the container - default is /app/secrets
+ */
 
 class OpenShiftRelease extends Release {
   constructor(baseName, imagePullSecretPath, config) {
@@ -66,7 +76,20 @@ class OpenShiftRelease extends Release {
     return this.serviceName;
   }
 
-  buildDeployment() {
+  /**
+   * Build a deployable application config.
+   * @param {Secret} secret secret to mount in the container
+   */
+  buildDeployment(secret) {
+    // Check secret integrity.
+    let secretName, mountPath;
+    if (secret) {
+      ({ secretName, mountPath = SECRETS_MOUNT_PATH } = secret);
+      if (!secretName) {
+        throw Error("Secret must include 'secretName'");
+      }
+    }
+
     console.log("Creating Deployment configuration...");
     debug("getting environment variables...");
     debug(
@@ -122,6 +145,13 @@ class OpenShiftRelease extends Release {
     const imagePullSecret = Release.read(this.imagePullSecretPath);
     const { name } = imagePullSecret.metadata;
     spec.imagePullSecrets = [{ name }];
+
+    if (secret) {
+      spec.containers[0].volumeMounts = [
+        { name: SECRETS_VOLUME_NAME, mountPath },
+      ];
+      spec.volumes = [{ name: SECRETS_VOLUME_NAME, secret: { secretName } }];
+    }
 
     const deploymentPath = path.join(releasesDir, DEPLOYMENT);
     debug("writing config: ", deploymentPath);
