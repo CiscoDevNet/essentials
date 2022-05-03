@@ -4,7 +4,6 @@
  */
 
 const {
-  BOT_URL,
   COMMAND_EVENTS,
   EXEC_SYNC_OPTIONS,
   DEPLOYMENT,
@@ -16,7 +15,6 @@ const {
 } = require("../config");
 
 module.exports = {
-  BOT_URL,
   COMMAND_EVENTS,
   EXEC_SYNC_OPTIONS,
   DEPLOYMENT,

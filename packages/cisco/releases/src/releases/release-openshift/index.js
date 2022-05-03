@@ -3,24 +3,20 @@
  * @author Matt Norris <matnorri@cisco.com>
  */
 
-const debug = require("debug")("releases:openshift");
+const debug = require("debug")("cisco:releases:openshift");
 
 const colors = require("colors/safe");
 const { execSync } = require("child_process");
 const path = require("path");
-const url = require("url");
 
 const Release = require("../release");
 
 const {
-  BOT_URL,
   EXEC_SYNC_OPTIONS,
   DEPLOYMENT,
   DEPLOYMENT_TEMPLATE,
-  HOSTNAME,
   ROUTE,
   ROUTE_TEMPLATE,
-  SECRET,
   SERVICE,
 } = require("./config");
 
@@ -35,32 +31,39 @@ const DEPLOYMENT_KINDS = {
 };
 
 const { DeploymentError } = require("./errors");
+const { REGISTRY } = require("../../config");
 
 class OpenShiftRelease extends Release {
-  constructor(projectName, imagePullSecret, config) {
-    super(projectName, config);
-    this.imagePullSecret = imagePullSecret;
+  constructor(baseName, imagePullSecretPath, config) {
+    super(baseName, config);
+    this.imagePullSecretPath = imagePullSecretPath;
 
-    if (!this.projectName) {
-      throw new Error("projectName required to create a release.");
+    if (!this.baseName) {
+      throw new Error("baseName required to create a release.");
     }
 
-    if (!this.imagePullSecret) {
-      throw new Error("imagePullSecret required to create a release.");
+    if (!this.imagePullSecretPath) {
+      throw new Error("imagePullSecretPath required to create a release.");
     }
 
-    const { hostName = HOSTNAME, deploymentKind = DEPLOYMENT_KINDS.OPENSHIFT } =
-      this.config;
+    const {
+      deploymentKind = DEPLOYMENT_KINDS.KUBERNETES,
+      registry = REGISTRY,
+      serviceName = this.baseName,
+      routeUrl,
+    } = this.config;
 
-    this.hostName = hostName;
     this.deploymentKind = deploymentKind;
+    this.registry = registry;
+    this.serviceName = serviceName;
+    this.routeUrl = routeUrl;
 
     debug("initiated");
   }
 
   activate() {
-    execSync(`oc project ${this.projectName}`, EXEC_SYNC_OPTIONS);
-    return this.projectName;
+    execSync(`oc project ${this.serviceName}`, EXEC_SYNC_OPTIONS);
+    return this.serviceName;
   }
 
   buildDeployment() {
@@ -90,7 +93,7 @@ class OpenShiftRelease extends Release {
     /**
      * Label to set in all resources for this application.
      */
-    const labels = `-l app=${this.name}`;
+    const labels = `-l app=${this.baseName}`;
 
     const generateTemplateCommandParts = [
       "oc",
@@ -109,13 +112,16 @@ class OpenShiftRelease extends Release {
     debug("reading template: ", deploymentTemplatePath);
     const deploymentTemplate = Release.read(deploymentTemplatePath);
 
-    debug(`adding secret ${this.imagePullSecret} to deployment...`);
+    debug(`adding secret ${this.imagePullSecretPath} to deployment...`);
     const deploymentData = this._getDeploymentData(deploymentTemplate);
     if (!deploymentData) {
       throw new DeploymentError("deployment data not found");
     }
     const { spec } = deploymentData.spec.template;
-    spec.imagePullSecrets = [{ name: this.imagePullSecret }];
+
+    const imagePullSecret = Release.read(this.imagePullSecretPath);
+    const { name } = imagePullSecret.metadata;
+    spec.imagePullSecrets = [{ name }];
 
     const deploymentPath = path.join(releasesDir, DEPLOYMENT);
     debug("writing config: ", deploymentPath);
@@ -138,12 +144,11 @@ class OpenShiftRelease extends Release {
     return deploymentConfigs[0];
   }
 
-  buildRoute() {
-    const botUrl = BOT_URL;
-    const hostname = url.parse(botUrl).hostname;
-    debug(`hostname ${hostname} from URL ${botUrl}`);
+  buildRoute(routeUrl = this.routeUrl) {
+    const { hostname } = new URL(routeUrl);
+    debug(`hostname ${hostname} from URL ${routeUrl}`);
 
-    const name = this.name;
+    const name = this.baseName;
     const route = this.environment || name || "route";
     const service = `svc/${name}`;
 
@@ -194,7 +199,7 @@ class OpenShiftRelease extends Release {
 
     const commandParts = [
       "oc create service clusterip",
-      this.name,
+      this.baseName,
       `--tcp=${port}`,
       "--dry-run=server",
       `-o yaml > ${serviceTemplatePath}`,
@@ -208,7 +213,7 @@ class OpenShiftRelease extends Release {
       // Update the values.
       const { spec } = service;
       spec.ports[0].name = `${port}-tcp`;
-      spec.selector[this.deploymentKind.toLowerCase()] = this.name;
+      spec.selector[this.deploymentKind.toLowerCase()] = this.baseName;
 
       // Write the deployment file.
       const servicePath = path.join(releasesDir, SERVICE);
@@ -238,7 +243,7 @@ class OpenShiftRelease extends Release {
     this.activate();
     console.log();
 
-    const secretPath = path.join(process.cwd(), SECRET);
+    const secretPath = path.join(process.cwd(), this.imagePullSecretPath);
     console.log("Releasing secret:", secretPath);
     await this._releaseFile(secretPath);
 

@@ -33,12 +33,17 @@ class GoogleRelease extends Release {
     debug("initiated");
   }
 
-  get hostName() {
+  get registry() {
     return `${this.location}-${HOSTNAME_BASE}`;
   }
 
   get fullImageName() {
-    return path.join(this.hostName, this.projectId, this.org, this.imageName);
+    return path.join(
+      this.registry,
+      this.projectId,
+      this.project,
+      this.imageName
+    );
   }
 
   activate() {
