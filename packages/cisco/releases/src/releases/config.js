@@ -5,7 +5,6 @@
 
 const {
   env,
-  BOT_URL,
   DEPLOYMENT,
   DEPLOYMENT_TEMPLATE,
   ROUTE,
@@ -18,7 +17,6 @@ const { COMMAND_EVENTS, EXEC_SYNC_OPTIONS } = require("../constants");
 
 module.exports = {
   env,
-  BOT_URL,
   COMMAND_EVENTS,
   EXEC_SYNC_OPTIONS,
   DEPLOYMENT,

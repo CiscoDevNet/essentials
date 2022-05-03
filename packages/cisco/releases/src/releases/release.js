@@ -16,13 +16,13 @@ const {
   NAME,
   VERSION,
   ENVIRONMENT_VARIABLES,
-  NODE_ENV,
+  LIFECYCLE,
   NPM_REGISTRY,
   NPM_USERNAME,
   NPM_PASSWORD,
   RELEASES_DIRECTORY,
-  HOSTNAME,
-  ORG,
+  REGISTRY,
+  PROJECT,
 } = require("../config");
 
 const {
@@ -39,21 +39,17 @@ const {
  * @property {String} releasesDir - path to a releases directory
  */
 const DEFAULT_CONFIG = {
+  registry: REGISTRY,
+  project: PROJECT,
   name: NAME,
-  hostName: HOSTNAME,
-  environment: NODE_ENV,
-  org: ORG,
   version: VERSION,
+  environment: LIFECYCLE,
   releasesDir: RELEASES_DIRECTORY,
   isBuildKitEnabled: true,
 };
 
-const ENV_DEV_MODIFIER = "--test";
-const ENV_PRODUCTION = "production";
-const ENV_STAGING = "staging";
-
 class Release extends EventEmitter {
-  constructor(projectName, config = DEFAULT_CONFIG) {
+  constructor(baseName, config = DEFAULT_CONFIG) {
     /**
      * hostName cannot be configured by default.
      * Subclasses may require a particular hostName structure,
@@ -61,32 +57,31 @@ class Release extends EventEmitter {
      */
 
     const {
-      environment = NODE_ENV,
-      org = ORG,
-      name = NAME,
+      project = PROJECT,
       version = VERSION,
+      environment = LIFECYCLE,
       releasesDir = RELEASES_DIRECTORY,
       isBuildKitEnabled = true,
     } = config;
 
     super();
-    this.projectName = projectName;
-
+    this.baseName = baseName;
     this.config = config;
-    this.environment = environment;
-    this.org = org;
-    this.name = name;
+
+    this.project = project;
     this.version = version;
+
+    this.environment = environment;
     this.releasesDir = releasesDir;
     this.isBuildKitEnabled = isBuildKitEnabled;
   }
 
-  set hostName(name) {
-    this._hostName = name;
+  set registry(name) {
+    this._registry = name;
   }
 
-  get hostName() {
-    return this._hostName || DEFAULT_CONFIG.hostName;
+  get registry() {
+    return this._registry || DEFAULT_CONFIG.registry;
   }
 
   get envVariables() {
@@ -103,7 +98,7 @@ class Release extends EventEmitter {
     }
 
     const releaseVars = {
-      NAME: this.name,
+      NAME: this.baseName,
       VERSION: this.version,
       NODE_ENV: this.environment,
     };
@@ -112,24 +107,12 @@ class Release extends EventEmitter {
   }
 
   get imageName() {
-    const isDev =
-      this.environment !== ENV_PRODUCTION && this.environment !== ENV_STAGING;
-
-    const imageType = isDev ? "development" : "production-ready";
-
-    const modifier = isDev ? ENV_DEV_MODIFIER : "";
-    const tag = `${this.version}${modifier}`;
-    const imageName = `${this.name}:${tag}`;
-
-    debug(
-      `${this.environment} environment produces a ${imageType} image: ${imageName}`
-    );
-
-    return imageName;
+    const tag = this.version || "latest";
+    return `${this.baseName}:${tag}`;
   }
 
   get fullImageName() {
-    return path.join(this.hostName, this.org, this.imageName);
+    return path.join(this.registry, this.project, this.imageName);
   }
 
   /**

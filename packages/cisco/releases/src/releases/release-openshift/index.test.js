@@ -1,19 +1,20 @@
 const OpenShiftRelease = require("./index");
 
-const PROJECT_NAME = "project name or project ID";
+const BASE_NAME = "base name, e.g., package name";
 const IMAGE_PULL_SECRET = "image pull secret file name";
 
-xtest("requires projectName", () => {
-  expect(new OpenShiftRelease()).toThrow("projectName required");
+xtest("requires baseName", () => {
+  expect(new OpenShiftRelease()).toThrow("baseName required");
 });
 
 xtest("requires imagePullSecret", () => {
-  expect(new OpenShiftRelease(PROJECT_NAME)).toThrow(
-    "imagePullSecret required"
-  );
+  expect(new OpenShiftRelease(BASE_NAME)).toThrow("imagePullSecret required");
 });
 
 it("constructs an OpenShift release", () => {
-  const release = new OpenShiftRelease(PROJECT_NAME, IMAGE_PULL_SECRET);
-  expect(release.projectName).toBe(PROJECT_NAME);
+  const release = new OpenShiftRelease(BASE_NAME, IMAGE_PULL_SECRET);
+  expect(release.baseName).toBe(BASE_NAME);
+
+  // Default registry
+  expect(release.registry).toBe("docker.io");
 });

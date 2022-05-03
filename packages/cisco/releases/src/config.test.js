@@ -6,9 +6,7 @@ const {
   NAME,
   VERSION,
 
-  BOT_URL,
-
-  NODE_ENV,
+  LIFECYCLE,
   PORT,
 
   NPM_REGISTRY,
@@ -27,13 +25,12 @@ const {
   SERVICE,
 
   PLATFORM,
-  HOSTNAME,
-  ORG,
+  REGISTRY,
+  PROJECT,
 } = require("./config");
 
 it("has default config values", () => {
   expect(env).toBeTruthy();
-  expect(BOT_URL).toBeUndefined();
   expect(PORT).toBe("3000");
 
   expect(NPM_REGISTRY).toBe("https://registry.npmjs.org");
@@ -41,8 +38,8 @@ it("has default config values", () => {
   expect(NPM_PASSWORD).toBeUndefined();
 
   expect(PLATFORM).toBe("docker");
-  expect(HOSTNAME).toBe("docker.io");
-  expect(ORG).toBe("library");
+  expect(REGISTRY).toBe("docker.io");
+  expect(PROJECT).toBe("library");
 
   const releasesDirBasename = path.basename(RELEASES_DIRECTORY);
   expect(releasesDirBasename).toBe(".releases");
@@ -58,6 +55,6 @@ it("has default config values", () => {
   expect(NAME).toBe("releases");
   expect(VERSION).toBeTruthy(); // e.g., 0.1.2
 
-  // Jest sets the NODE_ENV to "test".
-  expect(NODE_ENV).toBe("test");
+  // Jest defaults to "test".
+  expect(LIFECYCLE).toBe("test");
 });

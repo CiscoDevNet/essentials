@@ -14,20 +14,20 @@ const { NODE_ENV_DEVELOPMENT, YAML_FILE_EXT } = require("./constants");
 
 const DEFAULT_PLATFORM = {
   NAME: "docker",
-  HOSTNAME: "docker.io",
-  ORG: "library",
+  REGISTRY: "docker.io",
+  PROJECT: "library",
 };
 
 const env = new Env();
 
-const NODE_ENV = env.get("NODE_ENV", NODE_ENV_DEVELOPMENT);
+const LIFECYCLE = env.first(["LIFECYCLE", "NODE_ENV"], NODE_ENV_DEVELOPMENT);
 
 const currentDir = process.cwd();
-let envFilePath = path.join(currentDir, `.env.${NODE_ENV}`);
+let envFilePath = path.join(currentDir, `.env.${LIFECYCLE}`);
 
 // Get the .env file path.
 const DEFAULT_ENV_FILE_NAME = ".env";
-const isInDevelopment = NODE_ENV === NODE_ENV_DEVELOPMENT;
+const isInDevelopment = LIFECYCLE === NODE_ENV_DEVELOPMENT;
 const isNoSpecificEnvFile = !fs.existsSync(envFilePath);
 
 if (isInDevelopment && isNoSpecificEnvFile) {
@@ -53,16 +53,16 @@ const PLATFORM = env.first(
   ["CISCO_RELEASES_PLATFORM", "RELEASES_PLATFORM"],
   DEFAULT_PLATFORM.NAME
 );
-const HOSTNAME = env.first(
+const REGISTRY = env.first(
   ["CISCO_RELEASES_HOSTNAME", "RELEASES_HOSTNAME"],
-  DEFAULT_PLATFORM.HOSTNAME
+  DEFAULT_PLATFORM.REGISTRY
 );
-const ORG = env.first(
+const PROJECT = env.first(
   ["CISCO_RELEASES_ORG", "RELEASES_ORG"],
-  DEFAULT_PLATFORM.ORG
+  DEFAULT_PLATFORM.PROJECT
 );
 
-const imageNamespace = path.join(HOSTNAME, ORG);
+const imageNamespace = path.join(REGISTRY, PROJECT);
 debug("image namespace:", imageNamespace);
 
 const SERVICE_NAME = "service";
@@ -90,7 +90,11 @@ const ROUTE_TEMPLATE = `${ROUTE_NAME}${TEMPLATE_SUFFIX}.${YAML_FILE_EXT}`;
 
 // Configure secret file names.
 const SECRET_NAME = "secret";
-const SECRET = `${SECRET_NAME}.${YAML_FILE_EXT}`;
+const DEFAULT_SECRET = `${SECRET_NAME}.${YAML_FILE_EXT}`;
+const SECRET = env.get(
+  "CONFIG_CISCO_CONTAINER_IMAGE_PULL_SECRET_PATH",
+  DEFAULT_SECRET
+);
 
 // Configure service file names.
 const SERVICE = `${SERVICE_NAME}.${YAML_FILE_EXT}`;
@@ -102,11 +106,8 @@ module.exports = {
   NAME,
   VERSION,
 
-  // TODO: Move to a subclass and (probably) require it.
-  BOT_URL: env.get("BOT_URL"),
-
   ENVIRONMENT_VARIABLES,
-  NODE_ENV,
+  LIFECYCLE,
   PORT: env.get("PORT", 3000),
 
   NPM_REGISTRY: env.get("NPM_REGISTRY", "https://registry.npmjs.org"),
@@ -125,6 +126,6 @@ module.exports = {
   SERVICE_TEMPLATE,
 
   PLATFORM,
-  HOSTNAME,
-  ORG,
+  REGISTRY,
+  PROJECT,
 };
