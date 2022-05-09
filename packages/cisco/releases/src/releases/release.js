@@ -59,7 +59,7 @@ class Release extends EventEmitter {
     const {
       project = PROJECT,
       version = VERSION,
-      environment = LIFECYCLE,
+      lifecycle = LIFECYCLE,
       releasesDir = RELEASES_DIRECTORY,
       isBuildKitEnabled = true,
     } = config;
@@ -71,7 +71,7 @@ class Release extends EventEmitter {
     this.project = project;
     this.version = version;
 
-    this.environment = environment;
+    this.lifecycle = lifecycle;
     this.releasesDir = releasesDir;
     this.isBuildKitEnabled = isBuildKitEnabled;
   }
@@ -100,7 +100,7 @@ class Release extends EventEmitter {
     const releaseVars = {
       NAME: this.baseName,
       VERSION: this.version,
-      NODE_ENV: this.environment,
+      LIFECYCLE: this.lifecycle,
     };
 
     return { ...releaseVars, ...otherEnvVars };
@@ -299,7 +299,7 @@ class Release extends EventEmitter {
 
   get commandFlags() {
     const dockerComposePrimaryFile = `docker-compose.${YAML_FILE_EXT}`;
-    const dockerComposeEnvFile = `docker-compose.${this.environment}.${YAML_FILE_EXT}`;
+    const dockerComposeEnvFile = `docker-compose.${this.lifecycle}.${YAML_FILE_EXT}`;
 
     return [`-f ${dockerComposePrimaryFile}`, `-f ${dockerComposeEnvFile}`];
   }
