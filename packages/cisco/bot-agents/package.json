@@ -1,0 +1,17 @@
+{
+  "name": "@cisco/bot-agents",
+  "version": "0.0.0",
+  "description": "Conversational agent tools",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Matt Norris <matnorri@cisco.com>",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "jest": "^28.1.0"
+  },
+  "dependencies": {
+    "commander": "^9.2.0"
+  }
+}
