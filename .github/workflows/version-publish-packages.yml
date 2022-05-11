@@ -56,7 +56,11 @@ jobs:
       #
 
       - name: Version the packages
-        run: npm run lerna:version -- --yes
+        run: |
+          npm run lerna:version -- --yes
+          npm run lerna:install
+          git add .
+          git commit -m 'chore: update packages'
 
       - name: Push tags to the repository
         uses: CasperWA/push-protected@v2
