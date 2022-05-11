@@ -1,6 +1,6 @@
 {
   "name": "@cisco/bot-commands",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "Create responsive bot commands with ease",
   "main": "src/index.js",
   "author": "Matt Norris <matnorri@cisco.com>",
@@ -20,7 +20,7 @@
     "directory": "packages/gve/bot-commands"
   },
   "dependencies": {
-    "@cisco/analytics": "^0.5.3",
+    "@cisco/analytics": "^0.5.4",
     "@giphy/js-fetch-api": "^2.4.0",
     "axios": "^0.21.4",
     "jest": "^27.5.1"

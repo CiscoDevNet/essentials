@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.4](https://github.com/CiscoDevNet/essentials/compare/@cisco/core@0.5.3...@cisco/core@0.5.4) (2022-05-11)
+
+**Note:** Version bump only for package @cisco/core
+
+
+
+
+
 ## [0.5.3](https://github.com/CiscoDevNet/essentials/compare/@cisco/core@0.5.2...@cisco/core@0.5.3) (2022-05-06)
 
 **Note:** Version bump only for package @cisco/core

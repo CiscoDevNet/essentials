@@ -1,6 +1,6 @@
 {
   "name": "@cisco/google",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "",
   "main": "src/index.js",
   "author": "Matt Norris <matnorri@cisco.com>",

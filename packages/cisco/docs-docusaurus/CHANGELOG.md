@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.4](https://github.com/CiscoDevNet/essentials/compare/@cisco/docs-docusaurus@0.2.3...@cisco/docs-docusaurus@0.2.4) (2022-05-11)
+
+**Note:** Version bump only for package @cisco/docs-docusaurus
+
+
+
+
+
 ## [0.2.3](https://github.com/CiscoDevNet/essentials/compare/@cisco/docs-docusaurus@0.2.2...@cisco/docs-docusaurus@0.2.3) (2022-05-06)
 
 **Note:** Version bump only for package @cisco/docs-docusaurus
