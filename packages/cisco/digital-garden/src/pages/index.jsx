@@ -1,5 +1,7 @@
 import React from "react";
 import clsx from "clsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGitAlt } from "@fortawesome/free-brands-svg-icons";
 import Layout from "@theme/Layout";
 import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
@@ -18,7 +20,8 @@ function HomepageHeader() {
             className="button button--secondary button--lg"
             to="/docs/how-to-use-git"
           >
-            Start with git 🐈‍⬛
+            Start with git{" "}
+            <FontAwesomeIcon className="fa-icon-end" icon={faGitAlt} />
           </Link>
         </div>
       </div>

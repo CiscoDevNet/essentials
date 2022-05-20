@@ -65,8 +65,20 @@
 }
 
 /*
-* Buttons
-*/
+ * Icons
+ */
+
+.fa-icon-start {
+  padding-right: 0.6rem;
+}
+
+.fa-icon-end {
+  padding-left: 0.6rem;
+}
+
+/*
+ * Buttons
+ */
 
 .button {
   border: var(--button-border-width) var(--button-border-style);
