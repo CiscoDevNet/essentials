@@ -28,6 +28,11 @@
   /* Dark footer variable DNE. */
   /* --ifm-footer-background-color-dark: var(--cisco-midnight-blue); */
 
+  --ifm-global-radius: 0.6rem;
+
+  /* Inline code, e.g., `git status`, has sharper edges for readability. */
+  --ifm-code-border-radius: 0.2rem;
+
   /*
    * Font
    */
@@ -38,11 +43,7 @@
    * Buttons and "button-like" elements
    */
 
-  /* Inline code, e.g., `git status`, should have sharper edges than true buttons. */
-  --ifm-global-radius: 0.2rem;
-
-  /* Buttons have rounder edges than inline code. */
-  --ifm-button-border-radius: 0.6rem;
+  /* --ifm-button-border-radius: 0.6rem; */
 
   --button-border-width: 0.1rem;
   --button-border-style: solid;
@@ -72,7 +73,7 @@
   padding-right: 0.6rem;
 }
 
-.fa-icon-end {
+.fa-icon-right {
   padding-left: 0.6rem;
 }
 
@@ -93,6 +94,15 @@
 
 .pagination-nav__label {
   color: var(--ifm-font-color-base);
+}
+
+/* Tutorial arrows */
+.pagination-nav__link--prev .pagination-nav__label::before {
+  content: "← ";
+}
+
+.pagination-nav__link--next .pagination-nav__label::after {
+  content: " →";
 }
 
 /*

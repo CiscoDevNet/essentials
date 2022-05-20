@@ -21,7 +21,7 @@ function HomepageHeader() {
             to="/docs/how-to-use-git"
           >
             Start with git{" "}
-            <FontAwesomeIcon className="fa-icon-end" icon={faGitAlt} />
+            <FontAwesomeIcon className="fa-icon-right" icon={faGitAlt} />
           </Link>
         </div>
       </div>
