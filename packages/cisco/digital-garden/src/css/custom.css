@@ -25,10 +25,32 @@
   --ifm-color-primary-lightest: var(--cisco-sky-blue-lightest);
   --ifm-code-font-size: 95%;
 
-  --ifm-footer-background-color: var(--cisco-midnight-blue);
-
   /* Dark footer variable DNE. */
   /* --ifm-footer-background-color-dark: var(--cisco-midnight-blue); */
+
+  /*
+   * Font
+   */
+
+  /* --ifm-font-color-base: #000; */
+
+  /*
+   * Buttons and "button-like" elements
+   */
+
+  /* Inline code, e.g., `git status`, should have sharper edges than true buttons. */
+  --ifm-global-radius: 0.2rem;
+
+  /* Buttons have rounder edges than inline code. */
+  --ifm-button-border-radius: 0.6rem;
+
+  --button-border-width: 0.1rem;
+  --button-border-style: solid;
+
+  /*
+   * Footer
+   */
+  --ifm-footer-background-color: var(--cisco-midnight-blue);
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -41,6 +63,29 @@
   --ifm-color-primary-lighter: #32d8b4;
   --ifm-color-primary-lightest: #4fddbf;
 }
+
+/*
+* Buttons
+*/
+
+.button {
+  border: var(--button-border-width) var(--button-border-style);
+  border-bottom-width: calc(4 * var(--button-border-width));
+}
+
+/* Pagination buttons */
+.pagination-nav__link {
+  border: var(--button-border-width) var(--button-border-style)
+    var(--ifm-color-secondary-dark);
+}
+
+.pagination-nav__label {
+  color: var(--ifm-font-color-base);
+}
+
+/*
+ * Code
+ */
 
 .docusaurus-highlight-code-line {
   background-color: rgba(0, 0, 0, 0.1);
