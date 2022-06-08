@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.10.6](https://github.com/CiscoDevNet/essentials/compare/@cisco/releases@0.10.5...@cisco/releases@0.10.6) (2022-06-08)
+
+
+### Bug Fixes
+
+* **releases:** write image name explicitly to deployment ([28b6cb1](https://github.com/CiscoDevNet/essentials/commit/28b6cb1c0400885f0ce57be706f9841cc4957d0f))
+
+
+
+
+
 ## [0.10.5](https://github.com/CiscoDevNet/essentials/compare/@cisco/releases@0.10.4...@cisco/releases@0.10.5) (2022-05-11)
 
 **Note:** Version bump only for package @cisco/releases
