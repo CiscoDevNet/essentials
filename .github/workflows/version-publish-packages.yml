@@ -50,13 +50,13 @@ jobs:
           git config user.email "<>"
 
       - name: Install packages
-        run: npm run lerna:ci
+        run: |
+          npm ci
+          npx lerna bootstrap
 
       # Version the packages.
       - name: Version packages
-        run: |
-          npm run lerna:version -- --yes
-          npm run lerna:install
+        run: npm run lerna:version -- --yes
 
       # Publish the packages so that we may cleanly install them to generate new lock files.
       - name: Check publishing ability
