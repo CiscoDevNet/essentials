@@ -141,15 +141,18 @@ class OpenShiftRelease extends Release {
       throw new DeploymentError("deployment data not found");
     }
     const { spec } = deploymentData.spec.template;
+    const container = spec.containers[0];
 
+    // Configure image.
+    container.image = this.fullImageName;
+
+    // Configure secret.
     const imagePullSecret = Release.read(this.imagePullSecretPath);
     const { name } = imagePullSecret.metadata;
     spec.imagePullSecrets = [{ name }];
 
     if (secret) {
-      spec.containers[0].volumeMounts = [
-        { name: SECRETS_VOLUME_NAME, mountPath },
-      ];
+      container.volumeMounts = [{ name: SECRETS_VOLUME_NAME, mountPath }];
       spec.volumes = [{ name: SECRETS_VOLUME_NAME, secret: { secretName } }];
     }
 
