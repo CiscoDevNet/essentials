@@ -21,70 +21,23 @@ jobs:
           echo "PR triggered by this branch: ${{ github.event.pull_request.head.ref }}"
           echo "github.ref: ${{ github.ref }}"
 
-  version-packages:
-    runs-on: ubuntu-latest
-
-    # Version the packages if the PR was merged.
-    if: |
-      github.event.pull_request.merged &&
-      contains(github.ref, 'main')
-    steps:
-      #
-      # Set up
-      #
-
-      - uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN || github.token }}
-          # Fetch tags too, so that we can version properly: https://github.com/actions/checkout/issues/217
-          fetch-depth: 0
-      - uses: actions/setup-node@v2
-        with:
-          node-version: lts/fermium
-
-      # Configure git so Lerna can function properly.
-      - name: Configure git for Lerna
-        run: |
-          git config user.name "GVE App Support"
-          git config user.email "<>"
-
-      - name: Install
-        run: npm run lerna:ci
-
-      #
-      # Version
-      #
-
-      - name: Version the packages
-        run: |
-          npm run lerna:version -- --yes
-          npm run lerna:install
-          git add .
-          git commit -m 'chore: update packages'
-
-      - name: Push tags to the repository
-        uses: CasperWA/push-protected@v2
-        with:
-          token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN }}
-          branch: main
-          tags: True
-
-  publish-packages:
+  version-publish-packages:
     runs-on: ubuntu-latest
     # https://stackoverflow.com/a/67581515/154065
     env:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
 
-    # Publish the packages if the "Version Packages" workfow succeeded.
-    needs: version-packages
-    steps:
-      #
-      # Set up
-      #
+    # Version the packages if the PR was merged.
+    if: |
+      github.event.pull_request.merged &&
+      contains(github.ref, 'main')
 
+    steps:
+      # Set up.
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN || github.token }}
+          # Fetch tags too, so that we can version properly: https://github.com/actions/checkout/issues/217
           fetch-depth: 0
       - uses: actions/setup-node@v2
         with:
@@ -96,17 +49,34 @@ jobs:
           git config user.name "GVE App Support"
           git config user.email "<>"
 
-      - name: Check if able to publish changes
-        run: npm whoami
-
-      - name: Install
+      - name: Install packages
         run: npm run lerna:ci
 
-      #
-      # Publish
-      #
+      # Version the packages.
+      - name: Version packages
+        run: |
+          npm run lerna:version -- --yes
+          npm run lerna:install
 
-      # Use CI system automation.
-      # https://github.com/lerna/lerna/tree/main/commands/publish#--no-verify-access
+      # Publish the packages so that we may cleanly install them to generate new lock files.
+      - name: Check publishing ability
+        # Workflow will stop if this command fails.
+        run: npm whoami
       - name: Publish packages to NPM 📦
         run: npm run lerna:publish:auto -- --yes
+
+      # Generate the packages' new lock files.
+      - name: Generate lock files
+        run: npm run lerna:ci:auto
+      - name: Commit lock files
+        run: |
+          git add .
+          git commit -m 'chore: update package lock files'
+
+      # Push committed changes and tags to the remote code repo.
+      - name: Push code and tags to the repository
+        uses: CasperWA/push-protected@v2
+        with:
+          token: ${{ secrets.GVE_APP_SUPPORT_ACCESS_TOKEN }}
+          branch: main
+          tags: True
