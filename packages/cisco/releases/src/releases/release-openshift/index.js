@@ -80,7 +80,7 @@ class OpenShiftRelease extends Release {
    * Build a deployable application config.
    * @param {Secret} secret secret to mount in the container
    */
-  buildDeployment(secret) {
+  buildDeployment(secret, shouldIncludeImageName = false) {
     // Check secret integrity.
     let secretName, mountPath;
     if (secret) {
@@ -143,8 +143,10 @@ class OpenShiftRelease extends Release {
     const { spec } = deploymentData.spec.template;
     const container = spec.containers[0];
 
-    // Configure image.
-    container.image = this.fullImageName;
+    if (shouldIncludeImageName) {
+      // Configure image.
+      container.image = this.fullImageName;
+    }
 
     // Configure secret.
     const imagePullSecret = Release.read(this.imagePullSecretPath);
