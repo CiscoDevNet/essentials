@@ -1,6 +1,6 @@
 {
   "name": "@cisco/analytics",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "description": "Analytics events and constants to track system usage",
   "main": "src/index.js",
   "author": "Matt Norris <matnorri@cisco.com>",

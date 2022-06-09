@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0](https://github.com/CiscoDevNet/essentials/compare/@cisco/releases@0.10.6...@cisco/releases@0.11.0) (2022-06-09)
+
+
+### Features
+
+* **releases:** allow you to configure writing the image name ([1fb6679](https://github.com/CiscoDevNet/essentials/commit/1fb6679586d6d7a139ba1632e71591d386842e26))
+
+
+
+
+
 ## [0.10.6](https://github.com/CiscoDevNet/essentials/compare/@cisco/releases@0.10.5...@cisco/releases@0.10.6) (2022-06-08)
 
 

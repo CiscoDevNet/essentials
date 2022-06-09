@@ -1,6 +1,6 @@
 {
   "name": "@cisco/bot-middleware",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "description": "Middleware to intercept messages, e.g., gather and send analytics",
   "main": "src/index.js",
   "author": "Matt Norris <matnorri@cisco.com>",
@@ -17,7 +17,7 @@
     "directory": "packages/gve/bot-middleware"
   },
   "dependencies": {
-    "@cisco/analytics": "^0.5.5",
+    "@cisco/analytics": "^0.5.6",
     "@cisco/google": "^0.4.5",
     "@google-cloud/dialogflow": "^4.4.0",
     "@humanwhocodes/env": "^2.2.0",
