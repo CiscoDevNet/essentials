@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+  "name": "Sensitive Data Masker",
+  "version": "1.0.0",
+  "description": "Mask sensitive data in textboxes on webpages",
+  "permissions": ["activeTab"],
+  "icons": {
+    "48": "icons/icon48.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://chat.openai.com/chat/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "browser_action": {
+    "default_icon": "icons/icon48.png",
+    "default_popup": "popup.html"
+  }
+}
