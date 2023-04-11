@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "copy-files": "ncp popup.html dist/popup.html && ncp icons dist/icons",
+    "copy-files": "ncp src/popup.html dist/popup.html && ncp src/icons dist/icons",
     "prebuild": "mkdir -p dist",
-    "build": "parcel build manifest.json content.js",
+    "build": "parcel build src/manifest.json src/content.js --no-optimize",
     "postbuild": "npm run copy-files",
     "prebuild:ext": "mkdir -p output",
     "build:ext": "npm run build && cd dist && zip -r ../output/mask.xpi ."
