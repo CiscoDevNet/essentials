@@ -1,6 +1,6 @@
 {
-  "name": "mask",
-  "version": "0.0.0",
+  "name": "extension-mask",
+  "version": "1.0.0",
   "description": "",
   "scripts": {
     "copy-files": "ncp popup.html dist/popup.html && ncp icons dist/icons",
