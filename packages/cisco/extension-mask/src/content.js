@@ -49,7 +49,7 @@ const maskSensitiveData = (text) => {
   people.forEach((person) => {
     if (!peopleVars.has(person)) {
       const peopleCount = peopleVars.size + 1;
-      const formattedPerson = `person_${peopleCount}`;
+      const formattedPerson = `PERSON_${peopleCount}`;
       peopleVars.set(person, formatVariable(formattedPerson));
     }
 
@@ -59,7 +59,7 @@ const maskSensitiveData = (text) => {
   emails.forEach((email) => {
     if (!emailVars.has(email)) {
       const emailNumber = emailVars.size + 1;
-      const formattedEmail = `email_${emailNumber}@email.com`;
+      const formattedEmail = `EMAIL_${emailNumber}@email.com`;
       emailVars.set(email, formatVariable(formattedEmail));
     }
 
@@ -79,7 +79,7 @@ const maskSensitiveData = (text) => {
   places.forEach((place) => {
     if (!placeVars.has(place)) {
       const placeCount = placeVars.size + 1;
-      const formattedPlace = `place_${placeCount}`;
+      const formattedPlace = `PLACE_${placeCount}`;
       placeVars.set(place, formatVariable(formattedPlace));
     }
 
@@ -89,7 +89,7 @@ const maskSensitiveData = (text) => {
   organizations.forEach((organization) => {
     if (!orgVars.has(organization)) {
       const orgCount = orgVars.size + 1;
-      const formattedOrg = `organization_${orgCount}`;
+      const formattedOrg = `ORGANIZATION_${orgCount}`;
       orgVars.set(organization, formatVariable(formattedOrg));
     }
 
