@@ -8,7 +8,9 @@
     "build": "parcel build src/manifest.json src/content.js --no-optimize",
     "postbuild": "npm run copy-files",
     "prebuild:ext": "mkdir -p output",
-    "build:ext": "npm run build && cd dist && zip -r ../output/mask.xpi ."
+    "build:ext": "npm run build && cd dist && zip -r ../output/mask.xpi .",
+    "presource": "mkdir -p output",
+    "source": "zip -r output/source-code.zip .parcelrc package.json package-lock.json README.md src/"
   },
   "keywords": [],
   "author": "",

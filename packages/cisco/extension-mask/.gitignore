@@ -128,3 +128,9 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+
+# Project-specific
+
+## Mozilla Firefox Browser Extension
+web-ext-artifacts
