@@ -16,8 +16,12 @@ const orgVars = new Map();
  * @param {string} variableName
  * @returns formatted variable
  */
+// const formatVariable = (variableName) => {
+//   return `\${${variableName}}`;
+// };
+
 const formatVariable = (variableName) => {
-  return `\${${variableName}}`;
+  return variableName;
 };
 
 /**
@@ -125,12 +129,39 @@ const maskInput = (event) => {
 
     if (shouldMask) {
       target.value = maskSensitiveData(inputText);
+
+      // Print replacement rules to the console.
+      console.info(getBatchReplaceScript());
     }
 
     console.debug(`Processed ${target.tagName} from "${event.type}" event.`);
   }
 };
 
+const getBatchReplaceScript = () => {
+  allVars = [peopleVars, emailVars, phoneVars, placeVars, orgVars];
+  mappings = allVars.map((varsMapping) => formatMap(varsMapping));
+  return mappings.join("\n");
+};
+
+const formatMap = (map) => {
+  const entries = Array.from(map.entries());
+
+  // replace "Alice"
+  // with "Bob"
+
+  // replace "Carol"
+  // with "David"
+
+  const formattedEntries = entries.map(
+    ([unmasked, masked]) => `replace "${masked}"\nwith "${unmasked}"\n`
+  );
+  return formattedEntries.join("\n");
+};
+
+/**
+ * Listen for paste events to trigger the input processing.
+ */
 document.addEventListener("paste", (event) => {
   if (isInput(event)) {
     setTimeout(() => {
@@ -147,6 +178,19 @@ document.addEventListener("paste", (event) => {
   }
 });
 
+/**
+ * Listen for input events to trigger the input processing.
+ */
 document.addEventListener("input", maskInput);
 
-console.debug("Added listeners.");
+/**
+ * Listen for copy events from the background script `popup.js`.
+ */
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "getTextToCopy") {
+    const textToCopy = "This is the text to copy from content.js";
+    sendResponse(textToCopy);
+  }
+});
+
+console.debug("Added main listeners.");

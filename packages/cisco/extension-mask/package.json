@@ -5,7 +5,7 @@
   "scripts": {
     "copy-files": "ncp src/popup.html dist/popup.html && ncp src/icons dist/icons",
     "prebuild": "mkdir -p dist",
-    "build": "parcel build src/manifest.json src/content.js --no-optimize",
+    "build": "parcel build src/manifest.json src/content.js src/popup.js --no-optimize",
     "postbuild": "npm run copy-files",
     "prebuild:ext": "mkdir -p output",
     "build:ext": "npm run build && cd dist && zip -r ../output/mask.xpi .",
