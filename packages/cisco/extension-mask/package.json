@@ -1,0 +1,31 @@
+{
+  "name": "extension-mask",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "copy-files": "ncp src/popup.html dist/popup.html && ncp src/icons dist/icons",
+    "prebuild": "mkdir -p dist",
+    "build": "parcel build src/manifest.json src/content.js src/popup.js --no-optimize",
+    "postbuild": "npm run copy-files",
+    "prebuild:ext": "mkdir -p output",
+    "build:ext": "npm run build && cd dist && zip -r ../output/mask.xpi .",
+    "presource": "mkdir -p output",
+    "source": "zip -r output/source-code.zip .parcelrc package.json package-lock.json README.md src/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "compromise": "^14.8.2"
+  },
+  "devDependencies": {
+    "@parcel/config-webextension": "^2.8.3",
+    "ncp": "^2.0.0",
+    "parcel": "^2.8.3",
+    "process": "^0.11.10",
+    "web-ext": "^7.6.0"
+  },
+  "parcel": {
+    "extends": "@parcel/config-webextension"
+  }
+}
