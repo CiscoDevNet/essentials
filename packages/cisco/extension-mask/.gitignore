@@ -134,3 +134,6 @@ dist
 
 ## Mozilla Firefox Browser Extension
 web-ext-artifacts
+
+## Work with temporary files.
+scratch/

@@ -1,5 +1,8 @@
 import nlp from "compromise";
 
+// Action name to communicate across script files.
+const COPY_TEXT_ACTION = "getTextToCopy";
+
 const NEXT_EVENT_LOOP = 0;
 
 const PHONE_NUMBER_AREA_CODE = "555";
@@ -125,12 +128,53 @@ const maskInput = (event) => {
 
     if (shouldMask) {
       target.value = maskSensitiveData(inputText);
+
+      // Print replacement rules to the console.
+      console.info(getBatchReplaceScript());
     }
 
     console.debug(`Processed ${target.tagName} from "${event.type}" event.`);
   }
 };
 
+/**
+ * Generate a script in Batch Replace format to replace all masked data with
+ * the original data.
+ * @returns script in Batch Replace format
+ * @see https://marketplace.visualstudio.com/items?itemName=angelomollame.batch-replacer
+ */
+const getBatchReplaceScript = () => {
+  allVars = [peopleVars, emailVars, phoneVars, placeVars, orgVars];
+  mappings = allVars.map((varsMapping) => formatMap(varsMapping));
+  return mappings.join("\n");
+};
+
+/**
+ * Format the given map as a Batch Replace script.
+ * @param {Map} map - map of masked data to original data
+ * @returns script in Batch Replace format
+ * @see https://marketplace.visualstudio.com/items?itemName=angelomollame.batch-replacer
+ * @example
+ *
+ * replace "Alice"
+ * with "Bob"
+ *
+ * replace "Carol"
+ * with "David"
+ */
+const formatMap = (map) => {
+  const entries = Array.from(map.entries());
+  const formattedEntries = entries.map(
+    ([unmasked, masked]) => `replace "${masked}"\nwith "${unmasked}"\n`
+  );
+  return formattedEntries.join("\n");
+};
+
+// Add document listeners.
+
+/**
+ * Listen for paste events to trigger the input processing.
+ */
 document.addEventListener("paste", (event) => {
   if (isInput(event)) {
     setTimeout(() => {
@@ -147,6 +191,19 @@ document.addEventListener("paste", (event) => {
   }
 });
 
+/**
+ * Listen for input events to trigger the input processing.
+ */
 document.addEventListener("input", maskInput);
 
-console.debug("Added listeners.");
+/**
+ * Listen for copy events from the background script `popup.js`.
+ */
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === COPY_TEXT_ACTION) {
+    const textToCopy = getBatchReplaceScript();
+    sendResponse(textToCopy);
+  }
+});
+
+console.debug("Document listeners added.");

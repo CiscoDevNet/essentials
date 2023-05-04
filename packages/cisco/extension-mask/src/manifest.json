@@ -3,7 +3,7 @@
   "name": "Sensitive Data Masker",
   "version": "1.0.0",
   "description": "Mask sensitive data in textboxes on webpages",
-  "permissions": ["activeTab"],
+  "permissions": ["activeTab", "clipboardWrite"],
   "icons": {
     "48": "icons/icon48.png"
   },
