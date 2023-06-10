@@ -7,7 +7,7 @@ package-lock.json
 
 # Docusaurus
 .docusaurus/
-docs/
+digital-garden/docs/
 build/
 coverage/
 
