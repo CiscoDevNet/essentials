@@ -7,13 +7,13 @@ Use helpful functions to reduce parsing and errors.
 Install with [npm](https://www.npmjs.com/).
 
 ```bash
-npm i @gve/core
+npm i @cisco/core
 ```
 
 ## Usage
 
 ```js
-const { getDomain } = require("@gve/core");
+const { getDomain } = require("@cisco/core");
 
 const malformedUrl = "://www.cisco.com/c/en/us/products/datasheet.html";
 const domain = getDomain(malformedUrl);

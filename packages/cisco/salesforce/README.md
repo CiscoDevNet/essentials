@@ -7,13 +7,13 @@ Query and update [Salesforce](https://www.salesforce.com/) with built-in retries
 Install with [npm](https://www.npmjs.com/).
 
 ```bash
-npm i @gve/salesforce
+npm i @cisco/salesforce
 ```
 
 ## Usage
 
 ```js
-const { Salesforce, DirectAdapter } = require("@gve/salesforce");
+const { Salesforce, DirectAdapter } = require("@cisco/salesforce");
 
 const adapter = new DirectAdapter("<USERNAME>", "<PASSWORD>", "<URL>");
 const salesforce = new Salesforce(SALESFORCE_URL, adapter);

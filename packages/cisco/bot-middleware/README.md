@@ -7,7 +7,7 @@ Middleware to intercept messages. For example, gather and send analytics.
 Install with [npm](https://www.npmjs.com/).
 
 ```bash
-npm i @gve/bot-middleware
+npm i @cisco/bot-middleware
 ```
 
 ## Usage
@@ -31,7 +31,7 @@ const controller = new Botkit({
 
 // Use the product analytics middleware. 👇
 
-const { Analytics } = require("@gve/bot-middleware");
+const { Analytics } = require("@cisco/bot-middleware");
 
 const analyticsMiddleware = new Analytics("<ANALYTICS_API_KEY>");
 controller.middleware.receive.use(analyticsMiddleware.trackUserMessage);

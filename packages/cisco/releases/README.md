@@ -7,13 +7,13 @@ Build [Docker](https://www.docker.com/) images and deploy containers to [Google 
 Install with [npm](https://www.npmjs.com/).
 
 ```bash
-npm i @gve/releases
+npm i @cisco/releases
 ```
 
 ## Usage
 
 ```js
-const { OpenShiftRelease } = require("@gve/releases");
+const { OpenShiftRelease } = require("@cisco/releases");
 
 // Create the release.
 const projectName = "OpenShift project name or Google Cloud project ID";

@@ -7,7 +7,7 @@ Utilities to work easily with [Google Cloud](https://cloud.google.com/).
 Install with [npm](https://www.npmjs.com/).
 
 ```bash
-npm i @gve/google
+npm i @cisco/google
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ npm i @gve/google
 The `auth` module attempts to get Google application credentials from the [environment variable](https://cloud.google.com/docs/authentication/getting-started#setting_the_environment_variable) `GOOGLE_APPLICATION_CREDENTIALS`. If that fails, it looks for `GVE_GOOGLE_EMAIL` and `GVE_GOOGLE_KEY` to get them.
 
 ```js
-const { auth: googleAuth } = require("@gve/google");
+const { auth: googleAuth } = require("@cisco/google");
 const dialogflow = require("@google-cloud/dialogflow");
 
 const config = { credentials: googleAuth.credentials };

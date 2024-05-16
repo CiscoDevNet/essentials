@@ -7,13 +7,13 @@ Create responsive bot commands with ease.
 Install with [npm](https://www.npmjs.com/).
 
 ```bash
-npm i @gve/bot-commands
+npm i @cisco/bot-commands
 ```
 
 ## Usage
 
 ```js
-const { Command } = require("@gve/bot-commands");
+const { Command } = require("@cisco/bot-commands");
 
 const phrases = ["hello", "hi", "hey"];
 

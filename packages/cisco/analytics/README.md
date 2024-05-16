@@ -7,13 +7,13 @@ Analytics events and constants to track system usage.
 Install with [npm](https://www.npmjs.com/).
 
 ```bash
-npm i @gve/analtyics
+npm i @cisco/analtyics
 ```
 
 ## Usage
 
 ```js
-const { AnalyticsEvent, EVENTS } = require("@gve/analytics");
+const { AnalyticsEvent, EVENTS } = require("@cisco/analytics");
 
 const analyticsEvent = new AnalyticsEvent(EVENTS.MESSAGE_SENT);
 ```

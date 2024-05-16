@@ -7,13 +7,13 @@ Create [Adaptive Cards](https://adaptivecards.io/), components, and rich message
 Install with [npm](https://www.npmjs.com/).
 
 ```bash
-npm i @gve/cards
+npm i @cisco/cards
 ```
 
 ## Usage
 
 ```js
-const { Card, Header, Property } = require("@gve/cards");
+const { Card, Header, Property } = require("@cisco/cards");
 
 class RookieCard extends Card {
   constructor(playerName, team, position) {

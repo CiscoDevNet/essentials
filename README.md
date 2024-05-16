@@ -30,7 +30,7 @@ const controller = new Botkit({
 
 // Use the product analytics middleware. 👇
 
-const { Analytics } = require("@gve/bot-middleware");
+const { Analytics } = require("@cisco/bot-middleware");
 
 const analyticsMiddleware = new Analytics("<ANALYTICS_API_KEY>");
 controller.middleware.receive.use(analyticsMiddleware.trackUserMessage);
