@@ -6,7 +6,7 @@
 # This script gets the date of the latest commit for a given branch.
 #
 # Usage:
-#   ./scripts/sast/gitleaks/get-commit-date.sh [branch]
+#   ./scripts/get-commit-date.sh [branch]
 #
 # By default, it uses the main branch.
 #
