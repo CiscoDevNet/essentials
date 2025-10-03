@@ -1,5 +1,21 @@
 #!/usr/bin/env node
 
+/**
+ * This script generates API documentation in Markdown format for the project's JavaScript source files.
+ * It uses jsdoc-to-markdown to parse JSDoc comments and outputs the result to a specified destination file,
+ * adding Docusaurus frontmatter for integration with the documentation site.
+ *
+ * NOTE: The Docusaurus documentation sites in this repository have been deprecated.
+ *
+ * Usage:
+ *   node scripts/docs/make/api/index.js [--destination=path/to/output.md]
+ *
+ * By default, the output is written to docs/docs/api.md.
+ *
+ *
+ */
+
+
 const colors = require("colors/safe");
 const fs = require("fs").promises;
 const jsdoc2md = require("jsdoc-to-markdown");

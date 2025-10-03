@@ -1,5 +1,18 @@
 # !/bin/bash
-# description: Get the date of the latest commit
+
+# Description: Get the date of the latest commit
+# Author: Matt Norris <matnorri@cisco.com>
+#
+# This script gets the date of the latest commit for a given branch.
+#
+# Usage:
+#   ./scripts/sast/gitleaks/get-commit-date.sh [branch]
+#
+# By default, it uses the main branch.
+#
+# For more information, see:
+#   https://stackoverflow.com/q/18407526/154065
+#   https://stackoverflow.com/a/2514279/154065
 # author: Matt Norris <matnorri@cisco.com>
 
 branch="${1:-main}"
