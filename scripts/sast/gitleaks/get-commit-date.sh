@@ -13,7 +13,7 @@
 # For more information, see:
 #   https://stackoverflow.com/q/18407526/154065
 #   https://stackoverflow.com/a/2514279/154065
-# author: Matt Norris <matnorri@cisco.com>
+
 
 branch="${1:-main}"
 
