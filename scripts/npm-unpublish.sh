@@ -22,7 +22,7 @@
 #     ./scripts/npm-unpublish.sh
 #
 # See also:
-#   - scripts/lerna/audit-fix.sh for automated dependency fixes
+#   - scripts/npm-audit-fix.sh for automated dependency fixes
 
 npm unpublish @cisco/analytics --force
 npm unpublish @cisco/bot-commands --force

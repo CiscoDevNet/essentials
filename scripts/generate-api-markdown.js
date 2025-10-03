@@ -8,7 +8,7 @@
  * NOTE: The Docusaurus documentation sites in this repository have been deprecated.
  *
  * Usage:
- *   node scripts/docs/make/api/index.js [--destination=path/to/output.md]
+ *   node scripts/generate-api-markdown.js [--destination=path/to/output.md]
  *
  * By default, the output is written to docs/docs/api.md.
  *

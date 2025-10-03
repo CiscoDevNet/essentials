@@ -14,8 +14,8 @@
 # - Not all vulnerabilities can be fixed automatically; manual intervention may be required for some issues.
 #
 # Usage:
-#   ./scripts/lerna/audit-fix.sh [package_filter] [environment]
-#   Example: ./scripts/lerna/audit-fix.sh @cisco/analytics dev
+#   ./scripts/npm-audit-fix.sh [package_filter] [environment]
+#   Example: ./scripts/npm-audit-fix.sh @cisco/analytics dev
 #
 # For more information, see:
 #   https://docs.npmjs.com/cli/v8/commands/npm-audit
