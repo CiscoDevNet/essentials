@@ -1,0 +1,5 @@
+{
+  "action": "workflow_dispatch",
+  "workflow": "scan-leaks.yml",
+  "inputs": {}
+}

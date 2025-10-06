@@ -1,0 +1,27 @@
+# GitHub Action: Scan for Secrets and Sensitive Data
+#
+# This workflow scans the repository for secrets, credentials, and other sensitive information
+# using Gitleaks. It is triggered on pull requests and manual workflow dispatches.
+#
+# Maintainer: Matt Norris <matnorri@cisco.com>
+#
+# Usage:
+#   - Ensures no sensitive data is committed to the repository.
+#   - Fails the workflow if any secrets or sensitive patterns are detected.
+#
+# For more information on Gitleaks, see: https://github.com/gitleaks/gitleaks
+#
+# NOTE: This workflow is a draft. We are waiting for a license for our organization to be approved.
+
+name: Scan for leaks
+
+on: [pull_request, workflow_dispatch]
+
+jobs:
+  gitleaks:
+    if: github.event.pull_request.user.login != 'gveappsupport'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: gitleaks-action
+        uses: zricethezav/gitleaks-action@master
