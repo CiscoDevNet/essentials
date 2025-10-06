@@ -1,0 +1,44 @@
+# GitHub Action: Test JavaScript code
+#
+# This workflow runs tests for the JavaScript packages in the repository.
+#
+# Maintainer: Matt Norris <matnorri@cisco.com>
+#
+# Usage:
+#   - Runs tests for all JavaScript packages that have tests.
+#   - Fails the workflow if any tests fail.
+#
+# For more information on Jest, see: https://jestjs.io/
+
+name: Test JavaScript
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    paths:
+      - 'packages/javascript/**/*.js'
+      - 'packages/javascript/**/*.json'
+      - '.github/workflows/test.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/javascript
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+          cache-dependency-path: packages/javascript/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test

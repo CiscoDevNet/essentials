@@ -2,10 +2,14 @@
   "name": "javascript-packages",
   "private": true,
   "description": "JavaScript packages for essential tools and utilities",
+  "workspaces": [
+    "cisco/*"
+  ],
   "scripts": {
     "lint": "npm run lint:eslint && npm run lint:prettier",
     "lint:eslint": "eslint 'cisco/**/src/**/*.{js,json}' --ignore-pattern 'cisco/**/node_modules/**'",
-    "lint:prettier": "prettier --check 'cisco/**/src/**/*.{js,json}'"
+    "lint:prettier": "prettier --check 'cisco/**/src/**/*.{js,json}'",
+    "test": "npm test --workspaces --if-present"
   },
   "author": "Matt Norris <matnorri@cisco.com>",
   "license": "Apache-2.0",

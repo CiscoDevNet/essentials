@@ -22,9 +22,14 @@ This directory contains JavaScript/Node.js packages for essential tools and util
 - Node.js (version specified in `.nvmrc` at the project root)
 - npm
 
-### Linting
+### Testing
 
-This project uses ESLint and Prettier to maintain code quality and consistency.
+This project uses Jest for testing. Several packages include test files:
+- `@cisco/releases` - Release management tests
+- `@cisco/core` - Core utility function tests
+- `@cisco/docs-docusaurus` - Docusaurus config tests
+- `@cisco/bot-commands` - Bot command tests
+- `@cisco/salesforce` - Salesforce integration tests
 
 #### Install Dependencies
 
@@ -32,6 +37,27 @@ This project uses ESLint and Prettier to maintain code quality and consistency.
 cd packages/javascript
 npm install
 ```
+
+#### Run Tests
+
+To run all tests:
+
+```bash
+# Run all tests across all packages
+npm test
+```
+
+To test a specific package:
+
+```bash
+# Navigate to the package directory
+cd cisco/releases
+npm test
+```
+
+### Linting
+
+This project uses ESLint and Prettier to maintain code quality and consistency.
 
 #### Run Linting
 
@@ -62,12 +88,13 @@ npm run lint:prettier
 
 #### GitHub Actions
 
-Linting runs automatically on:
+Both linting and testing run automatically on:
 - Pull requests affecting JavaScript files
-- Pushes to `main` and `turborepo` branches
 - Manual workflow dispatch
 
-The workflow file is located at `.github/workflows/lint.yml`.
+The workflow files are:
+- `.github/workflows/lint.yml` - Linting
+- `.github/workflows/test.yml` - Testing
 
 ## License
 
