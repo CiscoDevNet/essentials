@@ -1,0 +1,11 @@
+# Exclude Git internal files
+.git/
+
+# Exclude common directories
+node_modules/
+
+# Exclude lock files (use full paths or patterns)
+package-lock.json
+poetry.lock
+yarn.lock
+pnpm-lock.yaml
