@@ -1,0 +1,65 @@
+#!/bin/bash
+
+# Taskfile: Simple Bash-based Task Runner
+
+# Warning ⚠️:
+#  - This Taskfile is a custom Bash script, not related to the Go-based Taskfile project (https://taskfile.dev).
+#  - This approach and its project do not seem to exist anymore.
+#
+# This file defines a set of bash functions that act as named tasks, similar to Makefile or npm scripts.
+# You can run any task by invoking: ./Taskfile <task>
+# If no task is specified, the 'default' function is run.
+#
+# How it works:
+# - Each function in this file is a task (e.g., scan, publish, help).
+# - At the end of the file, the script runs the function named by the first argument, or 'default' if none is given.
+# - The PATH is set to include local node_modules binaries for convenience.
+# - The 'help' task lists all available tasks.
+#
+# Common tasks in this Taskfile:
+#   scan         - Run gitleaks secret scanning (see scripts/gitleaks-sast/scan.sh)
+#   scan:action  - Run the gitleaks GitHub Action locally using act
+#   publish      - Publish packages using act and workflow files
+#   protect      - (Reserved) Run additional protection scripts (if implemented)
+#   help         - Show available tasks
+#
+# Example usage:
+#   ./Taskfile scan
+#   ./Taskfile publish
+#   ./Taskfile help
+#
+
+
+PATH=./node_modules/.bin:$PATH
+
+function default {
+    scan
+}
+
+function publish {
+    act -j publish-packages \
+        --secret-file .env \
+        -e act/complete-version-packages.json
+}
+
+function scan {
+    scripts/gitleaks-sast/scan.sh
+}
+
+# Scan with the gitleaks Github Action
+function scan:action {
+    act -j gitleaks
+}
+
+function protect {
+    scripts/gitleaks-sast/protect.sh
+}
+
+function help {
+    echo "$0 <task> <args>"
+    echo "Tasks:"
+    compgen -A function | cat -n
+}
+
+TIMEFORMAT="Task completed in %3lR"
+time ${@:-default}

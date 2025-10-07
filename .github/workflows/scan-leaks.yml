@@ -1,16 +1,32 @@
-# GitHub Action
-# description: Scan the code for secrets, etc.
-# author: Matt Norris <matnorri@cisco.com>
+# GitHub Action: Scan for Secrets and Sensitive Data
+#
+# This workflow scans the repository for secrets, credentials, and other sensitive information
+# using TruffleHog OSS. It is triggered on pull requests and manual workflow dispatches.
+#
+# Maintainer: Matt Norris <matnorri@cisco.com>
+#
+# Usage:
+#   - Ensures no sensitive data is committed to the repository.
+#   - Fails the workflow if any secrets or sensitive patterns are detected.
+#   - Uses .trufflehogignore file to exclude specific paths from scanning.
+#
+# For more information on TruffleHog, see: https://github.com/trufflesecurity/trufflehog
 
 name: Scan for leaks
 
 on: [pull_request, workflow_dispatch]
 
 jobs:
-  gitleaks:
+  trufflehog:
     if: github.event.pull_request.user.login != 'gveappsupport'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - name: gitleaks-action
-        uses: zricethezav/gitleaks-action@master
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch full git history for comprehensive scanning
+
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          extra_args: --results=verified,unknown

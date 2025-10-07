@@ -1,0 +1,27 @@
+{
+  "name": "javascript-packages",
+  "private": true,
+  "description": "JavaScript packages for essential tools and utilities",
+  "workspaces": [
+    "cisco/*"
+  ],
+  "scripts": {
+    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "lint:eslint": "eslint 'cisco/**/src/**/*.{js,json}' --ignore-pattern 'cisco/**/node_modules/**'",
+    "lint:prettier": "prettier --check 'cisco/**/src/**/*.{js,json}'",
+    "test": "npm test --workspaces --if-present"
+  },
+  "author": "Matt Norris <matnorri@cisco.com>",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@babel/core": "^7.15.8",
+    "@babel/eslint-parser": "^7.15.8",
+    "@babel/preset-react": "^7.16.7",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-sonar": "^0.6.1",
+    "eslint-plugin-sonarjs": "^0.11.0",
+    "prettier": "^2.4.1"
+  }
+}
