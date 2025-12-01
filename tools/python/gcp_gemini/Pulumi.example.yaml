@@ -1,0 +1,45 @@
+# Example Pulumi stack configuration file
+#
+# (Optional) Setup Local Backend - Skip if using Pulumi Cloud:
+#
+# 1. Switch to local file-based backend (stores state in ~/.pulumi/):
+#    pulumi login --local
+#
+# 2. Or use project-local backend (stores state in current directory):
+#    pulumi login file://$(pwd)
+#    This creates a .pulumi/ directory in the current project directory
+#    (.pulumi/ is already in .gitignore)
+#
+# Initialize and Configure Stack:
+#
+# 1. Initialize a new stack:
+#    pulumi stack init <stack-name>
+#    Example: pulumi stack init dev
+#    This creates Pulumi.<stack-name>.yaml with auto-generated encryption salt
+#
+# 2. Configure your settings using pulumi config set:
+#    pulumi config set gcp:project YOUR_PROJECT_ID
+#    pulumi config set region us-west1
+#    pulumi config set resource_prefix my-app
+#
+# Or manually copy this file to Pulumi.{stack-name}.yaml and uncomment/edit values below
+
+config:
+  # Optional: Your Google Cloud project ID
+  # If not set, uses the active gcloud project (gcloud config get-value project)
+  # Set with: pulumi config set gcp:project YOUR_PROJECT_ID
+  # gcp:project: YOUR_PROJECT_ID
+
+  # Optional: Vertex AI region (default: us-central1)
+  # Set with: pulumi config set region us-west1
+  # region: us-central1
+
+  # Optional: Resource naming prefix (default: uses project ID)
+  # Used for service account naming
+  # Set with: pulumi config set resource_prefix my-app
+  # resource_prefix: my-app
+
+  # Optional: Existing service account email to import
+  # If not set, creates a new service account named {resource_prefix}
+  # Set with: pulumi config set service_account_email my-sa@project.iam.gserviceaccount.com
+  # service_account_email: my-sa@project.iam.gserviceaccount.com

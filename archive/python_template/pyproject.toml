@@ -1,12 +1,12 @@
 [build-system]
-requires = [ "poetry-core>=1.0.0",]
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "python_template"
 version = "0.1.0"
 description = ""
-authors = [ "Matt <matnorri@cisco.com>",]
+authors = ["Matt Norris <matt@mattnorris.dev>"]
 
 [tool.commitizen]
 name = "cz_conventional_commits"

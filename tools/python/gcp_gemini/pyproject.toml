@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "gcp-gemini"
+version = "0.1.0"
+description = ""
+authors = ["Matt Norris <matt@mattnorris.dev>"]
+readme = "README.md"
+packages = [{ include = "gcp_gemini", from = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pulumi = "^3.182.0"
+pulumi-gcp = "^8.38.0"
+google-cloud-aiplatform = "^1.75.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
