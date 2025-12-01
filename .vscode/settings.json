@@ -1,0 +1,23 @@
+{
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "always"
+    },
+    "editor.formatOnSave": true,
+    "editor.rulers": [80, 100],
+    "editor.trimAutoWhitespace": true,
+    "files.associations": {
+      ".Makefile": "makefile"
+    },
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true,
+
+    "[python]": {
+      "editor.defaultFormatter": "charliermarsh.ruff",
+      "editor.formatOnSave": true,
+      "editor.codeActionsOnSave": {
+        "source.fixAll.ruff": "explicit",
+        "source.organizeImports.ruff": "always"
+      }
+    }
+  }
