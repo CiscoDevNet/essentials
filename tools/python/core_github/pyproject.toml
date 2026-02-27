@@ -1,0 +1,36 @@
+[project]
+name = "core-github"
+version = "0.1.0"
+description = ""
+authors = [{ name = "Matt Norris", email = "matt@mattnorris.dev" }]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "click>=8.1.0,<9.0.0",
+    "pandas>=2.0.0,<3.0.0",
+    "pygithub>=2.8.1,<3.0.0",
+    "python-dotenv>=1.2.1,<2.0.0",
+    "python-decouple>=3.8,<4.0",
+]
+
+[tool.poetry]
+packages = [{ include = "core_github", from = "src" }]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "pylint>=3.0.0,<4.0.0",
+    "perflint>=0.8.1,<0.9.0",
+    "black>=25.12.0,<26.0.0",
+    "pre-commit>=4.5.1,<5.0.0",
+    "ruff>=0.14.10,<0.15.0",
+    "bandit>=1.9.2,<2.0.0",
+    "pytest>=9.0.2,<10.0.0",
+    "detect-secrets>=1.5.0,<2.0.0",
+]
+
+[project.scripts]
+prs = "core_github.cli:get_prs_standalone"
