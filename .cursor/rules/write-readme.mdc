@@ -1,0 +1,44 @@
+---
+alwaysApply: true
+---
+
+# How to Write a README
+
+When writing or updating a README, follow this framework in order. A reader should be able to answer two questions quickly: **"Does this solve my problem?"** and **"How do I use it?"**
+
+## 1. Example First
+
+Start with a short, runnable code snippet that shows the most common use case. The reader should be able to infer how the project works from this example alone.
+
+- Show what the project does, not how it's built.
+- Keep it minimal — one common use case, not the full API.
+- A one-line description before the example (e.g., "Like `mkdir -p`, but in node.js!") adds important context.
+
+## 2. Installation
+
+Provide copy-pasteable install commands. Aim for a one- or two-liner. If the procedure is complex, break it into numbered steps — don't leave the reader guessing.
+
+## 3. API / Usage
+
+Document the main entry points. Start with the most obvious one and work outward.
+
+- Name each function/class/command with its signature.
+- Describe each parameter: type, whether it's required or optional, and what it does.
+- Don't rely solely on the example for this — be explicit.
+
+## 4. Running Tests
+
+If the project has tests, state how to run them in a single command (e.g., `npm test`, `pytest`). Mention what framework is used and what the tests cover.
+
+## 5. License
+
+A short mention is fine (e.g., "MIT"). Link to the full LICENSE file if one exists.
+
+## 6. Stay Focused
+
+A README answers **"What is it?"** and **"How do I use it?"** — nothing more. Keep design rationale, architecture deep-dives, and opinions out of the README. Link to separate docs, ADRs, or blog posts for that content.
+
+## Sources
+
+- http://blog.nodejitsu.com/how-to-write-a-readme
+- http://jesusabdullah.github.com/
