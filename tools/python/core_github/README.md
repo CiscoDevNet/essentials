@@ -21,10 +21,10 @@ prs --state open --output-format json
 
 ## Installation
 
-Requires Python 3.11+ and [Poetry](https://python-poetry.org/).
+Requires Python 3.11+ and [uv](https://docs.astral.sh/uv/).
 
 ```bash
-poetry install
+uv sync --all-packages
 ```
 
 Create a `.env` file with your GitHub token:

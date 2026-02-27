@@ -46,8 +46,7 @@ These files are in `.gitignore` and must be created by each user for their own G
 ### 1. Install Dependencies
 
 ```bash
-cd tools/python/gcp_gemini
-pip install -r requirements.txt
+uv sync --all-packages
 ```
 
 ### 2. Configure Google Cloud Authentication
