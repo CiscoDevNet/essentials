@@ -6,6 +6,6 @@ node_modules/
 
 # Exclude lock files (use full paths or patterns)
 package-lock.json
-poetry.lock
+uv.lock
 yarn.lock
 pnpm-lock.yaml

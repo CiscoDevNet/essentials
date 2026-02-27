@@ -1,4 +1,4 @@
-Add helpful Python dependencies to the current Poetry project.
+Add helpful Python dependencies to the current uv project.
 
 ## Parameters
 
@@ -28,11 +28,11 @@ Add helpful Python dependencies to the current Poetry project.
 Run these commands in the package directory (where `pyproject.toml` exists):
 
 ```sh
-poetry add python-dotenv python-decouple
+uv add python-dotenv python-decouple
 ```
 
 ```sh
-poetry add --group dev black pre-commit pylint perflint ruff bandit pytest detect-secrets
+uv add --group dev black pre-commit pylint perflint ruff bandit pytest detect-secrets
 ```
 
 ## Example Usage
@@ -40,7 +40,7 @@ poetry add --group dev black pre-commit pylint perflint ruff bandit pytest detec
 **With parameter:**
 
 - package_dir: `tools/python/my_package`
-- This will navigate to `tools/python/my_package/` and run the poetry add commands there
+- This will navigate to `tools/python/my_package/` and run the uv add commands there
 
 **Without parameter:**
 
@@ -53,5 +53,5 @@ poetry add --group dev black pre-commit pylint perflint ruff bandit pytest detec
 
 - The package directory must contain a `pyproject.toml` file
 - The directory location can be absolute or relative to the workspace root
-- The dev dependencies will be added to the `[tool.poetry.group.dev.dependencies]` section in `pyproject.toml`
-- Regular dependencies will be added to the `[tool.poetry.dependencies]` section
+- The dev dependencies will be added to the `[dependency-groups]` dev section in `pyproject.toml`
+- Regular dependencies will be added to the `[project]` dependencies section
