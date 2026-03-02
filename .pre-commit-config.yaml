@@ -67,6 +67,7 @@ default_language_version:
 # Exclude paths
 exclude: |
   (?x)^(
+      archive/|
       \.venv/|
       venv/|
       node_modules/|
