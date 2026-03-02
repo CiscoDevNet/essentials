@@ -1,0 +1,36 @@
+---
+description: Pulumi state management - use local file backend at package root
+globs: **/Pulumi.yaml, **/Pulumi.*.yaml, **/__main__.py
+alwaysApply: false
+---
+
+# Pulumi Local State Management
+
+When working with Pulumi projects, always use a local file backend for state storage.
+
+## Login Command
+
+Login to the local file backend at the **current package root** (not the workspace root):
+
+```bash
+pulumi login file://.
+```
+
+This creates a `.pulumi/` directory in the current package for state storage.
+
+## Key Points
+
+- State lives in `.pulumi/` at the package level (e.g., `tools/python/aws-artifact-repo/.pulumi/`)
+- Do NOT use `~/.pulumi/` (default) or workspace root for state
+- Each Pulumi project manages its own state independently
+- Use `uv run pulumi` to ensure correct Python environment
+
+## Example Workflow
+
+```bash
+cd tools/python/aws-artifact-repo
+uv run pulumi login file://.
+uv run pulumi stack init dev
+uv run pulumi config set aws:region us-east-1
+uv run pulumi up
+```

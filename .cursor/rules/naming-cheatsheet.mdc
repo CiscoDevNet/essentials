@@ -1,0 +1,256 @@
+---
+alwaysApply: true
+---
+
+# Naming Cheatsheet
+
+Naming things is hard. This cheatsheet makes it easier. The codebase is primarily **Python**, so all examples use Python / PEP 8 conventions unless noted otherwise.
+
+## Naming Convention by Language
+
+### Python (primary) — PEP 8
+
+| Kind | Convention | Examples |
+| ---- | ---------- | -------- |
+| Functions, methods, variables | `snake_case` | `get_user`, `post_count` |
+| Classes, dataclasses, exceptions | `PascalCase` | `LangSmithConfig`, `DataplaneOutputs` |
+| Module-level constants | `UPPER_SNAKE_CASE` | `DEFAULT_SEPARATOR` |
+| Private / internal names | Leading `_` | `_VPC_CIDR`, `_HOST_BACKEND_URL` |
+| Modules and packages | `snake_case` | `langsmith_hosting`, `config` |
+
+### TypeScript / JavaScript (secondary — `apps/typescript/`)
+
+| Kind | Convention |
+| ---- | ---------- |
+| Variables, functions | `camelCase` |
+| Classes, components, types | `PascalCase` |
+| Constants | `UPPER_SNAKE_CASE` |
+
+### IaC / Pulumi
+
+| Kind | Convention | Examples |
+| ---- | ---------- | -------- |
+| Pulumi logical resource names | `kebab-case` with parent prefix | `f"{cluster_name}-dataplane"` |
+| Pulumi config YAML keys | `camelCase` (Pulumi convention) | `eksClusterName`, `langsmithApiKey` |
+| Helm release names | short `kebab-case` | `name="dataplane"` |
+
+---
+
+## S-I-D
+
+A name must be **Short**, **Intuitive**, and **Descriptive**.
+
+```python
+# Bad
+a = 5
+is_paginatable = a > 10   # unnatural
+should_paginatize = a > 10 # made-up verb
+
+# Good
+post_count = 5
+has_pagination = post_count > 10
+should_paginate = post_count > 10
+```
+
+## Avoid Contractions
+
+Do **not** use contractions. They reduce readability.
+
+```python
+# Bad
+on_itm_clk = lambda: ...
+
+# Good
+on_item_click = lambda: ...
+```
+
+## Avoid Context Duplication
+
+Remove the context from a name when it is already implied by its container.
+
+```python
+class MenuItem:
+    # Bad — duplicates the class context
+    def handle_menu_item_click(self, event): ...
+
+    # Good — reads as MenuItem.handle_click()
+    def handle_click(self, event): ...
+```
+
+## Reflect the Expected Result
+
+A name should match how it is consumed.
+
+```python
+# Bad — forces negation at the call site
+is_enabled = item_count > 3
+button.set_disabled(not is_enabled)
+
+# Good — direct match
+is_disabled = item_count <= 3
+button.set_disabled(is_disabled)
+```
+
+---
+
+# Naming Functions
+
+## A/HC/LC Pattern
+
+```
+prefix? + action (A) + high_context (HC) + low_context? (LC)
+```
+
+| Name | Prefix | Action (A) | High context (HC) | Low context (LC) |
+| ---- | ------ | ---------- | ----------------- | ---------------- |
+| `get_user` | | `get` | `user` | |
+| `get_user_messages` | | `get` | `user` | `messages` |
+| `handle_click_outside` | | `handle` | `click` | `outside` |
+| `should_display_message` | `should` | `display` | `message` | |
+
+> **High context emphasizes the meaning.** `should_update_component` means _you_ will update it; `should_component_update` means _the component_ decides when to update itself.
+
+## Actions
+
+### `get`
+
+Access data immediately (synchronous getter or async fetch).
+
+```python
+def get_fruit_count(self) -> int:
+    return len(self.fruits)
+
+async def get_user(user_id: str) -> User:
+    return await fetch_user(user_id)
+```
+
+### `set`
+
+Set a value declaratively.
+
+```python
+def set_fruits(self, next_fruits: int) -> None:
+    self.fruits = next_fruits
+```
+
+### `reset`
+
+Restore a value to its initial state.
+
+```python
+def reset_fruits(self) -> None:
+    self.fruits = self._initial_fruits
+```
+
+### `create` / `delete`
+
+Bring something into existence or erase it permanently. Pair these together.
+
+```python
+def create_post(title: str) -> Post: ...
+def delete_post(post_id: str) -> None: ...
+```
+
+### `add` / `remove`
+
+Add to or remove from a collection. Pair these together.
+
+```python
+def add_filter(name: str, filters: list[str]) -> list[str]:
+    return [*filters, name]
+
+def remove_filter(name: str, filters: list[str]) -> list[str]:
+    return [f for f in filters if f != name]
+```
+
+### `compose`
+
+Build new data from existing data.
+
+```python
+def compose_page_url(page_name: str, page_id: int) -> str:
+    return f"{page_name.lower()}-{page_id}"
+```
+
+### `handle`
+
+Handle an event or callback.
+
+```python
+def handle_link_click() -> None:
+    print("Clicked a link!")
+```
+
+---
+
+## Prefixes
+
+### `is`
+
+A characteristic or state of the current context (boolean).
+
+```python
+is_blue = color == "blue"
+is_present = True
+```
+
+### `has`
+
+Whether the context possesses a certain value or state (boolean).
+
+```python
+# Bad
+is_products_exist = products_count > 0
+
+# Good
+has_products = products_count > 0
+```
+
+### `should`
+
+A positive conditional coupled with an action (boolean).
+
+```python
+def should_update_url(url: str, expected_url: str) -> bool:
+    return url != expected_url
+```
+
+### `min` / `max`
+
+Boundaries or limits.
+
+```python
+def render_posts(posts: list, min_posts: int, max_posts: int) -> list:
+    return posts[:random_between(min_posts, max_posts)]
+```
+
+### `prev` / `next`
+
+Previous or next state during a transition.
+
+```python
+prev_posts = self.state.posts
+next_posts = prev_posts + latest_posts
+```
+
+---
+
+## Singular and Plurals
+
+Use singular for a single value, plural for collections.
+
+```python
+# Bad
+friends = "Bob"
+friend = ["Bob", "Tony", "Tanya"]
+
+# Good
+friend = "Bob"
+friends = ["Bob", "Tony", "Tanya"]
+```
+
+---
+
+## Source
+
+https://github.com/kettanaito/naming-cheatsheet/

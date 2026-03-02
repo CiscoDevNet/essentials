@@ -1,0 +1,57 @@
+---
+description: Generate comprehensive .gitignore files using curated templates
+globs: **/.gitignore
+alwaysApply: false
+---
+
+# Gitignore Setup
+
+After creating a project with a command like `poetry` or `uv`, detect the languages of the project and ignore the proper items.
+
+Use the following commands to create comprehensive *.gitignore* files.
+
+## Most projects
+
+Ignore temporary and backup files.
+
+```sh
+curl https://raw.githubusercontent.com/mattnorris/gitignore/refs/heads/temp-backup/community/TemporaryBackup.gitignore >> .gitignore
+```
+
+Ignore common Mac artifacts.
+
+```sh
+curl https://raw.githubusercontent.com/github/gitignore/refs/heads/main/Global/macOS.gitignore >> .gitignore
+```
+
+## Node.js
+
+Ignore common Node artifacts.
+
+```sh
+curl https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore >> .gitignore
+```
+
+## Python
+
+Ignore common Python artifacts.
+
+```sh
+curl https://raw.githubusercontent.com/github/gitignore/master/Python.gitignore >> .gitignore
+```
+
+### Notebooks
+
+Ignore Jupyter artifacts.
+
+```sh
+curl https://raw.githubusercontent.com/github/gitignore/refs/heads/main/community/Python/JupyterNotebooks.gitignore >> .gitignore
+```
+
+## LangChain
+
+Ignore LangGraph artifacts.
+
+```sh
+curl https://raw.githubusercontent.com/mattnorris/gitignore/refs/heads/langchain/LangChain.gitignore >> .gitignore
+```
