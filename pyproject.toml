@@ -7,8 +7,38 @@ readme = "README.md"
 requires-python = ">=3.11,<4.0"
 dependencies = []
 
+[dependency-groups]
+dev = [
+    "ruff>=0.14.2",
+    "bandit>=1.8.6",
+    "pre-commit>=4.0.1",
+    "pylint>=3.1.0",
+    "perflint>=0.8.1",
+]
+
 [tool.uv.workspace]
 members = [
     "tools/python/core_github",
     "tools/python/gcp_gemini",
 ]
+
+[tool.ruff]
+exclude = ["**/migrations/**", "**/tmp/**"]
+
+[tool.ruff.lint]
+select = ["E", "F", "B", "PERF", "C", "I", "N", "PL"]
+
+[tool.bandit]
+exclude_dirs = [".venv", "venv", "node_modules", "__pycache__", ".git"]
+exclude = ["*test*.py"]
+
+[tool.pylint]
+load-plugins = ["perflint"]
+ignore = ["migrations", "tests", "tmp", "__pycache__", ".venv", "venv"]
+ignore-patterns = [
+    ".*/migrations/.*",
+    ".*/tests/.*",
+    ".*/test_.*",
+    ".*/__pycache__/.*",
+]
+disable = ["C", "R", "W"]

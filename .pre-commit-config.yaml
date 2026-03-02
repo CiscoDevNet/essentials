@@ -1,0 +1,81 @@
+repos:
+  # Ruff for Python linting and formatting
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.6
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+        exclude: ^.*/migrations/
+        stages: [pre-push]
+      - id: ruff-format
+        exclude: ^.*/migrations/
+        stages: [pre-push]
+
+  # Pylint with perflint for performance checks
+  - repo: local
+    hooks:
+      - id: pylint-perflint
+        name: pylint with perflint
+        entry: uv run pylint --load-plugins=perflint
+        language: system
+        types: [python]
+        exclude: ^.*/(migrations|tests|__pycache__|\.venv|venv)/.*
+        pass_filenames: true
+        args: ["--ignore=migrations,tests,__pycache__,.venv,venv"]
+        stages: [pre-push]
+
+  # Bandit for security scanning
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.8.6
+    hooks:
+      - id: bandit
+        args: [-ll]
+        additional_dependencies: ["bandit[toml]"]
+        stages: [pre-push]
+
+  # TruffleHog for secret scanning
+  - repo: local
+    hooks:
+      - id: trufflehog
+        name: TruffleHog
+        entry: bash -c 'trufflehog filesystem . --exclude_paths=.trufflehogignore --fail'
+        language: system
+        types: [text]
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]
+
+  # Trailing whitespace and end of file fixes
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        exclude: ^uv\.lock$
+      - id: check-json
+        exclude: ^\.vscode/
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: debug-statements
+
+# Global hooks configuration
+default_language_version:
+  python: python3.12
+
+# Exclude paths
+exclude: |
+  (?x)^(
+      \.venv/|
+      venv/|
+      node_modules/|
+      __pycache__/|
+      \.git/|
+      \.pytest_cache/|
+      \.pulumi/|
+      dist/|
+      build/|
+      \.ruff_cache/|
+      .*/migrations/
+  )

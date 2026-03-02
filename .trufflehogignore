@@ -1,11 +1,27 @@
-# Exclude Git internal files
 .git/
 
-# Exclude common directories
+# Installed packages
 node_modules/
+.mypy_cache/
+.venv/
 
-# Exclude lock files (use full paths or patterns)
+# Infrastructure
+.pulumi/
+
+# Environments
+.env
+.env.*
+!.env.example
+
+# Lock files
 package-lock.json
 uv.lock
 yarn.lock
 pnpm-lock.yaml
+
+# Output files
+output/
+
+# Credential/key files
+key\.json
+credentials\.json
