@@ -49,17 +49,31 @@ Now basic properties from all messages are automatically ✨ sent to analytics, 
 
 Clone this repository.
 
-Install its dependencies with [npm](https://www.npmjs.com/).
+Install its dependencies with [uv](https://docs.astral.sh/uv/).
 
 ```bash
 cd essentials
-npm ci
+uv sync --all-packages
 ```
 
-Bootstrap the project with [Lerna](https://github.com/lerna/lerna).
+### Git Hooks
+
+Install the [pre-commit](https://pre-commit.com/) hooks to run linters and security checks automatically.
 
 ```bash
-npx lerna bootstrap
+uv run pre-commit install --hook-type pre-push
+uv run pre-commit install
+```
+
+This sets up two hooks:
+
+- **pre-commit** — trailing whitespace, EOF fixer, YAML/JSON/TOML checks, merge conflict detection, debug statements.
+- **pre-push** — Ruff (lint + format), Pylint + perflint, Bandit (security), TruffleHog (secrets).
+
+[TruffleHog](https://github.com/trufflesecurity/trufflehog) must be installed separately:
+
+```bash
+brew install trufflehog
 ```
 
 ## License

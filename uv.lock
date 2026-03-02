@@ -481,6 +481,26 @@ name = "essentials"
 version = "0.1.0"
 source = { virtual = "." }
 
+[package.dev-dependencies]
+dev = [
+    { name = "bandit" },
+    { name = "perflint" },
+    { name = "pre-commit" },
+    { name = "pylint" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "bandit", specifier = ">=1.8.6" },
+    { name = "perflint", specifier = ">=0.8.1" },
+    { name = "pre-commit", specifier = ">=4.0.1" },
+    { name = "pylint", specifier = ">=3.1.0" },
+    { name = "ruff", specifier = ">=0.14.2" },
+]
+
 [[package]]
 name = "filelock"
 version = "3.24.3"
