@@ -1,0 +1,1 @@
+List of [OpenAI models available in Azure AI Foundry](https://learn.microsoft.com/en-us/azure/ai-foundry/foundry-models/concepts/models-sold-directly-by-azure?pivots=azure-openai&tabs=global-standard-aoai%2Cstandard-chat-completions%2Cglobal-standard#azure-openai-in-azure-ai-foundry-models)

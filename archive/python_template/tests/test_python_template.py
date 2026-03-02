@@ -1,5 +1,5 @@
-from pathlib import Path
 import sys
+from pathlib import Path
 
 # Append the 'src' folder to the path.
 # https://fortierq.github.io/python-import/#1st-solution-add-root-to-syspath
