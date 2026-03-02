@@ -1,0 +1,4 @@
+name: langsmith-hosting
+runtime: python
+main: src/langsmith_hosting
+description: LangSmith Hybrid infrastructure on AWS provisioned with Pulumi

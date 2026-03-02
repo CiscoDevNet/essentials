@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = [{ name = "Matt Norris", email = "matt@mattnorris.dev" }]
 readme = "README.md"
-requires-python = ">=3.11,<4.0"
+requires-python = ">=3.12,<3.13"
 dependencies = []
 
 [dependency-groups]
@@ -20,6 +20,10 @@ dev = [
 members = [
     "tools/python/core_github",
     "tools/python/gcp_gemini",
+    "tools/python/langsmith-hosting",
+    "tools/python/pulumi-utils",
+    "packages/python/langsmith-client",
+    "packages/python/azure-ai",
 ]
 
 [tool.ruff]

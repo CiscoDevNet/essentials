@@ -4,9 +4,9 @@ import argparse
 import os
 import shutil
 import tempfile
-import toml
-
 from pathlib import Path
+
+import toml
 
 ORIGINAL_PACKAGE_NAME = "python_template"
 PYPROJECT_TOML = "pyproject.toml"

@@ -1,0 +1,4 @@
+name: azure-ai
+description: Azure OpenAI GPT-5 infrastructure
+runtime: python
+main: src/azure_ai
