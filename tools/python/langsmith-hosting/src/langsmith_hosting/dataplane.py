@@ -6,9 +6,9 @@ Installs the full data plane stack on the EKS cluster:
   3. langgraph-dataplane Helm chart — connects the cluster to LangSmith
 
 Dependency chain:
-    EKS cluster ready
+    EKS node group ready (via ebs_csi_addon)
         ├── Listener (API call, outputs listener_id)
-        └── KEDA (Helm)
+        └── KEDA (Helm, depends on nodes being schedulable)
                 └── dataplane (Helm, depends on Listener + KEDA)
 """
 
@@ -17,6 +17,7 @@ from dataclasses import dataclass
 import pulumi
 import pulumi_kubernetes as k8s
 
+from langsmith_hosting.config import LangSmithConfig
 from langsmith_hosting.listener import LangSmithListener
 
 _HOST_BACKEND_URL = "https://api.host.langchain.com"
@@ -28,6 +29,8 @@ _DATAPLANE_CHART_VERSION = "0.2.17"
 # Disabled until an ingress hostname is configured. Once a DNS record points to
 # the ALB, set to True and pass the hostname via ingress.hostname in the Helm
 # values. See docs/ingress-hostname-setup.md in the Terraform project.
+_WATCH_NAMESPACES = "default"
+
 _ENABLE_HEALTH_CHECK = False
 
 _REDIS_CPU_REQUEST = "1000m"
@@ -44,26 +47,26 @@ class DataplaneOutputs:
 
 
 def create_dataplane(
-    cluster_name: str,
+    cfg: LangSmithConfig,
     k8s_provider: k8s.Provider,
-    langsmith_api_key: pulumi.Output[str],
-    langsmith_workspace_id: str,
-    watch_namespaces: str = "default",
+    depends_on: list[pulumi.Resource] | None = None,
 ) -> DataplaneOutputs:
     """Install the LangSmith data plane on an EKS cluster.
 
     Args:
-        cluster_name: EKS cluster name, also used as the listener compute_id.
+        cfg: Typed stack configuration (cluster name, API key, workspace ID).
         k8s_provider: Kubernetes provider for Helm releases.
-        langsmith_api_key: LangSmith API key (Pulumi secret).
-        langsmith_workspace_id: LangSmith workspace UUID.
-        watch_namespaces: Comma-separated K8s namespaces for the data plane
-            to monitor for deployment pods.
+        depends_on: Resources that must be ready before Helm charts are
+            installed (e.g. EBS CSI addon, which implies the node group).
 
     Returns:
         DataplaneOutputs with the listener ID.
     """
-    namespaces = [ns.strip() for ns in watch_namespaces.split(",")]
+    cluster_name = cfg.eks_cluster_name
+    langsmith_api_key = cfg.langsmith_api_key
+    langsmith_workspace_id = cfg.langsmith_workspace_id
+
+    namespaces = [ns.strip() for ns in _WATCH_NAMESPACES.split(",")]
 
     # =========================================================================
     # 1. Register a listener with the LangSmith Control Plane API
@@ -81,6 +84,7 @@ def create_dataplane(
     # =========================================================================
     keda = k8s.helm.v3.Release(
         f"{cluster_name}-keda",
+        name="keda",
         chart="keda",
         version=_KEDA_CHART_VERSION,
         namespace="keda",
@@ -90,6 +94,7 @@ def create_dataplane(
         ),
         opts=pulumi.ResourceOptions(
             provider=k8s_provider,
+            depends_on=depends_on or [],
             custom_timeouts=pulumi.CustomTimeouts(create="10m", update="10m"),
         ),
     )

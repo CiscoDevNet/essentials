@@ -11,13 +11,15 @@ langsmith-hosting/
 ├── pyproject.toml            # Dependencies (pulumi, pulumi-aws, pulumi-eks, ...)
 ├── README.md
 ├── docs/
-│   └── architecture.md       # This file
+│   ├── architecture.md       # This file
+│   └── cidr-entry-points.md  # CIDR plugin discovery mechanism
 └── src/
     └── langsmith_hosting/
         ├── __init__.py
         ├── __main__.py       # Entry point: wires all modules, exports outputs
+        ├── cidrs.py          # CIDR utilities (get_cidrs, collapse_cidrs)
         ├── config.py         # Typed config loading from Pulumi stack config
-        ├── constants.py      # PROJECT_NAME, TAGS
+        ├── constants.py      # PROJECT_NAME, get_tags()
         ├── vpc.py            # VPC + subnets
         ├── eks.py            # EKS cluster + node group + addons
         ├── postgres.py       # RDS PostgreSQL
@@ -52,11 +54,21 @@ Orchestrates all modules in order:
 1. Loads `.env` and Pulumi stack config via `config.py`
 2. Gets AWS caller identity and region
 3. Creates VPC
-4. Creates EKS cluster (depends on VPC)
-5. Creates PostgreSQL (depends on VPC + random password)
-6. Creates Redis (depends on VPC)
-7. Creates S3 bucket (depends on VPC)
-8. Exports stack outputs
+4. Builds the EKS API server CIDR allowlist (LangSmith IPs + [entry point plugins](cidr-entry-points.md) + manual overrides)
+5. Creates EKS cluster (depends on VPC)
+6. Creates PostgreSQL (depends on VPC + random password)
+7. Creates Redis (depends on VPC)
+8. Creates S3 bucket (depends on VPC)
+9. Creates data plane (listener + KEDA + langgraph-dataplane Helm chart)
+10. Exports stack outputs
+
+### `cidrs.py` -- CIDR Utilities
+
+Helper functions for IP/CIDR manipulation:
+
+- `get_cidrs()` -- appends `/32` (IPv4) or `/128` (IPv6) to bare IP addresses
+- `collapse_cidrs()` -- best-effort collapse of a CIDR list toward a target count (AWS EKS allows at most 40 public access CIDRs)
+- `AWS_EKS_MAX_PUBLIC_ACCESS_CIDRS` -- the 40-entry limit constant
 
 ### `config.py` -- Configuration
 

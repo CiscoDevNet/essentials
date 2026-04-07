@@ -9,7 +9,7 @@ from dataclasses import dataclass
 import pulumi
 import pulumi_aws as aws
 
-from langsmith_hosting.constants import TAGS
+from langsmith_hosting.constants import get_tags
 
 
 @dataclass
@@ -41,6 +41,7 @@ def create_redis(
     Returns:
         RedisOutputs with cluster connection details.
     """
+    tags = get_tags("redis")
     # =========================================================================
     # Cache subnet group
     # =========================================================================
@@ -48,7 +49,7 @@ def create_redis(
         f"{name}-subnet-group",
         name=name,
         subnet_ids=subnet_ids,
-        tags={**TAGS, "Name": f"{name}-subnet-group"},
+        tags={**tags, "Name": f"{name}-subnet-group"},
     )
 
     # =========================================================================
@@ -77,7 +78,7 @@ def create_redis(
                 description="Allow all outbound",
             )
         ],
-        tags={**TAGS, "Name": f"{name}-sg"},
+        tags={**tags, "Name": f"{name}-sg"},
     )
 
     # =========================================================================
@@ -92,7 +93,7 @@ def create_redis(
         num_cache_nodes=1,
         subnet_group_name=subnet_group.name,
         security_group_ids=[sg.id],
-        tags={**TAGS, "Name": name},
+        tags={**tags, "Name": name},
     )
 
     return RedisOutputs(

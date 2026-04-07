@@ -23,6 +23,7 @@ members = [
     "tools/python/langsmith-hosting",
     "tools/python/pulumi-utils",
     "packages/python/langsmith-client",
+    "packages/python/langsmith-network",
     "packages/python/azure-ai",
 ]
 

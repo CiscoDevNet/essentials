@@ -6,12 +6,37 @@ configuration.
 """
 
 import json
+import logging
 from dataclasses import dataclass
+from http import HTTPStatus
 
+import boto3
 import pulumi
 import pulumi_aws as aws
+from botocore.exceptions import ClientError
 
-from langsmith_hosting.constants import TAGS
+from langsmith_hosting.constants import get_tags
+
+logger = logging.getLogger(__name__)
+
+
+def _bucket_exists(name: str) -> bool:
+    """Check if an S3 bucket exists and is owned by this account.
+
+    Used to decide whether Pulumi should import an existing bucket into
+    state or create a new one (adopt-or-create pattern).
+
+    A 403 (e.g. from a VPC endpoint policy) still means the bucket
+    exists — only a 404 confirms it does not.
+    """
+    try:
+        boto3.client("s3").head_bucket(Bucket=name)
+        return True
+    except ClientError as exc:
+        code = exc.response.get("Error", {}).get("Code")
+        if code == str(HTTPStatus.NOT_FOUND):
+            return False
+        return True
 
 
 @dataclass
@@ -38,13 +63,21 @@ def create_s3(
     Returns:
         S3Outputs with bucket and endpoint details.
     """
+    tags = get_tags("s3")
     # =========================================================================
     # S3 bucket
     # =========================================================================
+    if _bucket_exists(bucket_name):
+        logger.info("Bucket %s already exists; importing into state", bucket_name)
+        bucket_opts = pulumi.ResourceOptions(import_=bucket_name)
+    else:
+        bucket_opts = None
+
     bucket = aws.s3.Bucket(
         bucket_name,
         bucket=bucket_name,
-        tags={**TAGS, "Name": bucket_name},
+        tags={**tags, "Name": bucket_name},
+        opts=bucket_opts,
     )
 
     # Block all public access
@@ -91,7 +124,7 @@ def create_s3(
         service_name=f"com.amazonaws.{region}.s3",
         vpc_endpoint_type="Gateway",
         route_table_ids=route_tables.ids,
-        tags={**TAGS, "Name": f"{bucket_name}-s3-endpoint"},
+        tags={**tags, "Name": f"{bucket_name}-s3-endpoint"},
     )
 
     # =========================================================================
