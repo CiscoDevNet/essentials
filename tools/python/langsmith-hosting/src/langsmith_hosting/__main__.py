@@ -17,10 +17,18 @@ Resource dependency chain:
   EKS -> KEDA (Helm) -> langgraph-dataplane (Helm)
 """
 
+from importlib.metadata import entry_points
+
 import pulumi
 import pulumi_aws as aws
 from dotenv import load_dotenv
+from langsmith_network import LANGSMITH
 
+from langsmith_hosting.cidrs import (
+    AWS_EKS_MAX_PUBLIC_ACCESS_CIDRS,
+    collapse_cidrs,
+    get_cidrs,
+)
 from langsmith_hosting.config import load_config
 from langsmith_hosting.dataplane import create_dataplane
 from langsmith_hosting.eks import create_eks_cluster
@@ -49,18 +57,49 @@ vpc = create_vpc(
 )
 
 # =============================================================================
+# EKS API server allowlist
+# =============================================================================
+_org_cidrs: list[str] = []
+for _ep in sorted(
+    entry_points(group="langsmith_hosting.cidrs"),
+    key=lambda ep: (ep.name, ep.value),
+):
+    try:
+        _org_cidrs.extend(_ep.load())
+    except (KeyboardInterrupt, SystemExit):
+        raise
+    except Exception as exc:  # noqa: BLE001 — any plugin failure must name the offending entry point
+        _dist = getattr(_ep, "dist", None)
+        _dist_info = f" from distribution {_dist}" if _dist is not None else ""
+        raise RuntimeError(
+            f"Failed to load langsmith_hosting.cidrs entry point "
+            f"{_ep.name!r}{_dist_info}"
+        ) from exc
+
+_all_cidrs = list(
+    dict.fromkeys(
+        get_cidrs(LANGSMITH) + tuple(_org_cidrs) + cfg.extra_public_access_cidrs
+    )
+)
+public_access_cidrs = collapse_cidrs(
+    _all_cidrs, max_count=AWS_EKS_MAX_PUBLIC_ACCESS_CIDRS
+)
+
+if len(public_access_cidrs) > AWS_EKS_MAX_PUBLIC_ACCESS_CIDRS:
+    raise ValueError(
+        f"EKS allows at most {AWS_EKS_MAX_PUBLIC_ACCESS_CIDRS} public access CIDRs, "
+        f"got {len(public_access_cidrs)}"
+    )
+
+# =============================================================================
 # EKS (Steps 2-7 in apply-targeted.sh)
 # =============================================================================
 eks = create_eks_cluster(
-    cluster_name=cfg.eks_cluster_name,
-    cluster_version=cfg.eks_cluster_version,
+    cfg=cfg,
     vpc_id=vpc.vpc_id,
     private_subnet_ids=vpc.private_subnet_ids,
     public_subnet_ids=vpc.public_subnet_ids,
-    node_instance_type=cfg.eks_node_instance_type,
-    node_min_size=cfg.eks_node_min_size,
-    node_max_size=cfg.eks_node_max_size,
-    node_desired_size=cfg.eks_node_desired_size,
+    public_access_cidrs=public_access_cidrs,
 )
 
 # =============================================================================
@@ -103,10 +142,9 @@ s3 = create_s3(
 # Data Plane (Listener + KEDA + langgraph-dataplane)
 # =============================================================================
 dataplane = create_dataplane(
-    cluster_name=cfg.eks_cluster_name,
+    cfg=cfg,
     k8s_provider=eks.k8s_provider,
-    langsmith_api_key=cfg.langsmith_api_key,
-    langsmith_workspace_id=cfg.langsmith_workspace_id,
+    depends_on=[eks.alb_controller],
 )
 
 # =============================================================================
@@ -134,13 +172,13 @@ pulumi.export("s3_bucket_name", s3.bucket_name)
 pulumi.export("langsmith_listener_id", dataplane.listener_id)
 
 # kubectl configuration command
-_kubectl_parts = [
-    "aws eks update-kubeconfig --region ",
-    region.region,
-    " --name ",
-    eks.cluster_name,
-]
-if cfg.aws_profile:
-    _kubectl_parts.extend([" --profile ", cfg.aws_profile])
-
-pulumi.export("kubectl_config_command", pulumi.Output.concat(*_kubectl_parts))
+pulumi.export(
+    "kubectl_config_command",
+    pulumi.Output.concat(
+        "aws eks update-kubeconfig --region ",
+        region.region,
+        " --name ",
+        eks.cluster_name,
+        " --profile <your-aws-profile>",
+    ),
+)

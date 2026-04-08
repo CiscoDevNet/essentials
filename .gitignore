@@ -271,3 +271,8 @@ Pulumi.*.yaml
 
 # Ignore Pulumi local backend state files.
 .pulumi/
+
+
+# Output files
+# -----------------------------------------------------------------------------
+output/

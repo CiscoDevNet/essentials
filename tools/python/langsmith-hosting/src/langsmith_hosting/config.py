@@ -7,7 +7,7 @@ All defaults below are validated against the Terraform dev.tfvars reference.
 Override any value by adding the corresponding key to your Pulumi.<stack>.yaml.
 """
 
-import os
+import ipaddress
 from dataclasses import dataclass
 
 import pulumi
@@ -21,8 +21,8 @@ _VPC_CIDR = "10.0.0.0/16"
 _EKS_CLUSTER_VERSION = "1.31"
 _EKS_NODE_INSTANCE_TYPE = "m5.xlarge"
 _EKS_NODE_MIN_SIZE = 2
-_EKS_NODE_MAX_SIZE = 5
-_EKS_NODE_DESIRED_SIZE = 2
+_EKS_NODE_MAX_SIZE = 8
+_EKS_NODE_DESIRED_SIZE = 3
 
 _POSTGRES_INSTANCE_CLASS = "db.t3.medium"
 _POSTGRES_ENGINE_VERSION = "16.6"
@@ -33,7 +33,22 @@ _REDIS_NODE_TYPE = "cache.t3.micro"
 
 _S3_BUCKET_PREFIX = "langsmith"
 
-_AWS_PROFILE = os.environ.get("AWS_PROFILE", "")
+
+def _parse_cidrs(raw: str | None) -> tuple[str, ...]:
+    """Split a comma-separated CIDR string into a tuple, dropping blanks.
+
+    Raises:
+        ValueError: If any entry is not a valid CIDR.
+    """
+    if not raw:
+        return ()
+    cidrs: list[str] = []
+    for raw_entry in raw.split(","):
+        raw_cidr = raw_entry.strip()
+        if not raw_cidr:
+            continue
+        cidrs.append(str(ipaddress.ip_network(raw_cidr, strict=False)))
+    return tuple(cidrs)
 
 
 @dataclass(frozen=True)
@@ -66,12 +81,12 @@ class LangSmithConfig:
     # S3
     s3_bucket_prefix: str
 
+    # EKS API server access
+    extra_public_access_cidrs: tuple[str, ...]
+
     # LangSmith Control Plane
     langsmith_api_key: pulumi.Output[str]
     langsmith_workspace_id: str
-
-    # AWS
-    aws_profile: str
 
 
 def load_config() -> LangSmithConfig:
@@ -109,9 +124,9 @@ def load_config() -> LangSmithConfig:
         redis_node_type=cfg.get("redisNodeType") or _REDIS_NODE_TYPE,
         # S3
         s3_bucket_prefix=cfg.get("s3BucketPrefix") or _S3_BUCKET_PREFIX,
+        # EKS API server access
+        extra_public_access_cidrs=_parse_cidrs(cfg.get("extraPublicAccessCidrs")),
         # LangSmith Control Plane
         langsmith_api_key=cfg.require_secret("langsmithApiKey"),
         langsmith_workspace_id=cfg.require("langsmithWorkspaceId"),
-        # AWS
-        aws_profile=cfg.get("awsProfile") or _AWS_PROFILE,
     )

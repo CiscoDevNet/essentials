@@ -9,7 +9,7 @@ from dataclasses import dataclass
 import pulumi
 import pulumi_awsx as awsx
 
-from langsmith_hosting.constants import TAGS
+from langsmith_hosting.constants import get_tags
 
 
 @dataclass
@@ -36,9 +36,11 @@ def create_vpc(
     Returns:
         VpcOutputs with VPC ID, subnet IDs, and CIDR block.
     """
+    tags = get_tags("vpc")
     vpc = awsx.ec2.Vpc(
         f"{cluster_name}-vpc",
         cidr_block=cidr_block,
+        enable_dns_hostnames=True,
         number_of_availability_zones=3,
         nat_gateways=awsx.ec2.NatGatewayConfigurationArgs(
             strategy=awsx.ec2.NatGatewayStrategy.SINGLE,
@@ -49,7 +51,7 @@ def create_vpc(
                 type=awsx.ec2.SubnetType.PRIVATE,
                 cidr_mask=19,
                 tags={
-                    **TAGS,
+                    **tags,
                     f"kubernetes.io/cluster/{cluster_name}": "shared",
                     "kubernetes.io/role/internal-elb": "1",
                 },
@@ -58,13 +60,13 @@ def create_vpc(
                 type=awsx.ec2.SubnetType.PUBLIC,
                 cidr_mask=20,
                 tags={
-                    **TAGS,
+                    **tags,
                     f"kubernetes.io/cluster/{cluster_name}": "shared",
                     "kubernetes.io/role/elb": "1",
                 },
             ),
         ],
-        tags=TAGS,
+        tags=tags,
     )
 
     nat_gateway_public_ips = pulumi.Output.all(vpc.eips).apply(

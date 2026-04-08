@@ -12,7 +12,7 @@ Pulumi project that provisions AWS infrastructure for LangSmith Hybrid.
 
 ## Prerequisites
 
-- AWS CLI configured with a named profile (set `awsProfile` in your stack config)
+- AWS CLI configured with an appropriate profile
 - [uv](https://docs.astral.sh/uv/) installed
 - Pulumi CLI installed
 
@@ -39,3 +39,4 @@ Stack configuration lives in `Pulumi.dev.yaml`. Key settings:
 | `postgresInstanceClass` | RDS instance class | `db.t3.medium` |
 | `redisNodeType` | ElastiCache node type | `cache.t3.micro` |
 | `s3BucketPrefix` | S3 bucket name prefix | `langsmith` |
+| `extraPublicAccessCidrs` | Comma-separated CIDRs to add to the EKS API server allowlist | _(none)_ |

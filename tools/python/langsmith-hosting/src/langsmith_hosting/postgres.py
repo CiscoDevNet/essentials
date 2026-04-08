@@ -10,7 +10,7 @@ import pulumi
 import pulumi_aws as aws
 import pulumi_random as random
 
-from langsmith_hosting.constants import TAGS
+from langsmith_hosting.constants import get_tags
 
 
 @dataclass
@@ -51,6 +51,7 @@ def create_postgres(  # noqa: PLR0913
     Returns:
         PostgresOutputs with connection details.
     """
+    tags = get_tags("postgres")
     # =========================================================================
     # Random password for PostgreSQL
     # =========================================================================
@@ -67,7 +68,7 @@ def create_postgres(  # noqa: PLR0913
         f"{name}-subnet-group",
         name=name,
         subnet_ids=subnet_ids,
-        tags={**TAGS, "Name": f"{name}-subnet-group"},
+        tags={**tags, "Name": f"{name}-subnet-group"},
     )
 
     # =========================================================================
@@ -96,7 +97,7 @@ def create_postgres(  # noqa: PLR0913
                 description="Allow all outbound",
             )
         ],
-        tags={**TAGS, "Name": f"{name}-sg"},
+        tags={**tags, "Name": f"{name}-sg"},
     )
 
     # =========================================================================
@@ -118,7 +119,7 @@ def create_postgres(  # noqa: PLR0913
         skip_final_snapshot=True,
         publicly_accessible=False,
         storage_encrypted=True,
-        tags={**TAGS, "Name": name},
+        tags={**tags, "Name": name},
     )
 
     # Build connection URL
