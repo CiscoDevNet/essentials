@@ -262,17 +262,15 @@ key.json
 
 
 # Pulumi
-# -----------------------------------------------------------------------------
-
-# Ignore Pulumi stack files, which contain project-specific config.
-# Allow the example file.
+## Ignore Pulumi stack files, which contain project-specific config.
+## Allow the example file.
 Pulumi.*.yaml
 !Pulumi.example.yaml
-
-# Ignore Pulumi local backend state files.
+## Ignore Pulumi local backend state files.
 .pulumi/
 
-
 # Output files
-# -----------------------------------------------------------------------------
 output/
+
+# Claude
+.claude/settings.json
