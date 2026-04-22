@@ -1,0 +1,16 @@
+[project]
+name = "ess-auth"
+version = "0.1.0"
+description = "OAuth2 client-credentials helper and JWT verification utilities"
+requires-python = ">=3.12,<3.13"
+dependencies = ["httpx>=0.27", "PyJWT>=2.0.0"]
+
+[project.optional-dependencies]
+jwks = ["PyJWT[crypto]>=2.0.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ess_auth"]

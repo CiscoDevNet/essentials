@@ -143,6 +143,25 @@ def create_eks_cluster(
     )
 
     # =========================================================================
+    # Launch template (IMDS hop limit = 2 for DinD sidecar)
+    # =========================================================================
+    # The DinD sidecar runs a privileged container inside the pod to provide
+    # Docker-in-Docker for code execution sandboxes. It needs IMDS access to
+    # fetch ECR credentials via `aws ecr get-login-password`. With the default
+    # hop limit of 1, requests from the nested Docker daemon cannot reach IMDS
+    # (pod→node = hop 1, DinD→pod = hop 2). Setting the limit to 2 allows the
+    # second hop to succeed.
+    launch_template = aws.ec2.LaunchTemplate(
+        f"{cluster_name}-node-launch-template",
+        metadata_options=aws.ec2.LaunchTemplateMetadataOptionsArgs(
+            http_endpoint="enabled",
+            http_tokens="required",
+            http_put_response_hop_limit=2,
+        ),
+        tags=tags,
+    )
+
+    # =========================================================================
     # Managed node group
     # =========================================================================
     node_group = eks.ManagedNodeGroup(
@@ -154,6 +173,10 @@ def create_eks_cluster(
             "min_size": node_min_size,
             "max_size": node_max_size,
             "desired_size": node_desired_size,
+        },
+        launch_template={
+            "id": launch_template.id,
+            "version": launch_template.latest_version.apply(str),
         },
     )
 
@@ -185,9 +208,10 @@ def create_eks_cluster(
     # =========================================================================
     # IAM role for EBS CSI controller (Pod Identity)
     # =========================================================================
-    # The EBS CSI controller runs in a Deployment (not a DaemonSet), so it
-    # cannot rely on the node role via IMDS (hop limit = 1 blocks pod access).
-    # Pod Identity injects credentials directly without IMDS.
+    # The EBS CSI controller runs in a Deployment (not a DaemonSet). While
+    # the launch template now sets hop limit = 2 (for DinD IMDS access),
+    # Pod Identity is still preferred here — it injects credentials directly
+    # without IMDS, avoiding any timing/propagation issues.
     # Registered BEFORE the addon so credentials are available on first boot.
     ebs_csi_role = aws.iam.Role(
         f"{cluster_name}-ebs-csi-role",
