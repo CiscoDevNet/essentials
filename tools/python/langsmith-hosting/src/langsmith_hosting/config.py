@@ -88,6 +88,10 @@ class LangSmithConfig:
     langsmith_api_key: pulumi.Output[str]
     langsmith_workspace_id: str
 
+    # Ingress (optional — ALB for deployed agents)
+    ingress_hostname: str | None
+    ingress_certificate_arn: str | None
+
 
 def load_config() -> LangSmithConfig:
     """Load and validate all configuration values from the Pulumi stack config.
@@ -129,4 +133,7 @@ def load_config() -> LangSmithConfig:
         # LangSmith Control Plane
         langsmith_api_key=cfg.require_secret("langsmithApiKey"),
         langsmith_workspace_id=cfg.require("langsmithWorkspaceId"),
+        # Ingress
+        ingress_hostname=cfg.get("ingressHostname"),
+        ingress_certificate_arn=cfg.get("ingressCertificateArn"),
     )

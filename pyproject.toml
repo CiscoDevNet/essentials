@@ -22,6 +22,8 @@ members = [
     "tools/python/gcp_gemini",
     "tools/python/langsmith-hosting",
     "tools/python/pulumi-utils",
+    "packages/python/ess-auth",
+    "packages/python/ess-browser",
     "packages/python/langsmith-client",
     "packages/python/langsmith-network",
     "packages/python/azure-ai",

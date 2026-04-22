@@ -26,12 +26,7 @@ _SMITH_BACKEND_URL = "https://api.smith.langchain.com"
 _KEDA_CHART_VERSION = "2.16.0"
 _DATAPLANE_CHART_VERSION = "0.2.17"
 
-# Disabled until an ingress hostname is configured. Once a DNS record points to
-# the ALB, set to True and pass the hostname via ingress.hostname in the Helm
-# values. See docs/ingress-hostname-setup.md in the Terraform project.
 _WATCH_NAMESPACES = "default"
-
-_ENABLE_HEALTH_CHECK = False
 
 _REDIS_CPU_REQUEST = "1000m"
 _REDIS_MEMORY_REQUEST = "2Gi"
@@ -102,6 +97,50 @@ def create_dataplane(
     # =========================================================================
     # 3. Install LangSmith dataplane (depends on both KEDA and Listener)
     # =========================================================================
+
+    # Build ingress values with ALB annotations so the AWS Load Balancer
+    # Controller provisions an ALB for the shared dataplane ingress.
+    ingress_annotations: dict[str, str] = {
+        "alb.ingress.kubernetes.io/scheme": "internet-facing",
+        "alb.ingress.kubernetes.io/target-type": "ip",
+        "alb.ingress.kubernetes.io/listen-ports": '[{"HTTP": 80}]',
+        "alb.ingress.kubernetes.io/healthcheck-path": "/ok",
+        "alb.ingress.kubernetes.io/healthcheck-protocol": "HTTP",
+        "alb.ingress.kubernetes.io/backend-protocol": "HTTP",
+    }
+    if cfg.ingress_certificate_arn:
+        cert_arn = cfg.ingress_certificate_arn
+        ingress_annotations.update(
+            {
+                "alb.ingress.kubernetes.io/certificate-arn": cert_arn,
+                "alb.ingress.kubernetes.io/listen-ports": (
+                    '[{"HTTP": 80}, {"HTTPS": 443}]'
+                ),
+                "alb.ingress.kubernetes.io/ssl-redirect": "443",
+            }
+        )
+
+    ingress_values: dict = {
+        "ingressClassName": "alb",
+        "annotations": ingress_annotations,
+    }
+    ingress_hostname = (cfg.ingress_hostname or "").strip() or None
+    if ingress_hostname and not cfg.ingress_certificate_arn:
+        raise pulumi.RunError(
+            "ingressCertificateArn is required when ingressHostname is set — "
+            "the operator constructs https:// health-check URLs from the hostname."
+        )
+    if ingress_hostname:
+        ingress_values["hostname"] = ingress_hostname
+
+    # Enable health checks only when a hostname is configured, because the
+    # listener constructs the check URL from the hostname. Without one, the
+    # URL is malformed and deployments fail with UnsupportedProtocol.
+    # Note: the operator always constructs https:// health check URLs when
+    # a hostname is set, so TLS (via ingressCertificateArn) is required
+    # before setting ingressHostname.
+    enable_health_check = ingress_hostname is not None
+
     k8s.helm.v3.Release(
         f"{cluster_name}-dataplane",
         name="dataplane",
@@ -119,11 +158,9 @@ def create_dataplane(
                 "smithBackendUrl": _SMITH_BACKEND_URL,
                 "langgraphListenerId": listener.listener_id,
                 "watchNamespaces": ",".join(namespaces),
-                "enableLGPDeploymentHealthCheck": _ENABLE_HEALTH_CHECK,
+                "enableLGPDeploymentHealthCheck": enable_health_check,
             },
-            "ingress": {
-                "ingressClassName": "alb",
-            },
+            "ingress": ingress_values,
             "redis": {
                 "statefulSet": {
                     "resources": {
