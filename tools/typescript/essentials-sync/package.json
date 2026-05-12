@@ -1,0 +1,35 @@
+{
+  "name": "essentials-sync",
+  "version": "0.1.0",
+  "description": "Move or sync packages from a company repo into the open-source essentials repo with adversarial review and deterministic scanning.",
+  "type": "module",
+  "bin": {
+    "essentials-sync": "./dist/cli.js"
+  },
+  "main": "./dist/cli.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/cli.ts",
+    "start": "node dist/cli.js",
+    "test": "vitest run",
+    "lint": "tsc --noEmit"
+  },
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@cursor/sdk": "latest",
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "execa": "^9.5.1",
+    "secretlint": "^9.0.0",
+    "@secretlint/secretlint-rule-preset-recommend": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}
