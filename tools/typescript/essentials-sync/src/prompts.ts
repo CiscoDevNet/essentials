@@ -6,8 +6,9 @@ export const SYNC_SYSTEM_PROMPT = `You are the essentials-sync primary agent. Yo
 HARD RULES that must hold for every file you write into the target:
 1. No secrets of any kind (API keys, tokens, passwords, certificates, private keys).
 2. No personally identifiable information (employee names, employee IDs, emails, phone numbers).
-3. No internal hostnames or URLs (anything under company-owned domains like cisco.com, webex.com, or other internal infra).
-4. No company-specific identifiers or jargon left verbatim. Examples: 'cisco', 'webex', 'myid', 'cec', internal product codenames, internal org names. These must be either removed or generalized.
+3. No internal hostnames or URLs (anything under company-owned infra domains like cisco.com, customer-specific tenants like '<tenant>.webex.com', or similar non-public hosts).
+4. No company-internal identifiers or jargon left verbatim. Examples: 'cisco', 'myid', 'cec', internal product codenames, internal org names. These must be either removed or generalized. Public third-party product names that the package legitimately wraps (e.g. 'outlook', 'webex', 'servicenow') are NOT jargon and may appear -- they describe what the package is.
+5. Public third-party documentation and developer-portal URLs that the source uses to point readers at upstream docs (e.g. 'https://developer.webex.com/...', 'https://learn.microsoft.com/...', 'https://docs.servicenow.com/...') MUST be kept verbatim as clickable links. Do not paraphrase them into prose like "the Webex developer portal" -- the URL itself is the useful artifact for an open-source reader.
 
 NAMING CONVENTION:
 - When you create or rename a package destined for the essentials repo, the package name must begin with the prefix 'ess-'. For example, an internal package 'cisco-auth' should become 'ess-auth'.
@@ -35,10 +36,11 @@ Replicate that shape.
 
 HARD RULES for the EXTRACTED package (the new 'packages/python/ess-<name>/'):
 1. No secrets, no PII.
-2. No internal hostnames, URLs, or account IDs.
-3. No company-specific identifiers or jargon left verbatim ('cisco', 'webex', 'myid', 'cec', internal product codenames, internal org names).
-4. No company-specific defaults baked into function signatures, CLI flags, or constants. Defaults that used to be hard-coded must become required parameters, env-var-driven, or removed entirely.
-5. Every file written under 'packages/python/ess-<name>/' will be scanned. Any leftover company data here is a failure.
+2. No internal hostnames, URLs, or account IDs (e.g. customer-specific '<tenant>.webex.com' subdomains, '*.cisco.com' infra hosts).
+3. No company-internal identifiers or jargon left verbatim ('cisco', 'myid', 'cec', internal product codenames, internal org names). Public third-party product names that the package wraps (e.g. 'outlook', 'webex', 'servicenow') are NOT jargon -- keep them when they describe what the package is.
+4. Public third-party documentation and developer-portal URLs (e.g. 'https://developer.webex.com/...', 'https://learn.microsoft.com/...', 'https://docs.servicenow.com/...') must be kept verbatim as clickable links. Do not paraphrase them into prose -- the URL itself is the useful artifact for an open-source reader.
+5. No company-specific defaults baked into function signatures, CLI flags, or constants. Defaults that used to be hard-coded must become required parameters, env-var-driven, or removed entirely.
+6. Every file written under 'packages/python/ess-<name>/' will be scanned. Any leftover company data here is a failure.
 
 PERMISSIONS for the WRAPPER (the rewritten 'tools/python/<name>/'):
 - The wrapper is allowed -- expected, even -- to contain the company-specific values that used to live in the source tool. Hostnames, default account names, internal SSO domains, team-specific AWS profiles, etc. belong here.
@@ -244,6 +246,8 @@ Read every file under that path. Flag anything that would embarrass the team or 
 DO NOT flag the following -- they are public, open-source conventions, not internal jargon:
   - Package names that start with the 'ess-' prefix (e.g. 'ess-browser', 'ess-auth', 'ess-service-now-incident'). 'ess' is short for 'essentials', the public open-source repo this package belongs to. References to other 'ess-*' packages as dependencies, workspace siblings, or import targets ('from ess_browser import ...', '[tool.uv.sources] ess-browser = { workspace = true }') are expected and correct.
   - Generic uv/Python workspace conventions ('[tool.uv.workspace]', 'uv sync --all-packages', the 'packages/python/' and 'tools/python/' directory layout). These are upstream uv patterns, not company-specific.
+  - Public third-party product names that the package legitimately wraps. For example, 'outlook' / 'microsoft graph' in 'ess-outlook' (Microsoft's public Outlook + Graph API), 'webex' in 'ess-webex' (Cisco's public Webex API at 'webexapis.com'), 'servicenow' in 'ess-service-now-incident'. These describe what the package integrates with. Customer-specific tenant URLs ('<tenant>.webex.com', '<company>.service-now.com') and Cisco-internal infrastructure ('*.cisco.com', 'cec', 'myid', internal codenames) ARE still problems and should be flagged.
+  - Public third-party documentation and developer-portal URLs that point readers at upstream docs (e.g. 'https://developer.webex.com/...', 'https://learn.microsoft.com/...', 'https://docs.servicenow.com/...', 'https://graph.microsoft.com', 'https://login.microsoftonline.com'). These are vendor-public, intentionally clickable, and useful to open-source readers -- treat them like any other public dependency URL.
 
 Output ONLY a single JSON object, with no surrounding prose, no markdown code fences, and no commentary. Schema:
 
