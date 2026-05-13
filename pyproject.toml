@@ -24,10 +24,14 @@ members = [
     "tools/python/pulumi-utils",
     "packages/python/ess-auth",
     "packages/python/ess-browser",
+    "packages/python/ess-dirs",
+    "packages/python/ess-outlook",
     "packages/python/ess-service-now-incident",
+    "packages/python/ess-webex",
     "packages/python/langsmith-client",
     "packages/python/langsmith-network",
     "packages/python/azure-ai",
+    "examples/python/ess-messages",
 ]
 
 [tool.ruff]
