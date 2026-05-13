@@ -8,6 +8,7 @@ members = [
     "core-github",
     "ess-auth",
     "ess-browser",
+    "ess-service-now-incident",
     "essentials",
     "gcp-gemini",
     "langsmith-client",
@@ -417,6 +418,29 @@ dev = [
 
 [package.metadata]
 requires-dist = [{ name = "playwright", specifier = ">=1.40.0" }]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8.0" }]
+
+[[package]]
+name = "ess-service-now-incident"
+version = "0.1.0"
+source = { editable = "packages/python/ess-service-now-incident" }
+dependencies = [
+    { name = "click" },
+    { name = "ess-browser" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "click", specifier = ">=8.1" },
+    { name = "ess-browser", editable = "packages/python/ess-browser" },
+]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest", specifier = ">=8.0" }]
