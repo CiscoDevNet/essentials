@@ -6,19 +6,19 @@ Extract a jargon-free `ess-*` shared package out of a team- or account-specific 
 
 ```bash
 essentials-sync \
-  --source ~/code/honeycomb/tools/python/service-now-incident \
+  --source ~/code/<private-repo>/tools/python/foo-client \
   --target-repo ~/code/essentials
 ```
 
 That invocation produces three artifacts across two repos:
 
 ```
-honeycomb/tools/python/service-now-incident/          (rewritten as a thin wrapper, Cisco defaults)
-honeycomb/packages/python/ess-service-now-incident/   (NEW: generic core, no defaults)
-essentials/packages/python/ess-service-now-incident/  (NEW: copy of the generic core)
+<private-repo>/tools/python/foo-client/           (rewritten as a thin wrapper, company defaults)
+<private-repo>/packages/python/ess-foo-client/    (NEW: generic core, no defaults)
+essentials/packages/python/ess-foo-client/        (NEW: copy of the generic core)
 ```
 
-The wrapper depends on the extracted package via `[tool.uv.sources] ess-service-now-incident = { workspace = true }` -- the same shape as `sales-ai-langsmith-hosting` / `langsmith-hosting`. The extracted and synced packages are scanned and reviewed; the wrapper is intentionally left alone so it can keep the company-specific defaults that justify its existence.
+The wrapper depends on the extracted package via `[tool.uv.sources] ess-foo-client = { workspace = true }`. The extracted and synced packages are scanned and reviewed; the wrapper is intentionally left alone so it can keep the company-specific defaults that justify its existence.
 
 ## How it works
 

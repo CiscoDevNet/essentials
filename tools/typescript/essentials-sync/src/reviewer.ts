@@ -11,8 +11,9 @@ export interface RunReviewerInputs {
   // reviewer audits the new shared library rather than the essentials target.
   reviewRootAbs?: string;
   // Working directory for the reviewer agent. Defaults to plan.targetRepoAbs.
-  // During the extract phase callers pass plan.sourceRepoRoot (honeycomb) so
-  // the reviewer can read files inside the extracted package directly.
+  // During the extract phase callers pass plan.sourceRepoRoot (the private
+  // source repo) so the reviewer can read files inside the extracted package
+  // directly.
   cwd?: string;
 }
 

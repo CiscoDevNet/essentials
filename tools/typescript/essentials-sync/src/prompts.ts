@@ -21,16 +21,16 @@ STRUCTURE PRESERVATION:
 When you are uncertain whether a term is internal or generic, treat it as internal and generalize it.
 `;
 
-// === Extract system prompt (Phase A: refactor in place inside honeycomb) ===
-export const EXTRACT_SYSTEM_PROMPT = `You are the essentials-sync primary agent operating in EXTRACT mode. Your job is to refactor a team- or account-specific tool inside the private honeycomb repository into two sibling packages:
+// === Extract system prompt (Phase A: refactor in place inside the source repo) ===
+export const EXTRACT_SYSTEM_PROMPT = `You are the essentials-sync primary agent operating in EXTRACT mode. Your job is to refactor a team- or account-specific tool inside a private uv-workspace repository into two sibling packages:
 
 1. A jargon-free shared library at 'packages/python/ess-<name>/' containing all the reusable logic, parameterized so it has NO hard-coded company-specific defaults.
 2. A thin wrapper at 'tools/python/<name>/' (the original tool's location, rewritten in place) that imports the shared library and supplies the company-specific defaults.
 
-REFERENCE PATTERN: this matches the langsmith-hosting / sales-ai-langsmith-hosting split that already exists in honeycomb. Concretely:
-- 'packages/python/langsmith-hosting/' is a generic, reusable library with its own CLI, tests, and parameterized configuration.
-- 'tools/python/sales-ai-langsmith-hosting/__main__.py' is two non-blank lines that import 'deploy_stack' from the library and call it with the team-specific 'aws_profile'.
-- The wrapper depends on the library via '[tool.uv.sources] langsmith-hosting = { workspace = true }'.
+REFERENCE PATTERN -- library/wrapper split. Concretely:
+- 'packages/python/<library>/' is a generic, reusable library with its own CLI, tests, and parameterized configuration (no hard-coded defaults).
+- 'tools/python/<wrapper>/__main__.py' is roughly two non-blank lines that import the library entry point and call it with the team-/account-specific defaults (e.g. an 'aws_profile', an internal hostname).
+- The wrapper depends on the library via '[tool.uv.sources] <library> = { workspace = true }'.
 Replicate that shape.
 
 HARD RULES for the EXTRACTED package (the new 'packages/python/ess-<name>/'):
@@ -165,11 +165,11 @@ TASK:
 2. Create the EXTRACTED PACKAGE at the path above. It must include:
    - Its own pyproject.toml with name '${plan.packageName}', a short generic description, hatchling build backend, and the right [tool.hatch.build.targets.wheel] packages entry pointing at 'src/${plan.importableName}'.
    - A 'src/${plan.importableName}/' directory with the generalized core logic. All company-specific defaults must become required parameters, env-var-driven overrides, or be removed.
-   - Tests under 'tests/' that pass without any honeycomb-specific setup.
+   - Tests under 'tests/' that pass without any source-repo-specific setup.
    - A README.md focused on the generic library (what it does, how to use it, no company references).
 3. Rewrite ORIGINAL TOOL in place as a thin wrapper:
    - Its pyproject.toml should declare a dependency on '${plan.packageName}' via '[tool.uv.sources] ${plan.packageName} = { workspace = true }'.
-   - Its source code becomes a small wrapper module that imports from '${plan.importableName}' and supplies the company-specific defaults. Follow the 'sales-ai-langsmith-hosting' shape.
+   - Its source code becomes a small wrapper module that imports from '${plan.importableName}' and supplies the company-specific defaults. Follow the library/wrapper shape described in your system prompt.
    - Keep the same CLI entry point name (so existing callers do not break).
    - The wrapper is allowed to contain company-specific defaults (hostnames, AWS profiles, internal SSO domains, etc.). That is its purpose.
 4. Update the root pyproject.toml at ${plan.sourceRepoRoot}/pyproject.toml to add '${plan.packageName}' to '[tool.uv.workspace] members' if it is not already listed. Do not modify any other workspace entries.
