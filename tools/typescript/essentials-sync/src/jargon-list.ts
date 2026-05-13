@@ -22,11 +22,6 @@ export const DEFAULT_JARGON_PATTERNS: readonly JargonPattern[] = [
     message: "Contains an internal Cisco hostname.",
   },
   {
-    term: "*.webex.com",
-    regex: hostnameSuffix("webex.com"),
-    message: "Contains an internal Webex hostname.",
-  },
-  {
     term: "myid",
     regex: wordBoundary("myid"),
     message: "References 'myid' identity service.",
@@ -35,11 +30,6 @@ export const DEFAULT_JARGON_PATTERNS: readonly JargonPattern[] = [
     term: "cec",
     regex: wordBoundary("cec"),
     message: "References 'cec' (Cisco employee credential).",
-  },
-  {
-    term: "webex",
-    regex: wordBoundary("webex"),
-    message: "References Webex product naming.",
   },
   {
     term: "cisco-ceto",
