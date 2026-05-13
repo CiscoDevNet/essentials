@@ -15,7 +15,6 @@ members = [
     "langsmith-hosting",
     "langsmith-network",
     "pulumi-utils",
-    "service-now-incident",
 ]
 
 [[package]]
@@ -1630,29 +1629,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/72/d1/d3159231aec234a59
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a6/24/4d91e05817e92e3a61c8a21e08fd0f390f5301f1c448b137c57c4bc6e543/semver-3.0.4-py3-none-any.whl", hash = "sha256:9c824d87ba7f7ab4a1890799cec8596f15c1241cb473404ea1cb0c55e4b04746", size = 17912, upload-time = "2025-01-24T13:19:24.949Z" },
 ]
-
-[[package]]
-name = "service-now-incident"
-version = "0.1.0"
-source = { editable = "tools/python/service-now-incident" }
-dependencies = [
-    { name = "click" },
-    { name = "ess-browser" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "pytest" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "click", specifier = ">=8.1" },
-    { name = "ess-browser", editable = "packages/python/ess-browser" },
-]
-
-[package.metadata.requires-dev]
-dev = [{ name = "pytest", specifier = ">=8.0" }]
 
 [[package]]
 name = "six"
