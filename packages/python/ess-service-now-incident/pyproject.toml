@@ -1,0 +1,28 @@
+[project]
+name = "ess-service-now-incident"
+version = "0.1.0"
+description = "Fetch ServiceNow incident records via an authenticated browser session"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "ess-browser",
+    "click>=8.1",
+]
+
+[tool.uv.sources]
+ess-browser = { workspace = true }
+
+[project.scripts]
+ess-service-now-incident = "ess_service_now_incident.__main__:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ess_service_now_incident"]
