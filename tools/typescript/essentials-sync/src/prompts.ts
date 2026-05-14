@@ -72,11 +72,13 @@ export function buildSyncInitialPrompt({
     : "No source pre-scan was performed (--no-source-scan).";
 
   const generalizationNote = jargonHeavy
-    ? `The source contains substantial company-specific jargon. Also write a file named RECOMMENDATIONS.md inside the target directory that:
+    ? `The source contains substantial company-specific jargon. Also write a file named tmp-RECOMMENDATIONS.md inside the target directory that:
   - proposes a new ess-* package name and rationale
   - lists identifiers and strings that were renamed
-  - calls out any modules or behaviors that could not be cleanly generalized and should be left behind in the private repo`
-    : "Source pre-scan looks light on company jargon; no RECOMMENDATIONS.md needed unless you find more during the rewrite.";
+  - calls out any modules or behaviors that could not be cleanly generalized and should be left behind in the private repo
+
+The 'tmp-' prefix is required: target repos gitignore 'tmp[-.]*' so this file stays out of commits, and the deterministic scanners and adversarial reviewer skip 'tmp-*' files. Treat it as a working note for the human reviewer; it is allowed to mention internal context (codenames, prior infrastructure, migration history) that would never be acceptable in a public file. Do NOT name the file RECOMMENDATIONS.md (no prefix) -- that name is committed and scanned.`
+    : "Source pre-scan looks light on company jargon; no tmp-RECOMMENDATIONS.md needed unless you find more during the rewrite.";
 
   return `MODE: ${mode}
 SOURCE (read-only, absolute path): ${plan.sourceAbs}
@@ -236,7 +238,9 @@ export function buildReviewerPrompt({
   const root = reviewRootAbs ?? plan.targetAbs;
   return `You are a strict open-source release reviewer. The package at ${root} is about to be published to a public, open-source repository.
 
-Read every file under that path. Flag anything that would embarrass the team or leak company information if released. Be paranoid. Pay particular attention to:
+Read every file under that path EXCEPT files whose basename starts with 'tmp-' or 'tmp.' -- those are working notes for the human reviewer, gitignored, and never committed. Skip them entirely; do not flag anything in them.
+
+For everything else, flag anything that would embarrass the team or leak company information if released. Be paranoid. Pay particular attention to:
   - Internal hostnames, URLs, account IDs, project codenames.
   - Personally identifiable information (employee names, IDs, emails, phone numbers).
   - Subtle references in docstrings, comments, naming, error messages, or example data that imply an internal audience.

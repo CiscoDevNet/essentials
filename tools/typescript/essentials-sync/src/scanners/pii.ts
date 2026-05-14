@@ -99,6 +99,7 @@ async function* walkTextFiles(rootPath: string): AsyncGenerator<string> {
         if (SKIP_DIRECTORIES.has(entry.name)) continue;
         stack.push(fullPath);
       } else if (entry.isFile()) {
+        if (entry.name.startsWith("tmp-") || entry.name.startsWith("tmp.")) continue;
         const ext = path.extname(entry.name).toLowerCase();
         if (BINARY_EXTENSIONS.has(ext)) continue;
         const stat = await fs.stat(fullPath);
