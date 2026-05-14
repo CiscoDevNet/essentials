@@ -32,6 +32,7 @@ members = [
     "packages/python/langsmith-network",
     "packages/python/azure-ai",
     "examples/python/ess-messages",
+    "examples/python/ess-hello-jwt-auth-code",
 ]
 
 [tool.ruff]
