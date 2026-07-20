@@ -23,6 +23,7 @@
     "chalk": "^5.3.0",
     "commander": "^12.1.0",
     "execa": "^9.5.1",
+    "globby": "^14.1.0",
     "secretlint": "^9.0.0",
     "@secretlint/secretlint-rule-preset-recommend": "^9.0.0"
   },
