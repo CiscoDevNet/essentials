@@ -274,3 +274,9 @@ output/
 
 # Claude
 .claude/settings.json
+
+# Agent-skills install output from `npx skills add ./skills` (source of truth is
+# skills/ess/). The CLI installs to .agents/skills/ and writes a machine-specific
+# lock file.
+.agents/skills/
+skills-lock.json
