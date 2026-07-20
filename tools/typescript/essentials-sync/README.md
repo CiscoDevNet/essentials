@@ -118,6 +118,8 @@ The `opus` sentinel resolves to the highest-version Opus model on your Cursor ac
 
 In extract mode (the default), scanners only run against the **extracted package**, not the wrapper. That is deliberate: the wrapper exists to hold the company-specific defaults that the open-source library cannot ship with. In `--no-extract` mode, scanners run against the sync target (the essentials copy) as before.
 
+Files whose basename starts with `tmp-` or `tmp.` are skipped by the deterministic scanners and the adversarial reviewer. Use this for working notes the agent leaves for you (the `tmp-RECOMMENDATIONS.md` it writes when the source has heavy jargon, for example) -- target repos are expected to gitignore the `tmp[-.]*` pattern so these files never get committed.
+
 ## Exit codes
 
 - `0` -- both phases clean; review and commit yourself.
