@@ -11,15 +11,19 @@ Install with the standard agent-skills CLI ([skills.sh](https://skills.sh)). It 
 From a local clone (run in the repo root):
 
 ```bash
-npx skills add ./skills --skill '*'                 # all skills
-npx skills add ./skills --skill mcp-hide-secrets    # a single skill
-npx skills add ./skills --list                      # list without installing
+npx skills add ./skills --skill '*' --full-depth                 # all skills
+npx skills add ./skills --skill mcp-hide-secrets --full-depth    # a single skill
+npx skills add ./skills --list --full-depth                      # list without installing
 ```
 
-Or straight from GitHub (replace `<owner>` with the repo owner):
+`--full-depth` is required so the CLI discovers skills under nested paths like `skills/ess/` (not just top-level directories).
+
+The CLI writes project skills to `.agents/skills/<name>/` (which Cursor reads natively, alongside `.cursor/skills/`). These are gitignored install output — the source of truth stays in `skills/`.
+
+Or straight from GitHub:
 
 ```bash
-npx skills add <owner>/essentials --skill '*'
+npx skills add CiscoDevNet/essentials --skill '*' --full-depth
 ```
 
 ### Install matrix
