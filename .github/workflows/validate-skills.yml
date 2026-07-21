@@ -1,0 +1,40 @@
+# GitHub Action: Validate Agent Skills
+#
+# Validates every skill under skills/ (any depth) against the agentskills.io spec using
+# skills-ref (https://github.com/agentskills/agentskills). Fails if any skill's
+# SKILL.md frontmatter or referenced files are invalid.
+#
+# Maintainer: Matt Norris <matnorri@cisco.com>
+#
+# For more information on Agent Skills, see: https://agentskills.io/specification
+
+name: Validate Skills
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    paths:
+      - 'skills/**'
+      - '.github/workflows/validate-skills.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Validate each skill
+        run: |
+          set -euo pipefail
+          status=0
+          while IFS= read -r skill_md; do
+            skill="$(dirname "$skill_md")"
+            echo "== validating ${skill} =="
+            uvx --from git+https://github.com/agentskills/agentskills#subdirectory=skills-ref \
+              skills-ref validate "$skill" || status=1
+          done < <(find skills -type f -name SKILL.md | sort)
+          exit $status

@@ -1,0 +1,5 @@
+- **fix(langsmith-client): centralize deploy naming** — Delegate `<service>-<env>` resolution to `langsmith-deploy-docker`, add `--deployment` for explicit base names, and resolve live deployments for idempotent delete.
+- **fix(azure-ai): align prod NAT gateway IPs** — Prod Azure OpenAI firewall rules were allowlisting dev EKS egress; prod and aoh-prod stacks now use the aoh-langsmith-hybrid-prod NAT IP.
+- **fix(langsmith-client): defer delete confirm** — Fix `deploy_docker` docstring, defer delete confirmation until a target exists, and remove erroneous `.env` gates from deploy scripts.
+- **docs(langsmith-client): document --deployment** — Clarify `DEPLOYMENT_NAME` in `push_secrets.py` and document `--deployment` in `docker-deployment.md`.
+- **fix(hello-agent): align listener id messaging** — Use `resolve_deploy_base` consistently, fix deploy docs/env references, and align `LANGSMITH_LISTENER_ID` messaging with the script requirement.
