@@ -264,6 +264,6 @@ Only resolve threads whose comments were addressed in code. Skip threads that:
 ## Related Commands
 
 - `/fix-pr-comments` — Interactive mode (asks before each fix)
-- `/review-pr` — Review someone else's PR
+- `pr-review` skill — Review someone else's PR
 - `/create-pr` — Create a new PR
 - `pr-address-comments-all` — Parallel batch with worktrees and approval gate

@@ -73,4 +73,5 @@ export interface CliOptions {
   noSourceScan: boolean;
   noAdversarialReview: boolean;
   noExtract: boolean;
+  noFastCopy: boolean;
 }

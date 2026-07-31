@@ -32,6 +32,16 @@ Critical findings block; non-blocking reviewer findings are surfaced as warnings
 
 For sources that are already generic and don't need an extract step, pass `--no-extract` and the tool runs Phase B only against `--source`.
 
+### Fast-path copy
+
+When `--no-extract` is set and the source pre-scan comes back with **zero** findings, Phase B skips the primary agent and copies the tree verbatim instead. The copy is still held to the same bar afterwards: deterministic scanners run against the target, then the adversarial reviewer. If either surfaces a critical finding, the run escalates to the primary agent and continues as normal.
+
+This exists because a clean source gives the primary agent nothing useful to do, and an agent asked to generalize an already-generic tree will paraphrase working prose and drop valid cross-references instead. On a 16-file skill directory the fast path finished in 27s with zero content drift, against 11min and 187 rewritten lines for the agent path.
+
+The copy honors `.gitignore` and skips the same cache and build directories the scanners skip. That is a safety property, not an optimization: the scanners never read gitignored paths, so copying them would ship content nothing vouched for (`.env`, local credentials). Anything copied that the text scanners could not read -- binaries, files over the 5 MB cap -- is listed explicitly at the end of the run. Files that exist only in the target (`LICENSE`, `NOTICE`) are left untouched, so re-syncing never clobbers them.
+
+Pass `--no-fast-copy` to force the agent path regardless.
+
 ## Installation
 
 ```bash
@@ -104,6 +114,7 @@ essentials-sync [options]
 | `--source-repo <path>` | no | Source repo root. Default: the git root discovered by walking up from `--source`. |
 | `--package-name <name>` | no | Override for the extracted `ess-*` package name. Must start with `ess-` and be kebab-case. Default: `ess-<basename of --source>`. |
 | `--no-extract` | no | Skip Phase A. Assume `--source` is already a generic package and only run the sync to essentials. |
+| `--no-fast-copy` | no | Always let the primary agent author the sync, even when the source scan is completely clean. See [Fast-path copy](#fast-path-copy). |
 | `--model <spec>` | no | Primary model. Accepts a concrete ID, a family sentinel (`opus`, `codex`, `claude`, `gpt`, `gemini`, `composer`), or `auto`. Default: `opus`. |
 | `--review-model <spec>` | no | Adversarial reviewer model. Same shape as `--model`. Default: `codex`. |
 | `--max-revisions <n>` | no | Maximum scan-and-revise iterations *per phase*. Default: `3`. |
@@ -133,7 +144,7 @@ Files whose basename starts with `tmp-` or `tmp.` are skipped by the determinist
 npm test
 ```
 
-Tests use [Vitest](https://vitest.dev) and exercise the jargon and PII scanners against the `clean-package` and `dirty-package` fixtures under `tests/fixtures/`, plus the extract-plan name/path derivation logic.
+Tests use [Vitest](https://vitest.dev) and cover the jargon and PII scanners against the `clean-package` and `dirty-package` fixtures under `tests/fixtures/`, the extract-plan name/path derivation logic, the verbatim copy (including that it refuses to copy gitignored files and preserves executable bits), and the fast-path eligibility gate.
 
 ## License
 
