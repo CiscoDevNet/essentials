@@ -39,6 +39,7 @@ const program = new Command()
   .option("--no-source-scan", "Skip the informational source pre-scan")
   .option("--no-adversarial-review", "Skip the LLM reviewer; deterministic scanners only")
   .option("--no-extract", "Skip the in-source extract phase; assume --source is already a generic package and only run the sync to essentials")
+  .option("--no-fast-copy", "Always let the primary agent author the sync, even when the source scan is completely clean")
   .option("--list-models", "Print the model catalog for the current API key and exit", false)
   .parse(process.argv);
 
@@ -75,6 +76,7 @@ async function main(cmd: Command): Promise<void> {
   const noSourceScan = opts.sourceScan === false;
   const noAdversarial = opts.adversarialReview === false;
   const extractEnabled = opts.extract !== false;
+  const fastCopy = opts.fastCopy !== false;
 
   let extractHalf = null;
   if (extractEnabled) {
@@ -206,6 +208,7 @@ async function main(cmd: Command): Promise<void> {
       maxRevisions,
       adversarialReview: !noAdversarial,
       extraJargonTerms,
+      fastCopy,
     });
 
     if (result.status === "clean") {

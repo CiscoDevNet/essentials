@@ -12,6 +12,7 @@ import {
 } from "./prompts.js";
 import { runScanners, hasCriticalFindings, formatFindings } from "./scanners/index.js";
 import { runReviewer } from "./reviewer.js";
+import { copyTreeVerbatim } from "./copy.js";
 
 export type SessionPhase = "extract" | "sync";
 
@@ -24,6 +25,7 @@ export interface RunSyncSessionInputs {
   maxRevisions: number;
   adversarialReview: boolean;
   extraJargonTerms?: string[];
+  fastCopy: boolean;
 }
 
 export interface RunSyncSessionResult {
@@ -102,8 +104,109 @@ async function runExtractPhase(inputs: RunSyncSessionInputs): Promise<PhaseResul
   }
 }
 
+// A source that scanned completely clean needs no rewriting, so the primary
+// agent has nothing useful to do: pointing it at the tree anyway makes it
+// paraphrase already-generic prose and drop valid cross-references. Copy
+// instead, then hold the copy to the same scan-and-review bar. Returns null when
+// something does surface, so the caller can escalate to the agent.
+async function tryFastCopyPhase(
+  inputs: RunSyncSessionInputs,
+): Promise<PhaseResult | null> {
+  const { apiKey, reviewModel, plan, adversarialReview, extraJargonTerms } = inputs;
+
+  const copied = await copyTreeVerbatim(plan.sourceAbs, plan.targetAbs);
+  console.log(
+    chalk.green(
+      `[fast-copy] copied ${copied.filesCopied.length} file(s) verbatim `
+        + `(source scan was clean, so there is nothing to generalize)`,
+    ),
+  );
+  if (copied.unscannedFiles.length > 0) {
+    console.log(
+      chalk.yellow(
+        `[fast-copy] ${copied.unscannedFiles.length} file(s) copied without text scanning `
+          + `(binary or over the size cap) -- review manually:`,
+      ),
+    );
+    for (const relPath of copied.unscannedFiles) {
+      console.log(chalk.yellow(`  - ${relPath}`));
+    }
+  }
+  if (copied.symlinksSkipped.length > 0) {
+    console.log(
+      chalk.yellow(
+        `[fast-copy] skipped ${copied.symlinksSkipped.length} symlink(s): `
+          + copied.symlinksSkipped.join(", "),
+      ),
+    );
+  }
+
+  const deterministic = await runScanners({
+    rootPath: plan.targetAbs,
+    jargonSeverity: "critical",
+    extraJargonTerms,
+  });
+  logScanReport("fast-copy deterministic", deterministic);
+  if (deterministic.findings.some((finding) => finding.severity === "critical")) {
+    console.log(
+      chalk.yellow(
+        "[fast-copy] target scan surfaced critical finding(s) the source scan did not; "
+          + "escalating to the primary agent.",
+      ),
+    );
+    return null;
+  }
+
+  if (adversarialReview) {
+    console.log(chalk.dim(`[reviewer] running on model ${reviewModel}`));
+    const reviewerFindings = await runReviewer({
+      apiKey,
+      reviewModel,
+      plan,
+      reviewRootAbs: plan.targetAbs,
+      cwd: plan.targetRepoAbs,
+    });
+    const criticals = reviewerFindings.filter((finding) => finding.severity === "critical");
+    reportReviewerWarnings(reviewerFindings);
+    if (criticals.length > 0) {
+      console.log(
+        chalk.yellow(
+          `[fast-copy] reviewer raised ${criticals.length} critical finding(s); `
+            + "escalating to the primary agent.",
+        ),
+      );
+      return null;
+    }
+  }
+
+  return { status: "clean", remainingFindings: [], iterations: 0 };
+}
+
+// The fast path is only sound when a scan actually vouched for the source.
+// Extract mode is excluded because Phase A's output is authored by the agent, so
+// there is no pre-existing generic tree to copy.
+export function canFastCopy(inputs: RunSyncSessionInputs): boolean {
+  if (!inputs.fastCopy) return false;
+  if (inputs.plan.phaseAEnabled) return false;
+  if (!inputs.sourceScan) return false;
+  return inputs.sourceScan.findings.length === 0;
+}
+
 async function runSyncPhase(inputs: RunSyncSessionInputs): Promise<PhaseResult> {
   const { apiKey, primaryModel, reviewModel, plan, sourceScan, maxRevisions, adversarialReview, extraJargonTerms } = inputs;
+
+  if (canFastCopy(inputs)) {
+    const fastResult = await tryFastCopyPhase(inputs);
+    if (fastResult) {
+      return fastResult;
+    }
+  } else if (inputs.fastCopy && !inputs.plan.phaseAEnabled) {
+    const reason = inputs.sourceScan
+      ? `source scan found ${inputs.sourceScan.findings.length} finding(s)`
+      : "source scan was skipped";
+    console.log(chalk.dim(`[fast-copy] not eligible (${reason}); using the primary agent.`));
+  }
+
   const agent = await Agent.create({
     apiKey,
     model: { id: primaryModel },
@@ -214,35 +317,10 @@ async function scanAndReviseLoop({
         reviewRootAbs,
         cwd: reviewerCwd,
       });
-      const reviewerCritical = reviewerFindings.filter(
+      combinedFindings = reviewerFindings.filter(
         (finding) => finding.severity === "critical",
       );
-      const reviewerWarnings = reviewerFindings.filter(
-        (finding) => finding.severity === "warning",
-      );
-      combinedFindings = reviewerCritical;
-      if (reviewerFindings.length > 0) {
-        console.log(
-          chalk.dim(
-            `[reviewer] returned ${reviewerFindings.length} finding(s) `
-              + `(critical=${reviewerCritical.length}, warning=${reviewerWarnings.length})`,
-          ),
-        );
-      }
-      if (reviewerWarnings.length > 0) {
-        console.log(
-          chalk.yellow(
-            `[reviewer] ${reviewerWarnings.length} non-blocking finding(s) (review manually):`,
-          ),
-        );
-        for (const finding of reviewerWarnings) {
-          console.log(
-            chalk.yellow(
-              `  - ${finding.file}:${finding.line} [${finding.type}] ${finding.message}`,
-            ),
-          );
-        }
-      }
+      reportReviewerWarnings(reviewerFindings);
     }
 
     if (combinedFindings.length === 0) {
@@ -340,6 +418,27 @@ function extractAssistantText(event: unknown): string | null {
     }
   }
   return parts.length > 0 ? parts.join("") : null;
+}
+
+function reportReviewerWarnings(reviewerFindings: Finding[]): void {
+  if (reviewerFindings.length === 0) return;
+  const criticals = reviewerFindings.filter((finding) => finding.severity === "critical");
+  const warnings = reviewerFindings.filter((finding) => finding.severity === "warning");
+  console.log(
+    chalk.dim(
+      `[reviewer] returned ${reviewerFindings.length} finding(s) `
+        + `(critical=${criticals.length}, warning=${warnings.length})`,
+    ),
+  );
+  if (warnings.length === 0) return;
+  console.log(
+    chalk.yellow(`[reviewer] ${warnings.length} non-blocking finding(s) (review manually):`),
+  );
+  for (const finding of warnings) {
+    console.log(
+      chalk.yellow(`  - ${finding.file}:${finding.line} [${finding.type}] ${finding.message}`),
+    );
+  }
 }
 
 function logScanReport(label: string, report: ScanReport): void {

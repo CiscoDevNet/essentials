@@ -1,11 +1,12 @@
 import { promises as fs } from "node:fs";
+import path from "node:path";
 import { globbyStream } from "globby";
 import type { Finding } from "../types.js";
 
 // Always skipped, even when the scanned tree has no .gitignore. These are
 // caches, build output, and VCS/dependency directories that never carry
 // meaningful findings.
-const HARD_SKIP_DIRECTORIES = [
+export const HARD_SKIP_DIRECTORIES = [
   "node_modules", ".git", ".venv", "venv", "__pycache__", ".pytest_cache",
   ".ruff_cache", ".mypy_cache", "dist", "build", ".pulumi",
 ];
@@ -17,6 +18,17 @@ const BINARY_EXTENSIONS = [
 ];
 
 const MAX_FILE_BYTES = 5 * 1024 * 1024;
+
+// True when walkTextFiles would have passed over this file: a binary extension
+// or past the size cap. Callers that copy files rather than scan them use this
+// to report what left the source repo without being read.
+export async function isUnscannableTextFile(filePath: string): Promise<boolean> {
+  if (BINARY_EXTENSIONS.includes(path.extname(filePath).toLowerCase())) {
+    return true;
+  }
+  const stat = await fs.stat(filePath);
+  return stat.size > MAX_FILE_BYTES;
+}
 
 // Yields absolute paths of candidate text files under rootPath. Traversal,
 // .gitignore handling, and directory/extension skipping are delegated to
