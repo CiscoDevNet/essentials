@@ -17,7 +17,7 @@ from validate_summary import (  # noqa: E402
     validate_summary_text,
 )
 
-_REPO_ROOT = Path(__file__).resolve().parents[5]
+_REPO_ROOT = Path(__file__).resolve().parents[4]
 
 
 def test_parse_document_extracts_subjects() -> None:
