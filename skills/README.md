@@ -42,6 +42,7 @@ npx skills add CiscoDevNet/essentials --skill '*' --full-depth
 | [`ess/pr-address-comments-all`](ess/pr-address-comments-all/) | Address review comments across one or more PRs in parallel, each in its own git worktree on the PR's branch. |
 | [`ess/mcp-hide-secrets`](ess/mcp-hide-secrets/) | Move Cursor MCP credentials out of `mcp.json` into a login-loaded `mcp.env` (macOS LaunchAgent). |
 | [`ess/summarize-change-log`](ess/summarize-change-log/) | Condense a long git log or squash message into 1–5 Conventional-Commit bullets. |
+| [`ess/essentials-sync`](ess/essentials-sync/) | Extract a jargon-free `ess-*` package out of a private tool and sync it to the open-source essentials repo. |
 
 ## Notes
 
