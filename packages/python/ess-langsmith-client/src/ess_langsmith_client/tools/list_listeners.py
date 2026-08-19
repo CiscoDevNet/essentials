@@ -11,8 +11,8 @@ PREREQUISITES:
 - LANGSMITH_WORKSPACE_ID: Your LangSmith workspace ID
 
 USAGE:
-    langsmith-listeners list
-    langsmith-listeners list --format json
+    langsmith-client listeners list
+    langsmith-client listeners list --format json
 
 CONTROL PLANE API REFERENCE:
     https://docs.langchain.com/langsmith/api-ref-control-plane
@@ -23,7 +23,7 @@ from typing import Any
 
 import click
 
-from langsmith_client import (
+from ess_langsmith_client import (
     ControlPlaneClient,
     common_options,
     create_client,

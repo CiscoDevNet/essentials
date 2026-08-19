@@ -6,6 +6,10 @@ Reads name and version from pyproject.toml to create a consistent image tag.
 Can target any project directory via --project-dir / -C.
 """
 
+# The build command callback exposes one function parameter per CLI option, so
+# the argument count necessarily exceeds PLR0913's limit. Suppress it here.
+# ruff: noqa: PLR0913
+
 import os
 import subprocess  # nosec B404  # developer tooling shells out to docker/langgraph
 import sys
@@ -13,24 +17,7 @@ from pathlib import Path
 
 import click
 
-from langsmith_client import get_project_info
-
-
-def _get_git_sha() -> str | None:
-    """Return the short Git commit SHA, or None if unavailable."""
-    try:
-        result = subprocess.run(  # nosec B603 B607  # hardcoded git command with list args, no shell
-            ["git", "rev-parse", "--short", "HEAD"],
-            capture_output=True,
-            text=True,
-            timeout=5,
-            check=False,
-        )
-    except (FileNotFoundError, subprocess.TimeoutExpired):
-        return None
-    if result.returncode == 0:
-        return result.stdout.strip()
-    return None
+from ess_langsmith_client import get_git_sha, get_project_info
 
 
 @click.command(
@@ -57,7 +44,7 @@ def _get_git_sha() -> str | None:
     ),
 )
 @click.argument("langgraph_args", nargs=-1, type=click.UNPROCESSED)
-def build(  # noqa: PLR0913
+def build(
     tag: str | None,
     push: bool,
     registry: str | None,
@@ -72,19 +59,19 @@ def build(  # noqa: PLR0913
     \b
     Examples:
         # Build with defaults from pyproject.toml
-        langsmith-build
+        langsmith-client build
 
         # Build a specific project
-        langsmith-build -C labs/python/hello-world-graph
+        langsmith-client build -C path/to/my-agent
 
         # Build with custom tag
-        langsmith-build -t my-image:v2
+        langsmith-client build -t my-image:v2
 
         # Build and push to registry
-        langsmith-build --push --registry gcr.io/my-project
+        langsmith-client build --push --registry gcr.io/my-project
 
         # Build for a different platform (e.g., local testing on Apple Silicon)
-        langsmith-build --platform linux/arm64
+        langsmith-client build --platform linux/arm64
     """
     project_path = Path(project_dir)
 
@@ -96,7 +83,7 @@ def build(  # noqa: PLR0913
                 "Could not read pyproject.toml. Provide --tag or ensure "
                 "pyproject.toml exists."
             )
-        git_sha = _get_git_sha()
+        git_sha = get_git_sha()
         tag = (
             f"{project.name}:{project.version}-{git_sha}"
             if git_sha
