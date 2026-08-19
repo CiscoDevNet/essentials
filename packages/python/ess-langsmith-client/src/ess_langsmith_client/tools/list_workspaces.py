@@ -9,9 +9,9 @@ PREREQUISITES:
 - LANGSMITH_API_KEY: Your LangSmith API key
 
 USAGE:
-    langsmith-workspaces list
-    langsmith-workspaces list --format json
-    langsmith-workspaces list --format table
+    langsmith-client workspaces list
+    langsmith-client workspaces list --format json
+    langsmith-client workspaces list --format table
 
 API REFERENCE:
     https://api.smith.langchain.com/api/v1/workspaces
@@ -19,21 +19,16 @@ API REFERENCE:
 
 import json
 from datetime import datetime
+from http import HTTPStatus
 
 import click
 import requests
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 
-# Load environment variables from .env file
+from ess_langsmith_client.client import _REQUEST_TIMEOUT, _SMITH_API_URL
+
 load_dotenv()
-
-# LangSmith API base URL
-LANGSMITH_API_URL = "https://api.smith.langchain.com"
-
-HTTP_OK = 200
-
-_REQUEST_TIMEOUT = 30
 
 
 # =============================================================================
@@ -114,7 +109,7 @@ def get_workspaces(api_key: str) -> WorkspacesResult:
         RuntimeError: If the API request fails
     """
     response = requests.get(
-        f"{LANGSMITH_API_URL}/api/v1/workspaces",
+        f"{_SMITH_API_URL}/api/v1/workspaces",
         headers={
             "x-api-key": api_key,
             "Content-Type": "application/json",
@@ -122,7 +117,7 @@ def get_workspaces(api_key: str) -> WorkspacesResult:
         timeout=_REQUEST_TIMEOUT,
     )
 
-    if response.status_code == HTTP_OK:
+    if response.status_code == HTTPStatus.OK:
         return WorkspacesResult.from_api_response(response.json())
     else:
         raise RuntimeError(

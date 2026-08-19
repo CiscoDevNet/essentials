@@ -1,0 +1,29 @@
+[project]
+name = "ess-langsmith-client"
+version = "0.1.0"
+description = "LangSmith Control Plane API client and CLI"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "requests>=2.31.0",
+    "click>=8.1.0",
+    "python-dotenv>=1.1.0",
+    "python-decouple>=3.8",
+    "pydantic>=2.0.0",
+]
+
+[project.optional-dependencies]
+agent-test = ["langgraph-sdk>=0.1.0"]
+
+[project.scripts]
+langsmith-client = "ess_langsmith_client.tools.main:cli"
+
+[build-system]
+# >=1.27 understands the bare SPDX string form of `license`.
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ess_langsmith_client"]
+exclude = ["**/test_*.py"]
