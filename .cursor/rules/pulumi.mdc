@@ -20,7 +20,7 @@ This creates a `.pulumi/` directory in the current package for state storage.
 
 ## Key Points
 
-- State lives in `.pulumi/` at the package level (e.g., `tools/python/aws-artifact-repo/.pulumi/`)
+- State lives in `.pulumi/` at the package level (e.g., `tools/python/langsmith-hosting/.pulumi/`)
 - Do NOT use `~/.pulumi/` (default) or workspace root for state
 - Each Pulumi project manages its own state independently
 - Use `uv run pulumi` to ensure correct Python environment
@@ -28,7 +28,7 @@ This creates a `.pulumi/` directory in the current package for state storage.
 ## Example Workflow
 
 ```bash
-cd tools/python/aws-artifact-repo
+cd tools/python/langsmith-hosting
 uv run pulumi login file://.
 uv run pulumi stack init dev
 uv run pulumi config set aws:region us-east-1

@@ -53,5 +53,5 @@ curl https://raw.githubusercontent.com/github/gitignore/refs/heads/main/communit
 Ignore LangGraph artifacts.
 
 ```sh
-curl https://raw.githubusercontent.com/mattnorris/gitignore/refs/heads/langchain/LangChain.gitignore >> .gitignore
+curl https://raw.githubusercontent.com/github/gitignore/refs/heads/main/LangChain.gitignore >> .gitignore
 ```
