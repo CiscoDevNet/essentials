@@ -1,0 +1,28 @@
+[project]
+name = "ess-passwords"
+version = "0.1.0"
+description = "Readable password generation from a filtered EFF wordlist"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "click>=8.1",
+    "xkcdpass>=1.30",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+]
+
+[project.scripts]
+ess-passwords = "ess_passwords.__main__:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+exclude = ["**/test_*.py"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ess_passwords"]
