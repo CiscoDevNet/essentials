@@ -45,6 +45,26 @@ repos:
         always_run: true
         stages: [pre-push]
 
+  # Forbidden jargon in commit messages and added lines. The wordlist lives in
+  # essentials-sync; exceptions live in .essentials-sync-jargon.json. The
+  # pre-push hook rescans every unpublished commit, so it also catches commits
+  # made without hooks (git commit-tree, --no-verify).
+  - repo: local
+    hooks:
+      - id: jargon-commit-msg
+        name: jargon (commit message)
+        entry: node --disable-warning=ExperimentalWarning tools/typescript/essentials-sync/src/jargon-check.ts --message-file
+        language: system
+        always_run: true
+        stages: [commit-msg]
+      - id: jargon-push
+        name: jargon (unpublished commits)
+        entry: node --disable-warning=ExperimentalWarning tools/typescript/essentials-sync/src/jargon-check.ts
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]
+
   # Trailing whitespace and end of file fixes
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
@@ -61,10 +81,16 @@ repos:
       - id: debug-statements
 
 # Global hooks configuration
+default_install_hook_types: [pre-commit, pre-push, commit-msg]
+# Hooks without an explicit `stages` run on commit and push, not on commit-msg.
+default_stages: [pre-commit, pre-push]
 default_language_version:
   python: python3.12
 
 # Exclude paths
+#
+# `\.git/` is deliberately absent: nothing under it is ever staged, but it did
+# match `.git/COMMIT_EDITMSG`, the file every commit-msg hook is handed.
 exclude: |
   (?x)^(
       archive/|
@@ -72,7 +98,6 @@ exclude: |
       venv/|
       node_modules/|
       __pycache__/|
-      \.git/|
       \.pytest_cache/|
       \.pulumi/|
       dist/|

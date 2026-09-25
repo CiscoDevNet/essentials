@@ -100,6 +100,44 @@ Drop a `.essentials-sync-jargon.json` file at the root of the original source to
 
 Entries that start with `*.` are treated as hostname suffixes; everything else as case-insensitive word-boundary matches. Per-org employee-ID patterns belong here too -- the bundled PII scanner only flags emails, phone numbers, and SSNs.
 
+## Git hooks
+
+The same wordlist guards commits to the repo that hosts this tool. `src/jargon-check.ts` runs as two [pre-commit](https://pre-commit.com) hooks:
+
+| Hook | Stage | Checks |
+| --- | --- | --- |
+| `jargon-commit-msg` | `commit-msg` | The message being committed, ignoring git comment lines. |
+| `jargon-push` | `pre-push` | Every commit not yet on a remote: its message and the lines it adds. |
+
+The pre-push hook is the backstop: it also catches commits that skipped the commit-msg hook (`git commit --no-verify`, `git commit-tree`). It only scans what a push would publish, so existing history never blocks a push.
+
+Install both after cloning:
+
+```bash
+uv run pre-commit install
+```
+
+The hooks run under plain `node` (22.18 or later strips the TypeScript types), so they need no `npm install`. Run the check by hand with:
+
+```bash
+node tools/typescript/essentials-sync/src/jargon-check.ts                 # unpublished commits
+node tools/typescript/essentials-sync/src/jargon-check.ts --to-ref <sha>  # a specific commit and its unpublished ancestors
+```
+
+Exceptions live in `.essentials-sync-jargon.json` at the repo root. `allow.paths` are repo-relative globs (`*`, `**`, `?`) whose added lines are never flagged; `allow.text` entries are literal strings removed from a line before matching, so a forbidden term elsewhere on the same line is still caught:
+
+```json
+{
+  "terms": ["internal-codename"],
+  "allow": {
+    "paths": ["tools/typescript/essentials-sync/tests/**"],
+    "text": ["docs.example.com"]
+  }
+}
+```
+
+The exception list applies to the hooks only; `essentials-sync` runs still scan synced packages against the full wordlist.
+
 ## Usage
 
 ```
