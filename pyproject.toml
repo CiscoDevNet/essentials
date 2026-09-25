@@ -42,6 +42,11 @@ exclude = ["**/migrations/**", "**/tmp/**"]
 [tool.ruff.lint]
 select = ["E", "F", "B", "PERF", "C", "I", "N", "PL"]
 
+[tool.ruff.lint.per-file-ignores]
+# ess-passwords tests: inline word counts, length caps, and entropy floors are
+# the values under test; naming them would just indirect the assertion.
+"packages/python/ess-passwords/src/ess_passwords/test_*.py" = ["PLR2004"]
+
 [tool.bandit]
 exclude_dirs = [".venv", "venv", "node_modules", "__pycache__", ".git"]
 exclude = ["*test*.py"]
