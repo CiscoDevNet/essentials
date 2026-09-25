@@ -8,6 +8,7 @@ import { runScanners, formatFindings } from "./scanners/index.js";
 import { planSync, composeFullPlan } from "./sync.js";
 import { planExtract } from "./extract-plan.js";
 import { runSyncSession } from "./agent.js";
+import { parseJargonOverrides } from "./jargon-list.js";
 import {
   listAvailableModels,
   parseModelSpec,
@@ -297,17 +298,7 @@ async function loadJargonOverrides(sourceAbs: string): Promise<string[]> {
   const configPath = path.join(sourceAbs, ".essentials-sync-jargon.json");
   try {
     const raw = await fs.readFile(configPath, "utf8");
-    const parsed = JSON.parse(raw) as unknown;
-    if (Array.isArray(parsed)) {
-      return parsed.filter((entry): entry is string => typeof entry === "string");
-    }
-    if (parsed && typeof parsed === "object") {
-      const terms = (parsed as { terms?: unknown }).terms;
-      if (Array.isArray(terms)) {
-        return terms.filter((entry): entry is string => typeof entry === "string");
-      }
-    }
-    return [];
+    return parseJargonOverrides(JSON.parse(raw) as unknown).terms;
   } catch (error) {
     if (error instanceof Error && "code" in error && (error as { code?: string }).code === "ENOENT") {
       return [];
