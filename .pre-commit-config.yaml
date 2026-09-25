@@ -88,6 +88,9 @@ default_language_version:
   python: python3.12
 
 # Exclude paths
+#
+# `\.git/` is deliberately absent: nothing under it is ever staged, but it did
+# match `.git/COMMIT_EDITMSG`, the file every commit-msg hook is handed.
 exclude: |
   (?x)^(
       archive/|
@@ -95,7 +98,6 @@ exclude: |
       venv/|
       node_modules/|
       __pycache__/|
-      \.git/|
       \.pytest_cache/|
       \.pulumi/|
       dist/|
