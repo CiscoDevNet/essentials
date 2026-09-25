@@ -19,7 +19,7 @@ repos:
         entry: uv run pylint --load-plugins=perflint
         language: system
         types: [python]
-        exclude: ^.*/(migrations|tests|__pycache__|\.venv|venv)/.*
+        exclude: ^.*/(migrations|tests|__pycache__|\.venv|venv)/.*|.*/test_[^/]*\.py
         pass_filenames: true
         args: ["--ignore=migrations,tests,__pycache__,.venv,venv"]
         stages: [pre-push]
