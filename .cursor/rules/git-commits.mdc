@@ -1,0 +1,50 @@
+---
+description: Agent commits and PRs - plain git commit with hooks installed, no Cursor attribution
+alwaysApply: true
+---
+
+# Git Commits
+
+Commit messages and pull requests contain only what the user asked for. Never add
+`Co-authored-by:` trailers or any other agent attribution.
+
+Cursor appends a `Co-authored-by: Cursor` trailer to every agent `git commit`, whatever the
+settings or rules say. The `strip-cursor-coauthor` commit-msg hook removes it before the
+commit is created, so commit normally and let the hooks run.
+
+## Committing
+
+1. Once per checkout, make sure the commit-msg hook is installed. A plain install covers
+   every stage listed in `default_install_hook_types`:
+
+   ```bash
+   test -x "$(git rev-parse --git-path hooks)/commit-msg" || uv run pre-commit install
+   ```
+
+2. Commit with `git commit`. Never pass `--no-verify`: it skips the hook that removes the
+   trailer, along with the message checks.
+3. Verify with `git log -1 --format=full`. If the trailer is still there, the hook did not
+   run: install it (step 1), then `git commit --amend --no-edit` while the commit is unpushed.
+
+## Fallback: no hooks
+
+If installing the hooks is not an option, build the commit with `git commit-tree`, which
+Cursor leaves alone. It skips every hook too, so run them yourself first:
+
+```bash
+uv run pre-commit run --files $(git diff --cached --name-only)
+uv run pre-commit run --hook-stage commit-msg --commit-msg-filename /tmp/commit-msg
+old=$(git rev-parse HEAD)
+new=$(git commit-tree "$(git write-tree)" -p "$old" < /tmp/commit-msg)
+git update-ref "refs/heads/$(git branch --show-current)" "$new" "$old"
+```
+
+Passing the old tip makes `update-ref` fail if the branch moved in the meantime.
+
+## Pull requests
+
+- Never append `Made with Cursor`, `Made with [Cursor](https://cursor.com)`, or similar
+  attribution to PR titles or bodies.
+- PR descriptions contain only **Summary** and **Test plan**, or what the user asked for.
+- After `gh pr create` or `gh pr edit`, check `gh pr view <number> --json body` and remove
+  any injected footer.

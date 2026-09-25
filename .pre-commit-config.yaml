@@ -51,6 +51,13 @@ repos:
   # made without hooks (git commit-tree, --no-verify).
   - repo: local
     hooks:
+      # Runs first so later commit-msg checks never see the injected trailer.
+      - id: strip-cursor-coauthor
+        name: strip Cursor co-author trailer
+        entry: tools/shell/strip-cursor-coauthor.sh
+        language: script
+        stages: [commit-msg]
+        pass_filenames: true
       - id: jargon-commit-msg
         name: jargon (commit message)
         entry: node --disable-warning=ExperimentalWarning tools/typescript/essentials-sync/src/jargon-check.ts --message-file
