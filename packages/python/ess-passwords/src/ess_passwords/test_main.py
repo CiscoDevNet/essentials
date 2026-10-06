@@ -38,6 +38,7 @@ def test_json_carries_the_password_and_its_strength() -> None:
     assert result.exit_code == 0
     assert payload.keys() == {"password", "entropy_bits", "wordlist_size"}
     assert payload["entropy_bits"] > 50
+    assert "bits of entropy" not in result.stderr
 
 
 def test_json_with_count_is_a_list() -> None:

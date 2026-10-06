@@ -51,7 +51,7 @@ no `--dry-run` and no confirmation prompt.
 | `--capitalize-at` | random | Position of the upper-cased word, counting from 0 |
 | `--digits` | `0` | Digits to append after the last word |
 | `--count` / `-n` | `1` | Number of passwords to print |
-| `--json` | off | Emit JSON: an object, or an array when `--count` is above 1 |
+| `--json` | off | Emit JSON: an object, or an array when `--count` is above 1. Entropy is in the payload; the stderr note is omitted |
 
 ## API
 
@@ -81,7 +81,9 @@ Frozen dataclass with `value`, `entropy_bits`, and `wordlist_size`.
 `entropy_bits` counts the random word and digit choices only. Which word
 is capitalised is not counted: it is worth just `log2(word_count)`
 against a scheme an attacker already knows, and understating strength is
-the safe direction.
+the safe direction. When `max_length` is set, the generator rejects
+over-long candidates, so the reported figure is an upper bound on the
+accepted distribution.
 
 ### `load_wordlist()` and `excluded_words()`
 

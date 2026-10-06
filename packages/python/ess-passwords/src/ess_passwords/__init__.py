@@ -1,6 +1,6 @@
 """Readable password generation from a filtered EFF wordlist."""
 
-from .exceptions import EssPasswordsError, PasswordPolicyError
+from .exceptions import EssPasswordsError, PasswordLengthError, PasswordPolicyError
 from .password import (
     DEFAULT_SEPARATOR,
     DEFAULT_WORD_COUNT,
@@ -15,6 +15,7 @@ __all__ = [
     "DEFAULT_WORD_COUNT",
     "EssPasswordsError",
     "GeneratedPassword",
+    "PasswordLengthError",
     "PasswordOptions",
     "PasswordPolicyError",
     "excluded_words",
