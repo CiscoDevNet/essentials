@@ -13,7 +13,7 @@ from dataclasses import dataclass
 
 from xkcdpass import xkcd_password
 
-from .exceptions import PasswordPolicyError
+from .exceptions import PasswordLengthError, PasswordPolicyError
 from .wordlist import load_wordlist
 
 DEFAULT_WORD_COUNT = 5
@@ -55,9 +55,14 @@ class GeneratedPassword:
     Attributes:
         value: The password itself.
         entropy_bits: Entropy contributed by the random word and digit
-            choices. Which word is capitalised is not counted: it is worth
-            only log2(word_count) against a scheme an attacker already
-            knows, and understating strength is the safe direction.
+            choices. Words are drawn in order without replacement, so this
+            is the sum of log2 of the words still left at each draw, plus
+            log2(10) per digit. Which word is capitalised is not counted:
+            it is worth only log2(word_count) against a scheme an attacker
+            already knows, and understating strength is the safe direction.
+            When `max_length` is set, rejection sampling discards long
+            candidates, so this figure is an upper bound on the accepted
+            distribution rather than its exact entropy.
         wordlist_size: Number of candidate words after length filtering.
     """
 
@@ -95,7 +100,7 @@ def _require_valid(options: PasswordOptions) -> None:
         options
     ):
         msg = _impossible_length_message(options)
-        raise PasswordPolicyError(msg)
+        raise PasswordLengthError(msg)
 
 
 def _compose(words: list[str], options: PasswordOptions) -> str:
@@ -149,19 +154,29 @@ def generate_password(options: PasswordOptions | None = None) -> GeneratedPasswo
 
     Returns:
         The password plus the entropy of the scheme that produced it.
+        With `max_length` set, `entropy_bits` is an upper bound: long
+        draws are rejected, so not every combination is equally reachable.
 
     Raises:
         PasswordPolicyError: The options cannot produce a password --
-            `word_count` or `max_length` below 1, `capitalized_index`
-            outside the words, or a `max_length` the word count cannot fit.
+            `word_count` or `max_length` below 1, `word_count` larger
+            than the filtered wordlist, `capitalized_index` outside the
+            words, or a `max_length` the word count cannot fit.
     """
     opts = options or PasswordOptions()
     _require_valid(opts)
 
     wordlist = load_wordlist()
-    entropy_bits = opts.word_count * math.log2(len(wordlist))
-    if opts.digit_count:
-        entropy_bits += opts.digit_count * math.log2(len(_DIGITS))
+    # xkcdpass samples without replacement, so a count past the filtered
+    # list raises ValueError. That is a policy failure, not a traceback.
+    if opts.word_count > len(wordlist):
+        msg = (
+            f"word_count must be at most {len(wordlist)}, the size of the "
+            f"filtered wordlist, got {opts.word_count}."
+        )
+        raise PasswordPolicyError(msg)
+
+    entropy_bits = _entropy_bits(opts.word_count, len(wordlist), opts.digit_count)
 
     for _ in range(_MAX_GENERATION_ATTEMPTS):
         words = xkcd_password.generate_xkcdpassword(
@@ -179,4 +194,17 @@ def generate_password(options: PasswordOptions | None = None) -> GeneratedPasswo
             )
 
     msg = _impossible_length_message(opts)
-    raise PasswordPolicyError(msg)
+    raise PasswordLengthError(msg)
+
+
+def _entropy_bits(word_count: int, wordlist_size: int, digit_count: int) -> float:
+    """Entropy of an ordered draw without replacement, plus the digits.
+
+    Each word is chosen from the words still left, so the word contribution
+    is sum(log2(N - i)) for each draw. Digits are independent draws from 0-9.
+
+    Callers that also set `max_length` reject over-long candidates, so this
+    value is an upper bound on the accepted distribution.
+    """
+    word_bits = sum(math.log2(wordlist_size - index) for index in range(word_count))
+    return word_bits + digit_count * math.log2(len(_DIGITS))

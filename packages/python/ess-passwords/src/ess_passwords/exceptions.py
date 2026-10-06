@@ -9,3 +9,7 @@ class EssPasswordsError(Exception):
 
 class PasswordPolicyError(EssPasswordsError):
     """The requested password options cannot produce a valid password."""
+
+
+class PasswordLengthError(PasswordPolicyError):
+    """`max_length` is too small for the requested word count."""

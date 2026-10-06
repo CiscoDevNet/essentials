@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 import re
 
 import pytest
@@ -94,7 +95,7 @@ def test_digits_raise_entropy() -> None:
     with_digits = generate_password(PasswordOptions(digit_count=4)).entropy_bits
 
     # Four decimal digits are worth 4 * log2(10), a little over 13 bits.
-    assert with_digits > without + 13
+    assert with_digits == pytest.approx(without + 4 * math.log2(10))
 
 
 def test_negative_digit_count_raises() -> None:
@@ -110,10 +111,27 @@ def test_passwords_are_not_repeated() -> None:
 
 def test_reports_entropy_from_actual_wordlist() -> None:
     result = generate_password()
+    expected = sum(
+        math.log2(result.wordlist_size - index) for index in range(DEFAULT_WORD_COUNT)
+    )
 
     assert result.wordlist_size > 1000
     # Five words from a wordlist of a few thousand clears 50 bits easily.
+    assert result.entropy_bits == pytest.approx(expected)
     assert result.entropy_bits > 50
+
+
+def test_entropy_counts_sampling_without_replacement(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    words = ["alpha", "bravo", "charlie"]
+    monkeypatch.setattr("ess_passwords.password.load_wordlist", lambda: words)
+
+    result = generate_password(PasswordOptions(word_count=2, digit_count=1))
+    expected = math.log2(3) + math.log2(2) + math.log2(10)
+
+    assert result.entropy_bits == pytest.approx(expected)
+    assert result.entropy_bits < 2 * math.log2(3) + math.log2(10)
 
 
 def test_max_length_is_respected() -> None:
@@ -139,6 +157,19 @@ def test_impossible_max_length_is_rejected_before_generating(
 
     with pytest.raises(PasswordPolicyError, match="Reduce the word count"):
         generate_password(PasswordOptions(word_count=8, max_length=20))
+
+
+def test_word_count_above_the_wordlist_raises(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Sampling without replacement cannot draw more words than the list.
+    monkeypatch.setattr(
+        "ess_passwords.password.load_wordlist",
+        lambda: ["alpha", "bravo", "charlie"],
+    )
+
+    with pytest.raises(PasswordPolicyError, match="at most 3"):
+        generate_password(PasswordOptions(word_count=4))
 
 
 def test_zero_words_raises() -> None:

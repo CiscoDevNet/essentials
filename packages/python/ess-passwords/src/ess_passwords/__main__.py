@@ -91,6 +91,8 @@ def generate_command(  # noqa: PLR0913 -- Click option surface; bundling hurts r
 
     The password goes to stdout and its entropy to stderr, so the output
     pipes straight into a secret store without a stray note tagging along.
+    `--json` puts entropy in the JSON object instead and does not write
+    the stderr note.
     """
     options = PasswordOptions(
         word_count=words,
