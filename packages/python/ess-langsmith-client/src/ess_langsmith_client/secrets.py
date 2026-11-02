@@ -3,6 +3,15 @@
 import os
 from collections.abc import Iterable
 
+_PLATFORM_MANAGED_SECRET_NAMES = frozenset(
+    {
+        "LANGSMITH_CONTROL_PLANE_API_KEY",
+        "LANGSMITH_ENDPOINT",
+        "LANGSMITH_PROJECT",
+        "LANGSMITH_TRACING",
+    }
+)
+
 
 def get_env_secrets(keys: Iterable[str]) -> list[dict[str, str]]:
     """Read the named environment variables as deployment secrets.
@@ -48,10 +57,23 @@ def merge_secrets(
         auto_detect_keys: Environment variable names to fall back to.
 
     Returns:
-        The merged list. ``cli_secrets`` win on name collisions.
+        The merged list. ``cli_secrets`` win on name collisions. Names managed
+        by the LangSmith control plane are omitted because the deployment API
+        rejects customer attempts to set them.
     """
     all_secrets = parse_secrets(list(cli_secrets))
     for secret in get_env_secrets(auto_detect_keys):
         if not any(existing["name"] == secret["name"] for existing in all_secrets):
             all_secrets.append(secret)
-    return all_secrets
+    filtered_secrets = [
+        secret
+        for secret in all_secrets
+        if secret["name"] not in _PLATFORM_MANAGED_SECRET_NAMES
+    ]
+    if all_secrets and not filtered_secrets:
+        names = ", ".join(sorted(secret["name"] for secret in all_secrets))
+        raise ValueError(
+            "All requested deployment secrets are managed by the LangSmith "
+            f"control plane and cannot be submitted: {names}"
+        )
+    return filtered_secrets

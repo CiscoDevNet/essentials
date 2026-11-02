@@ -9,6 +9,7 @@ CONTROL PLANE API REFERENCE:
 
 import os
 import time
+import uuid
 from http import HTTPStatus
 from typing import Any
 
@@ -18,6 +19,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 _REQUEST_TIMEOUT = 30
+
+_PAGE_SIZE = 100
 
 # Smith app/data API host (tracing sessions, API keys, workspaces).
 # Distinct from the control-plane host below (deployments and projects).
@@ -38,6 +41,25 @@ POLL_INTERVAL = 60
 # A deployment whose status contains any of these is treated as "stuck" and is
 # skipped when resolving the live deployment for a canonical name.
 _UNHEALTHY_STATUS_MARKERS = ("FAIL", "ERROR", "DELET")
+
+
+def _require_listener_id(listener_id: str) -> str:
+    """Return the canonical UUID form of a listener ID.
+
+    The control plane takes the ID as a single path segment. Rejecting
+    anything else keeps values such as ``../deployments/<id>`` from being
+    interpolated into the request URL.
+
+    Raises:
+        ValueError: If listener_id is not a UUID string.
+    """
+    if not isinstance(listener_id, str):
+        raise ValueError(f"Listener ID must be a UUID, got {listener_id!r}.")
+    try:
+        parsed = uuid.UUID(listener_id)
+    except ValueError as exc:
+        raise ValueError(f"Listener ID must be a UUID, got {listener_id!r}.") from exc
+    return str(parsed)
 
 
 class ControlPlaneClient:
@@ -108,6 +130,104 @@ class ControlPlaneClient:
             raise RuntimeError(
                 f"Failed to list listeners: {response.status_code}\n{response.text}"
             )
+
+    def get_listener(self, listener_id: str) -> dict[str, Any]:
+        """Get a specific listener by ID.
+
+        Args:
+            listener_id: Listener UUID. Other values are rejected before any
+                request is sent.
+
+        Raises:
+            ValueError: If listener_id is not a UUID.
+            RuntimeError: If the API returns a non-200 status.
+        """
+        listener_id = _require_listener_id(listener_id)
+        response = requests.get(
+            f"{self.base_url}/listeners/{listener_id}",
+            headers=self.headers,
+            timeout=_REQUEST_TIMEOUT,
+        )
+
+        if response.status_code == HTTPStatus.OK:
+            return response.json()
+        raise RuntimeError(
+            f"Failed to get listener {listener_id}: "
+            f"{response.status_code}\n{response.text}"
+        )
+
+    def delete_listener(self, listener_id: str) -> bool:
+        """Delete a listener by ID.
+
+        Args:
+            listener_id: Listener UUID. Other values are rejected before any
+                request is sent.
+
+        Returns:
+            True on success (HTTP 204).
+
+        Raises:
+            ValueError: If listener_id is not a UUID.
+            RuntimeError: If the API returns a non-204 status, or the request
+                fails in transit. A transport failure means the deletion
+                outcome is unknown and must be checked before retrying.
+        """
+        listener_id = _require_listener_id(listener_id)
+        try:
+            response = requests.delete(
+                f"{self.base_url}/listeners/{listener_id}",
+                headers=self.headers,
+                timeout=_REQUEST_TIMEOUT,
+            )
+        except requests.RequestException as exc:
+            raise RuntimeError(
+                f"Failed to delete listener {listener_id}: {exc}. "
+                "The deletion outcome is unknown; check whether the listener "
+                "still exists before retrying, since the server may already "
+                "have processed the DELETE."
+            ) from exc
+
+        if response.status_code == HTTPStatus.NO_CONTENT:
+            return True
+        raise RuntimeError(
+            f"Failed to delete listener {listener_id}: "
+            f"{response.status_code}\n{response.text}"
+        )
+
+    def list_all_deployments(self) -> list[dict[str, Any]]:
+        """List every deployment in the workspace, following pagination.
+
+        Raises:
+            RuntimeError: If a page is not HTTP 200, or its body has no
+                ``resources`` list. A missing list is not an empty page, so a
+                listener delete cannot proceed when the in-use check cannot
+                see deployments.
+        """
+        deployments: list[dict[str, Any]] = []
+        offset = 0
+        while True:
+            response = requests.get(
+                f"{self.base_url}/deployments",
+                headers=self.headers,
+                params={"limit": _PAGE_SIZE, "offset": offset},
+                timeout=_REQUEST_TIMEOUT,
+            )
+            if response.status_code != HTTPStatus.OK:
+                raise RuntimeError(
+                    f"Failed to list deployments: "
+                    f"{response.status_code}\n{response.text}"
+                )
+            payload = response.json()
+            page = payload.get("resources") if isinstance(payload, dict) else None
+            if not isinstance(page, list):
+                raise RuntimeError(
+                    "Failed to list deployments: response has no resources list.\n"
+                    f"{response.text}"
+                )
+            deployments.extend(page)
+            if len(page) < _PAGE_SIZE:
+                return deployments
+            offset += len(page)
 
     def list_deployments(self, name_contains: str | None = None) -> dict[str, Any]:
         """List all deployments, optionally filtered by name."""

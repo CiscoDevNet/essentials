@@ -16,10 +16,14 @@ _SYS_ID = "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6"
 
 class TestNormalizeUrl:
     def test_already_has_https(self):
-        assert _normalize_url("https://x.com/p") == "https://x.com/p"
+        assert (
+            _normalize_url("https://host.example.com/p") == "https://host.example.com/p"
+        )
 
     def test_already_has_http(self):
-        assert _normalize_url("http://x.com/p") == "http://x.com/p"
+        assert (
+            _normalize_url("http://host.example.com/p") == "http://host.example.com/p"
+        )
 
     def test_schemeless_url(self):
         assert (

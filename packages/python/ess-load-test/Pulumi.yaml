@@ -1,0 +1,7 @@
+name: ess-load-test
+runtime:
+  name: python
+  options:
+    toolchain: uv
+main: src/ess_load_test/infra
+description: Generic EC2 Locust load testing cluster provisioned with Pulumi

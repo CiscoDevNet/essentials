@@ -73,7 +73,7 @@ def test_is_vague_subject_detects_port_from_inside_support() -> None:
 
 
 def test_is_vague_subject_detects_port_from_phrase() -> None:
-    assert is_vague_subject("docs: port deployment naming docs from #510")
+    assert is_vague_subject("docs: port deployment naming docs from #120")
 
 
 @patch("validate_summary.run_commitizen_check")

@@ -3,21 +3,21 @@
 ## Before (verbose input)
 
 ```
-* fix(langsmith-client): centralize deployment naming in deploy CLI
+* fix(api-client): centralize deployment naming in deploy CLI
 
 Shell scripts were building deployment names and passing pre-suffixed --name
-values, which produced double-encoded names like hello-agent-prod-dev. ...
+values, which produced double-encoded names like my-service-prod-dev. ...
 
-* fix(azure-ai): align prod NAT gateway IPs with LangSmith hybrid cluster
+* fix(infra): align prod NAT gateway IPs with the prod cluster
 ...
 
-* fix(langsmith-client): address PR #513 review comments
+* fix(api-client): address PR #123 review comments
 ...
 
-* docs(langsmith-client): port deployment naming docs from #510
+* docs(api-client): port deployment naming docs from #120
 ...
 
-* fix(langsmith-client,hello-agent): address PR #513 review comments
+* fix(api-client,web): address PR #123 review comments
 ...
 ```
 
@@ -29,20 +29,20 @@ Subject lengths (all ≤50):
 
 | Subject | Length |
 | --- | --- |
-| `fix(langsmith-client): centralize deploy naming` | 47 |
-| `fix(azure-ai): align prod NAT gateway IPs` | 41 |
-| `fix(langsmith-client): defer delete confirm` | 43 |
-| `docs(langsmith-client): document --deployment` | 45 |
-| `fix(hello-agent): align listener id messaging` | 45 |
+| `fix(api-client): centralize deploy naming` | 41 |
+| `fix(infra): pin prod egress to NAT gateway` | 42 |
+| `fix(cli): defer delete confirm` | 30 |
+| `docs(api-client): document --deployment` | 39 |
+| `fix(web): align listener id messaging` | 37 |
 
 ## Bad vs good subjects
 
 | Bad (process/meta) | Good (outcome) |
 | --- | --- |
-| `fix: address PR #513 review comments` | `fix(langsmith-client): defer delete confirm` |
-| `docs: port deployment naming docs from #510` | `docs(langsmith-client): document --deployment` |
-| `chore: follow up on review` | `fix(hello-agent): align listener id messaging` |
-| `fix: cherry-pick doc improvements` | `docs(langsmith-client): document --deployment` |
+| `fix: address PR #123 review comments` | `fix(cli): defer delete confirm` |
+| `docs: port deployment naming docs from #120` | `docs(api-client): document --deployment` |
+| `chore: follow up on review` | `fix(web): align listener id messaging` |
+| `fix: cherry-pick doc improvements` | `docs(api-client): document --deployment` |
 
 ## Validate the good example
 

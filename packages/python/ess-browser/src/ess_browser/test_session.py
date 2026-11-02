@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
+import json
+import time
 from unittest.mock import MagicMock, PropertyMock, call, patch
 
 import pytest
 from playwright.sync_api import Error as PlaywrightError
 
 from .auth import DUO_SKIP_UPDATE_SCRIPT
-from .session import BrowserSession, _safe_origin
+from .session import _SESSION_COOKIE_MODE, BrowserSession, _safe_origin
 
 
 class _TargetClosedError(PlaywrightError):
@@ -288,10 +290,14 @@ class TestSafeOrigin:
         )
 
     def test_strips_userinfo(self):
-        assert _safe_origin("https://alice:x@host.com/p") == ("https://host.com")
+        assert _safe_origin("https://alice:x@host.example.com/p") == (
+            "https://host.example.com"
+        )
 
     def test_preserves_port(self):
-        assert _safe_origin("https://host.com:8443/p") == ("https://host.com:8443")
+        assert _safe_origin("https://host.example.com:8443/p") == (
+            "https://host.example.com:8443"
+        )
 
     def test_file_url_returns_scheme_only(self):
         assert _safe_origin("file:///etc/passwd") == "file:"
@@ -300,7 +306,10 @@ class TestSafeOrigin:
         assert _safe_origin("data:text/html,<h1>hi</h1>") == "data:"
 
     def test_malformed_port_does_not_raise(self):
-        assert _safe_origin("https://host:bad/path") == "https://host"
+        assert (
+            _safe_origin("https://host.example.com:bad/path")
+            == "https://host.example.com"
+        )
 
     def test_ipv6_brackets_preserved(self):
         assert _safe_origin("https://[::1]:8443/path") == "https://[::1]:8443"
@@ -316,3 +325,200 @@ class TestSafeOrigin:
 
     def test_empty_string(self):
         assert _safe_origin("") == "<unknown>"
+
+
+class TestSessionCookiePersistence:
+    """Carrying the SSO session cookie across launches.
+
+    The cookie that represents a completed SSO login is
+    session-scoped, and Playwright's persistent context does not restore
+    those -- so without this the profile persists everything *except*
+    the thing that keeps you logged in.
+    """
+
+    _SESSION_COOKIE = {
+        "name": "JSESSIONID",
+        "value": "opaque",
+        "domain": "idp.example.com",
+        "path": "/",
+        "expires": -1,
+    }
+    _PERSISTENT_COOKIE = {
+        "name": "DT",
+        "value": "opaque",
+        "domain": "idp.example.com",
+        "path": "/",
+        "expires": 1893456000,
+    }
+
+    def _cookie_file(self, tmp_path):
+        return tmp_path / "profile" / "session-cookies.json"
+
+    def test_session_cookies_are_saved_on_exit(self, _mock_playwright, tmp_path):
+        _mock_playwright["context"].cookies.return_value = [
+            self._SESSION_COOKIE,
+            self._PERSISTENT_COOKIE,
+        ]
+        with BrowserSession(profile_dir=tmp_path / "profile"):
+            pass
+
+        saved = json.loads(self._cookie_file(tmp_path).read_text(encoding="utf-8"))
+        assert [c["name"] for c in saved["cookies"]] == ["JSESSIONID"]
+
+    def test_persistent_cookies_are_left_to_chrome(self, _mock_playwright, tmp_path):
+        """Saving them too would make two stores disagree about one cookie."""
+        _mock_playwright["context"].cookies.return_value = [self._PERSISTENT_COOKIE]
+        with BrowserSession(profile_dir=tmp_path / "profile"):
+            pass
+
+        assert not self._cookie_file(tmp_path).exists()
+
+    def test_saved_cookies_are_owner_only(self, _mock_playwright, tmp_path):
+        """They are live credentials for as long as the session lasts."""
+        _mock_playwright["context"].cookies.return_value = [self._SESSION_COOKIE]
+        with BrowserSession(profile_dir=tmp_path / "profile"):
+            pass
+
+        mode = self._cookie_file(tmp_path).stat().st_mode & 0o777
+        assert mode == _SESSION_COOKIE_MODE
+
+    def test_saved_cookies_are_restored_on_the_next_launch(
+        self, _mock_playwright, tmp_path
+    ):
+        _mock_playwright["context"].cookies.return_value = [self._SESSION_COOKIE]
+        with BrowserSession(profile_dir=tmp_path / "profile"):
+            pass
+
+        _mock_playwright["context"].add_cookies.reset_mock()
+        with BrowserSession(profile_dir=tmp_path / "profile"):
+            pass
+
+        _mock_playwright["context"].add_cookies.assert_called_once_with(
+            [self._SESSION_COOKIE]
+        )
+
+    def test_stale_cookies_are_dropped_not_replayed(self, _mock_playwright, tmp_path):
+        """An old session identifier should not be sent to the IdP."""
+        path = self._cookie_file(tmp_path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            json.dumps(
+                {"saved_at": time.time() - 48 * 3600, "cookies": [self._SESSION_COOKIE]}
+            ),
+            encoding="utf-8",
+        )
+        _mock_playwright["context"].cookies.return_value = []
+
+        with BrowserSession(profile_dir=tmp_path / "profile"):
+            pass
+
+        _mock_playwright["context"].add_cookies.assert_not_called()
+        assert not path.exists()
+
+    @pytest.mark.parametrize("saved_at", [float("nan"), float("inf")])
+    def test_non_finite_saved_at_is_not_replayed(
+        self, _mock_playwright, tmp_path, saved_at
+    ):
+        """NaN and inf pass float() and then fail the age check the wrong way."""
+        path = self._cookie_file(tmp_path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            json.dumps({"saved_at": saved_at, "cookies": [self._SESSION_COOKIE]}),
+            encoding="utf-8",
+        )
+        _mock_playwright["context"].cookies.return_value = []
+
+        with BrowserSession(profile_dir=tmp_path / "profile") as session:
+            assert session.context is _mock_playwright["context"]
+
+        _mock_playwright["context"].add_cookies.assert_not_called()
+
+    def test_a_failed_cookie_delete_does_not_stop_the_session(
+        self, _mock_playwright, tmp_path
+    ):
+        """A read-only profile costs a login, not the session."""
+        path = self._cookie_file(tmp_path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            json.dumps(
+                {"saved_at": time.time() - 48 * 3600, "cookies": [self._SESSION_COOKIE]}
+            ),
+            encoding="utf-8",
+        )
+        _mock_playwright["context"].cookies.return_value = []
+
+        with patch.object(type(path), "unlink", side_effect=OSError("read-only")):
+            with BrowserSession(profile_dir=tmp_path / "profile") as session:
+                assert session.context is _mock_playwright["context"]
+
+        _mock_playwright["context"].add_cookies.assert_not_called()
+
+    def test_a_corrupt_file_does_not_stop_the_session(self, _mock_playwright, tmp_path):
+        """One bad file should cost a login, not the whole run."""
+        path = self._cookie_file(tmp_path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("{not json", encoding="utf-8")
+        _mock_playwright["context"].cookies.return_value = []
+
+        with BrowserSession(profile_dir=tmp_path / "profile") as session:
+            assert session.context is _mock_playwright["context"]
+
+        _mock_playwright["context"].add_cookies.assert_not_called()
+
+    def test_a_logged_out_session_clears_the_saved_cookies(
+        self, _mock_playwright, tmp_path
+    ):
+        """Otherwise a stale file outlives the session it belongs to."""
+        path = self._cookie_file(tmp_path)
+        _mock_playwright["context"].cookies.return_value = [self._SESSION_COOKIE]
+        with BrowserSession(profile_dir=tmp_path / "profile"):
+            pass
+        assert path.exists()
+
+        _mock_playwright["context"].cookies.return_value = []
+        with BrowserSession(profile_dir=tmp_path / "profile"):
+            pass
+        assert not path.exists()
+
+    def test_no_temp_file_is_left_behind(self, _mock_playwright, tmp_path):
+        _mock_playwright["context"].cookies.return_value = [self._SESSION_COOKIE]
+        with BrowserSession(profile_dir=tmp_path / "profile"):
+            pass
+
+        leftovers = list((tmp_path / "profile").glob("*.tmp"))
+        assert leftovers == []
+
+    def test_a_leftover_tmp_file_is_not_reused(self, _mock_playwright, tmp_path):
+        """A crash leftover must not receive live cookies at a world-readable mode."""
+        profile = tmp_path / "profile"
+        profile.mkdir(parents=True, exist_ok=True)
+        leftover = profile / "session-cookies.json.tmp"
+        leftover.write_text("stale", encoding="utf-8")
+        leftover.chmod(0o644)
+        _mock_playwright["context"].cookies.return_value = [self._SESSION_COOKIE]
+
+        with BrowserSession(profile_dir=profile):
+            pass
+
+        dest = self._cookie_file(tmp_path)
+        assert dest.exists()
+        mode = dest.stat().st_mode & 0o777
+        assert mode == _SESSION_COOKIE_MODE
+        # The leftover path was never truncated into the destination.
+        assert leftover.read_text(encoding="utf-8") == "stale"
+
+    def test_non_numeric_saved_at_does_not_stop_the_session(
+        self, _mock_playwright, tmp_path
+    ):
+        path = self._cookie_file(tmp_path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            json.dumps({"saved_at": "corrupt", "cookies": [self._SESSION_COOKIE]}),
+            encoding="utf-8",
+        )
+        _mock_playwright["context"].cookies.return_value = []
+
+        with BrowserSession(profile_dir=tmp_path / "profile") as session:
+            assert session.context is _mock_playwright["context"]
+
+        _mock_playwright["context"].add_cookies.assert_not_called()

@@ -48,6 +48,9 @@ Delete one or more keys by exact description.
 # Delete several keys
 uv run langsmith-client keys delete "key-1" "key-2" "key-3"
 
+# List what would be deleted, then stop
+uv run langsmith-client keys delete "key-1" --dry-run
+
 # Skip the confirmation prompt
 uv run langsmith-client keys delete "key-1" --yes
 
@@ -58,7 +61,8 @@ uv run langsmith-client keys delete "duplicated-name" --all
 | Option | Description |
 | --- | --- |
 | `--all` | Delete every key matching a description, even when one description matches multiple keys. |
-| `--yes` | Skip the confirmation prompt. |
+| `--dry-run` | Show the keys that would be deleted, then exit without deleting. Wins over `--yes`. |
+| `--yes`, `-y` | Skip the confirmation prompt. Required when there is no terminal to prompt on. |
 
 ### Duplicate safeguard
 

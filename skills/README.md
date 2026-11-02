@@ -12,7 +12,7 @@ From a local clone (run in the repo root):
 
 ```bash
 npx skills add ./skills --skill '*' --full-depth                 # all skills
-npx skills add ./skills --skill mcp-hide-secrets --full-depth    # a single skill
+npx skills add ./skills --skill ess-mcp-hide-secrets --full-depth  # a single skill
 npx skills add ./skills --list --full-depth                      # list without installing
 ```
 
@@ -39,9 +39,12 @@ npx skills add CiscoDevNet/essentials --skill '*' --full-depth
 | Skill | What it does |
 | ----- | ------------ |
 | [`ess/ess-pr-address-comments`](ess/ess-pr-address-comments/) | Address review comments on one or more PRs, each in its own git worktree on the PR's branch, then reply to and resolve the addressed threads. |
-| [`ess/mcp-hide-secrets`](ess/mcp-hide-secrets/) | Move Cursor MCP credentials out of `mcp.json` into a login-loaded `mcp.env` (macOS LaunchAgent). |
+| [`ess/ess-pr-review`](ess/ess-pr-review/) | Review one or more PRs: repo linters run the deterministic checks, the agent adds judgment, and findings post after one approval. |
+| [`ess/ess-gh-copilot-review`](ess/ess-gh-copilot-review/) | Review the current branch with GitHub Copilot CLI: the whole branch, only what changed since the last Copilot review, or a given range. |
+| [`ess/ess-mcp-hide-secrets`](ess/ess-mcp-hide-secrets/) | Move Cursor MCP credentials out of `mcp.json` into a login-loaded `mcp.env` (macOS LaunchAgent). |
 | [`ess/ess-summarize-change-log`](ess/ess-summarize-change-log/) | Condense a long git log or squash message into 1–5 Conventional-Commit bullets. |
-| [`ess/git-tidy`](ess/git-tidy/) | Audit local branches, remote branches, and worktrees, then delete only what you approve at a single gate. |
+| [`ess/ess-git-tidy`](ess/ess-git-tidy/) | Audit local branches, remote branches, and worktrees, then delete only what you approve at a single gate. |
+| [`ess/ess-my-groups`](ess/ess-my-groups/) | Resolve nicknames and group names, which may overlap and nest, to people with emails and service handles, and maintain those groups. |
 | [`ess/ess-git-commits`](ess/ess-git-commits/) | Commit and open PRs as an agent without agent attribution, using a commit-msg hook that strips the injected trailer. |
 | [`ess/ess-gh-repo-mirror`](ess/ess-gh-repo-mirror/) | Mirror a GitHub repo or Action, including its tags, into another owner or org, or sync an existing mirror. |
 | [`ess/ess-env-credentials`](ess/ess-env-credentials/) | Recover from missing environment variables or credentials by asking to source the project's `.env`, never reading it. |
@@ -52,7 +55,7 @@ npx skills add CiscoDevNet/essentials --skill '*' --full-depth
 
 ## Notes
 
-- Cursor-only behavior such as `disable-model-invocation: true` (slash-command-only activation) is kept out of the committed `SKILL.md`. To enable it locally, see [`ess/mcp-hide-secrets/references/install-cursor.md`](ess/mcp-hide-secrets/references/install-cursor.md).
+- Cursor-only behavior such as `disable-model-invocation: true` (slash-command-only activation) is kept out of the committed `SKILL.md`. To enable it locally, see [`ess/ess-mcp-hide-secrets/references/install-cursor.md`](ess/ess-mcp-hide-secrets/references/install-cursor.md).
 
 ## License
 

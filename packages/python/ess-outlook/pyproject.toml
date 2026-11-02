@@ -8,6 +8,7 @@ dependencies = [
     "click>=8.1",
     "ess-dirs",
     "msal>=1.28.0",
+    "python-decouple>=3.8",
     "python-dotenv>=1.0.0",
     "requests>=2.31.0",
 ]

@@ -30,13 +30,36 @@ Then run `uv sync --all-packages` from the workspace root.
 
 ## Prerequisites
 
-- `CLIENT_ID` and `TENANT_ID` set in the environment (see `.env.example`)
-  - `CLIENT_ID` -- the application (client) ID from a Microsoft Entra
-    (Azure AD) app registration with delegated `Mail.ReadWrite`
-    permission. The well-known "Office Desktop Apps" public client ID
-    works on most Microsoft 365 tenants without any registration.
-  - `TENANT_ID` -- your organization's Microsoft Entra tenant ID.
 - Python 3.12+
+- Credentials for one of the two authentication paths in
+  [Configuration](#configuration)
+
+## Configuration
+
+Set these in the environment or in this package's `.env` file (see
+`.env.example`). The CLI loads that `.env` on startup from any working
+directory, so no `source .env` is needed. Real environment variables take
+precedence over the file.
+
+Boolean variables accept `1`, `true`, `yes`, `y`, `on`, `t` (and their
+negatives), case-insensitively, via [python-decouple's][decouple] `strtobool`.
+An unrecognized value raises `ValueError` rather than being treated as off, so
+typos surface immediately.
+
+| Variable | Required | Description |
+| ---- | ---- | ----- |
+| `CLIENT_ID` | Yes, unless `GRAPH_ACCESS_TOKEN` is set | Application (client) ID of a Microsoft Entra app registration with delegated `Mail.ReadWrite`. |
+| `TENANT_ID` | Yes, unless `GRAPH_ACCESS_TOKEN` is set | Your organization's Microsoft Entra tenant ID. |
+| `GRAPH_ACCESS_TOKEN` | No | Pre-issued access token. Bypasses MSAL, so `CLIENT_ID` and `TENANT_ID` are then unused. See [Bring your own token](#bring-your-own-token). |
+| `GRAPH_INTERACTIVE_AUTH` | No | Set to `1` for browser sign-in instead of a device code. See [Browser sign-in](#browser-sign-in). |
+
+There is no built-in default client ID. If neither `CLIENT_ID`/`TENANT_ID`
+nor `GRAPH_ACCESS_TOKEN` is set, authentication raises `GraphAuthError`.
+
+The well-known "Office Desktop Apps" public client works on many Microsoft
+365 tenants for the device-code flow without a dedicated registration, but
+it has no `http://localhost` redirect URI, so it cannot be used with
+`GRAPH_INTERACTIVE_AUTH`.
 
 ## Usage
 
@@ -84,8 +107,40 @@ If your tenant blocks device-code flow via Conditional Access, run
 the command directly in your terminal session rather than over a
 remote shell.
 
+### Browser sign-in
+
+Set `GRAPH_INTERACTIVE_AUTH=1` to sign in through the system browser
+(authorization code + PKCE on a loopback redirect) instead of entering a
+device code. Conditional Access policies often permit this where they
+block device code.
+
+This requires `CLIENT_ID` to name an app registration that lists
+`http://localhost` as a redirect URI; without one, sign-in fails with
+`AADSTS50011`. Well-known first-party client IDs generally do not
+qualify, so this is off by default. On success, MSAL caches a refresh token;
+later runs renew silently.
+
+### Bring your own token
+
+Set `GRAPH_ACCESS_TOKEN` to skip MSAL entirely. `CLIENT_ID` and
+`TENANT_ID` are then unnecessary:
+
+```bash
+GRAPH_ACCESS_TOKEN="$(pbpaste)" ess-outlook list --limit 10
+```
+
+Get a token from [Graph Explorer](https://developer.microsoft.com/graph/graph-explorer):
+sign in, open the **Access token** tab, and copy the value. Consent to
+`Mail.Read` (or `Mail.ReadWrite` for `mark-read` and `delete`) under
+**Modify permissions** first, or requests return 403.
+
+Graph Explorer tokens expire after about an hour and are not cached, so
+this suits one-off reads rather than unattended jobs.
+
 ## Running Tests
 
 ```bash
 uv run pytest packages/python/ess-outlook/
 ```
+
+[decouple]: https://github.com/HBNetwork/python-decouple

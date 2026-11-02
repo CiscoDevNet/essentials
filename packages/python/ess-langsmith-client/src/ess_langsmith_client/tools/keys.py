@@ -12,10 +12,12 @@ USAGE:
     langsmith-client keys create "LangSmith Deployment: my-app"
     langsmith-client keys delete "my-old-key" "another-old-key"
     langsmith-client keys delete "duplicated-name" --all
+    langsmith-client keys delete "my-old-key" --dry-run
 """
 
 import json
 import os
+import sys
 from datetime import datetime, timezone
 from http import HTTPStatus
 from typing import Any
@@ -218,6 +220,21 @@ def _format_duplicate_error(duplicates: dict[str, list[dict[str, Any]]]) -> str:
     return "\n".join(error_lines)
 
 
+def _is_interactive() -> bool:
+    return sys.stdin.isatty()
+
+
+def _confirm_or_abort(key_count: int, *, skip: bool) -> None:
+    """Require explicit consent before deleting keys."""
+    if skip:
+        return
+    # Without a terminal there is no one to answer the prompt, so make the
+    # caller opt in rather than reading an empty stdin as "no".
+    if not _is_interactive():
+        raise click.UsageError("Not running interactively; pass --yes to delete.")
+    click.confirm(f"Delete {key_count} key(s)?", abort=True, err=True)
+
+
 def _common_options(func):
     func = click.option(
         "--api-key",
@@ -349,12 +366,21 @@ def create(
         "matches more than one key (default: error on duplicates)."
     ),
 )
-@click.option("--yes", is_flag=True, help="Skip confirmation prompt")
-def delete(
+@click.option(
+    "--dry-run",
+    is_flag=True,
+    default=False,
+    help="Show the keys that would be deleted without deleting them.",
+)
+@click.option(
+    "--yes", "-y", is_flag=True, default=False, help="Skip the confirmation prompt."
+)
+def delete(  # noqa: PLR0913 -- Click maps one parameter per option
     api_key: str | None,
     workspace_id: str | None,
     descriptions: tuple[str, ...],
     delete_all: bool,
+    dry_run: bool,
     yes: bool,
 ):
     """Delete API keys by description (name).
@@ -366,11 +392,16 @@ def delete(
     refuses to delete and exits with an error. Pass --all to explicitly
     delete every matching key.
 
+    The command lists the keys it will delete and asks for confirmation.
+    Pass --yes to skip the prompt, which is required when not running in a
+    terminal. Pass --dry-run to list the keys and stop; it wins over --yes.
+
     \b
     Examples:
         langsmith-client keys delete "my-old-key"
         langsmith-client keys delete "key-1" "key-2" "key-3"
         langsmith-client keys delete "key-1" --yes
+        langsmith-client keys delete "key-1" --dry-run
         langsmith-client keys delete "duplicated-name" --all
     """
     try:
@@ -399,8 +430,11 @@ def delete(
         )
     click.echo()
 
-    if not yes:
-        click.confirm("Delete these keys?", abort=True)
+    if dry_run:
+        click.echo(f"Dry run: {len(targets)} key(s) would be deleted; nothing changed.")
+        return
+
+    _confirm_or_abort(len(targets), skip=yes)
 
     deleted = 0
     failed = 0

@@ -1,0 +1,11 @@
+# Copy to Pulumi.<stack>.yaml (for example Pulumi.dev.yaml), then replace
+# your-aws-profile with the AWS CLI profile for your account (after your AWS SSO login).
+config:
+  aws:profile: your-aws-profile
+  aws:region: us-east-1
+  ess-load-test:environment: dev
+  ess-load-test:instanceType: t3.large
+  ess-load-test:masterInstanceType: t3.small
+  ess-load-test:workerCount: 2
+  ess-load-test:useDefaultVpc: true
+encryptionsalt: v1:placeholder:placeholder

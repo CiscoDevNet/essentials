@@ -33,7 +33,7 @@ Follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.
 - Format: `<type>[optional scope]: <description>` — imperative mood, lowercase type.
 - Types: `feat`, `fix`, `docs`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`.
 - **Entire subject ≤ 50 characters** (type, scope, colon, space, description).
-- Scope matches the primary area (`langsmith-client`, `azure-ai`, `hello-agent`).
+- Scope matches the primary area (`api-client`, `cli`, `web`).
 
 ### What changed, not process
 
@@ -41,9 +41,9 @@ Every subject must state **what changed**. Ban vague/process subjects:
 
 | Bad | Good |
 | --- | --- |
-| `address PR #513 review comments` | `fix(langsmith-client): defer delete confirm` |
-| `port docs from #510` | `docs(langsmith-client): document --deployment` |
-| `follow up on review` | `fix(hello-agent): align listener id messaging` |
+| `address PR #123 review comments` | `fix(cli): defer delete confirm` |
+| `port docs from #120` | `docs(api-client): document --deployment` |
+| `follow up on review` | `fix(web): align listener id messaging` |
 
 ## Consolidation (>5 input commits)
 

@@ -94,8 +94,8 @@ def test_impossible_max_length_reports_the_policy_error() -> None:
 
 
 def test_generate_offers_no_dry_run() -> None:
-    # Read-only per cli-write-safety.mdc: there is nothing to preview,
-    # so the flag must not exist rather than being a silent no-op.
+    # Read-only commands take no --dry-run: there is nothing to preview, so the
+    # flag must not exist rather than being a silent no-op.
     result = CliRunner().invoke(main, ["generate", "--dry-run"])
 
     assert result.exit_code != 0

@@ -42,6 +42,17 @@ class TestBuildCli:
         cli = build_cli()
         assert isinstance(cli, click.Command)
 
+    def test_extra_auth_domains_reach_get_incident(self):
+        cli = build_cli(
+            default_instance="example.service-now.com",
+            extra_auth_domains=("login.corp.example.net",),
+        )
+        mock_get, result = _invoke(cli, ["INC0000001"], env=_ENV_UNSET)
+        assert result.exit_code == 0
+        assert mock_get.call_args.kwargs["extra_auth_domains"] == (
+            "login.corp.example.net",
+        )
+
 
 class TestInstancePrecedence:
     """Runtime tests for the --instance / env var / default precedence."""
