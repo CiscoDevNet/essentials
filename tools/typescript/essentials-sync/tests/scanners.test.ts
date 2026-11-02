@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
+import { generateKeyPairSync } from "node:crypto";
 import { promises as fs } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { scanJargon } from "../src/scanners/jargon.js";
 import { scanPii } from "../src/scanners/pii.js";
+import { scanWithSecretlint } from "../src/scanners/secretlint.js";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const cleanFixture = path.join(here, "fixtures", "clean-package");
@@ -61,6 +63,28 @@ describe("pii scanner", () => {
     "x@example.io",
   ])("flags %s", async (line) => {
     expect(await emailFindings(line)).toBe(1);
+  });
+});
+
+describe("secretlint scanner", () => {
+  // A key generated per run, in a directory outside this package: secretlint
+  // once ran from the package directory and silently skipped such paths.
+  it.each([
+    ["a directory", (dir: string) => dir],
+    ["a single file", (dir: string) => path.join(dir, "key.pem")],
+  ])("flags a private key in %s outside the package", async (_label, pickRoot) => {
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "secretlint-test-"));
+    try {
+      const { privateKey } = generateKeyPairSync("ec", { namedCurve: "P-256" });
+      const pem = privateKey.export({ type: "pkcs8", format: "pem" }).toString();
+      await fs.writeFile(path.join(dir, "key.pem"), pem, "utf8");
+      const findings = await scanWithSecretlint(pickRoot(dir));
+      expect(findings.map((f) => [f.file, f.term])).toEqual([
+        [path.join(dir, "key.pem"), "@secretlint/secretlint-rule-privatekey"],
+      ]);
+    } finally {
+      await fs.rm(dir, { recursive: true, force: true });
+    }
   });
 });
 

@@ -1,3 +1,4 @@
+import { promises as fs } from "node:fs";
 import path from "node:path";
 import { execa } from "execa";
 import type { Finding } from "../types.js";
@@ -27,13 +28,18 @@ export async function scanWithSecretlint(
   const packageRoot = packageRootPath();
   const configPath = options.configPath ?? path.join(packageRoot, ".secretlintrc.json");
   // Pass the publishable files rather than a glob over rootPath, which would
-  // also read gitignored files that never ship.
-  const files = (await listPublishableFiles(rootPath)).map((relPath) => path.join(rootPath, relPath));
+  // also read gitignored files that never ship. secretlint rejects any path
+  // outside its cwd, so it runs in the scanned directory on relative paths.
+  const isFile = !(await fs.lstat(rootPath)).isDirectory();
+  const cwd = isFile ? path.dirname(rootPath) : rootPath;
+  const files = (await listPublishableFiles(rootPath)).map((relPath) =>
+    isFile ? path.basename(rootPath) : relPath,
+  );
 
   const findings: Finding[] = [];
   for (let start = 0; start < files.length; start += FILES_PER_INVOCATION) {
     const batch = files.slice(start, start + FILES_PER_INVOCATION);
-    findings.push(...(await runSecretlint(packageRoot, configPath, batch)));
+    findings.push(...(await runSecretlint(packageRoot, configPath, cwd, batch)));
   }
   return findings;
 }
@@ -41,25 +47,19 @@ export async function scanWithSecretlint(
 async function runSecretlint(
   packageRoot: string,
   configPath: string,
+  cwd: string,
   files: string[],
 ): Promise<Finding[]> {
   let result;
   try {
     result = await execa(
-      "npx",
-      [
-        "--no-install",
-        "secretlint",
-        "--secretlintrc",
-        configPath,
-        "--format",
-        "json",
-        "--maskSecrets",
-        ...files,
-      ],
+      "secretlint",
+      ["--secretlintrc", configPath, "--format", "json", "--maskSecrets", ...files],
       {
         reject: false,
-        cwd: packageRoot,
+        cwd,
+        preferLocal: true,
+        localDir: packageRoot,
       },
     );
   } catch (error) {
@@ -71,7 +71,20 @@ async function runSecretlint(
     throw error;
   }
 
-  return parseSecretlintOutput(result.stdout ?? "");
+  // 0 is clean and 1 is findings. Anything else means secretlint never
+  // scanned, which must not read as a clean result.
+  if (result.exitCode !== 0 && result.exitCode !== 1) {
+    const reason = (result.stderr || result.stdout || "").trim().split("\n")[0];
+    throw new Error(`secretlint exited ${result.exitCode}: ${reason}`);
+  }
+
+  // secretlint reports real paths, which differ from cwd under a symlinked
+  // directory such as macOS /tmp.
+  const realCwd = await fs.realpath(cwd);
+  return parseSecretlintOutput(result.stdout ?? "").map((finding) => ({
+    ...finding,
+    file: path.join(cwd, path.relative(realCwd, finding.file)),
+  }));
 }
 
 function isMissingBinaryError(error: unknown): boolean {
