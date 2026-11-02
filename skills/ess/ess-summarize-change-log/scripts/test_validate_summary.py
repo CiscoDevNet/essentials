@@ -1,4 +1,4 @@
-"""Tests for summarize-change-log summary validation."""
+"""Tests for ess-summarize-change-log summary validation."""
 
 from __future__ import annotations
 
@@ -11,13 +11,13 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from validate_summary import (  # noqa: E402
+    COMMITIZEN_SPEC,
     ValidationError,
     is_vague_subject,
     parse_document,
+    run_commitizen_check,
     validate_summary_text,
 )
-
-_REPO_ROOT = Path(__file__).resolve().parents[4]
 
 
 def test_parse_document_extracts_subjects() -> None:
@@ -83,7 +83,7 @@ def test_validate_summary_text_checks_each_subject(mock_cz: MagicMock) -> None:
         "- **docs(web): update guide** — More.\n"
     )
     expected_count = len(parse_document(text).subjects)
-    count = validate_summary_text(text, repo_root=_REPO_ROOT)
+    count = validate_summary_text(text)
     assert count == expected_count
     assert mock_cz.call_count == expected_count
 
@@ -92,5 +92,26 @@ def test_validate_summary_text_checks_each_subject(mock_cz: MagicMock) -> None:
 def test_validate_summary_text_rejects_vague_subject(mock_cz: MagicMock) -> None:
     text = "- **fix: address PR #123** — Process-only subject.\n"
     with pytest.raises(ValidationError, match="vague subject"):
-        validate_summary_text(text, repo_root=_REPO_ROOT)
+        validate_summary_text(text)
     mock_cz.assert_not_called()
+
+
+@patch("validate_summary.subprocess.run")
+def test_run_commitizen_check_uses_pinned_tool_outside_repo(
+    mock_run: MagicMock,
+) -> None:
+    mock_run.return_value = MagicMock(returncode=0)
+    run_commitizen_check("fix(api): short subject")
+    command = mock_run.call_args.args[0]
+    assert command[:5] == ["uv", "tool", "run", "--from", COMMITIZEN_SPEC]
+    assert command[-4:] == ["-m", "fix(api): short subject", "-l", "50"]
+    cwd = Path(mock_run.call_args.kwargs["cwd"])
+    assert cwd != Path.cwd()
+    assert not cwd.exists()
+
+
+@patch("validate_summary.subprocess.run")
+def test_run_commitizen_check_raises_on_failure(mock_run: MagicMock) -> None:
+    mock_run.return_value = MagicMock(returncode=1)
+    with pytest.raises(ValidationError, match="failed Conventional Commits"):
+        run_commitizen_check("Fixed stuff")

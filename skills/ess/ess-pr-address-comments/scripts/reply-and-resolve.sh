@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 #
-# reply_and_resolve.sh
+# reply-and-resolve.sh
 # Reply to a PR review comment and resolve its thread. Encapsulates the
-# error-prone Step 9 of pr-address-comments (SKILL.md):
+# error-prone reply/resolve step of references/fix-procedure.md:
 #   - REST reply via POST /repos/<o>/<r>/pulls/<N>/comments with in_reply_to
 #     (NOT the /replies sub-resource, which 404s)
 #   - GraphQL resolveReviewThread mutation
 #
 # Usage:
-#   reply_and_resolve.sh --repo owner/repo --pr N \
+#   reply-and-resolve.sh --repo owner/repo --pr N \
 #     --comment-id ID --thread-id TID --body "Fixed — <what changed>"
 #
 # Only call this for threads that were actually ADDRESSED in code. Skip

@@ -1,8 +1,8 @@
 # Worktree mechanics
 
-How `pr-address-comments-all` isolates each PR in its own git worktree and why
+How `ess-pr-address-comments` isolates each PR in its own git worktree and why
 it differs from the stock `/worktree` command. The script
-[`scripts/create_pr_worktree.sh`](../scripts/create_pr_worktree.sh) implements
+[`scripts/create-pr-worktree.sh`](../scripts/create-pr-worktree.sh) implements
 all of this; read here when you need to understand or debug it.
 
 ## `-B <branch>` instead of `--detach`
@@ -18,7 +18,9 @@ git worktree add -B "$BRANCH" "$WORKTREE_DIR" "origin/$BRANCH"
 ```
 
 `-B` creates (or resets) a real local branch `$BRANCH` pointing at
-`origin/$BRANCH` and checks it out in the new worktree. As a result:
+`origin/$BRANCH` and checks it out in the new worktree. The script refuses that
+reset when the local branch contains commits that are not on `origin/$BRANCH`,
+so Phase 1 cannot drop unpushed work. As a result:
 
 - Commits land directly on the PR branch.
 - `git push origin "$BRANCH"` updates the PR — no `push HEAD:<branch>` dance.
@@ -72,19 +74,19 @@ another worktree (git forbids the same branch in two worktrees). Options:
 - Create the worktree detached and push explicitly:
 
   ```bash
-  SKILL=skills/ess/pr-address-comments-all
+  # SKILL_DIR is the absolute path of this skill, resolved before entering the worktree.
   git worktree add --detach "$WORKTREE_DIR" "origin/$BRANCH"
   # ... commit ...
-  "$SKILL/scripts/safe_push.sh" --branch "$BRANCH"   # pushes HEAD:<branch>, rebases if moved
+  "$SKILL_DIR/scripts/safe-push.sh" --branch "$BRANCH"   # pushes HEAD:<branch>, rebases if moved
   ```
 
-  `safe_push.sh` already pushes `HEAD:<branch>`, so it works the same whether the
+  `safe-push.sh` already pushes `HEAD:<branch>`, so it works the same whether the
   worktree is attached (`-B`) or detached — and it will not hang if the branch
   moved while you worked.
 
 ### Cross-repo PRs
 
 When PRs span multiple repositories (full URLs in different repos), run
-`create_pr_worktree.sh` from **each PR's own repo root** so `REPO_ROOT` and the
+`create-pr-worktree.sh` from **each PR's own repo root** so `REPO_ROOT` and the
 remote resolve correctly. Always pass `--repo owner/repo` so a bare-number
 assumption from one repo never leaks into another.

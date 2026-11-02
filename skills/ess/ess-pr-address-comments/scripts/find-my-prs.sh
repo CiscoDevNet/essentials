@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 #
-# find_my_prs.sh
+# find-my-prs.sh
 # Discover the current repo's open PRs authored by you that need attention:
 # either the review decision is CHANGES_REQUESTED, or there is at least one
 # unresolved review thread.
 #
-# Usage: find_my_prs.sh [--repo owner/repo] [--limit N]
+# Usage: find-my-prs.sh [--repo owner/repo] [--limit N]
 #   --repo owner/repo - Repo to query (default: current remote)
 #   --limit N         - Max PRs to scan (default: 50)
 #
@@ -14,17 +14,18 @@
 #   stderr - a human-readable table (number, decision, unresolved, branch, title)
 #
 # Exits 0 with empty stdout when nothing matches.
+# Exits non-zero if any review-thread lookup fails. A failed lookup is not
+# reported as "no PRs need attention", and a PR is not skipped when its
+# decision is already CHANGES_REQUESTED.
 
 set -euo pipefail
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
 NC='\033[0m'
 
 error() { echo -e "${RED}Error:${NC} $1" >&2; exit 1; }
 info() { echo -e "${GREEN}→${NC} $1" >&2; }
-warn() { echo -e "${YELLOW}Warning:${NC} $1" >&2; }
 
 command -v gh >/dev/null 2>&1 || error "gh CLI not found on PATH"
 
@@ -35,7 +36,7 @@ while [[ $# -gt 0 ]]; do
     case "$1" in
         --repo) OWNER_REPO="${2:-}"; shift 2 ;;
         --limit) LIMIT="${2:-}"; shift 2 ;;
-        -h|--help) sed -n '2,18p' "$0"; exit 0 ;;
+        -h|--help) sed -n '2,19p' "$0"; exit 0 ;;
         *) error "Unknown argument: $1" ;;
     esac
 done
@@ -109,7 +110,7 @@ MATCHES=()
 while IFS=$'\t' read -r NUMBER DECISION BRANCH TITLE; do
     [[ -z "$NUMBER" ]] && continue
     UNRESOLVED="$(count_unresolved_threads "$NUMBER")" \
-        || { warn "Could not read threads for #${NUMBER}; skipping"; continue; }
+        || error "Could not read threads for #${NUMBER}. Discovery failed; refusing to return a partial result."
 
     if [[ "$DECISION" == "CHANGES_REQUESTED" || "$UNRESOLVED" -gt 0 ]]; then
         MATCHES+=("$NUMBER")

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# create_pr_worktree.sh
+# create-pr-worktree.sh
 # Create a git worktree checked out ON a PR's branch (so work commits locally
 # and pushes straight back to the PR), then run the repo's worktree setup.
 #
@@ -8,7 +8,7 @@
 # (~/.cursor/worktrees/<WORKTREE_ID>/<repo-key>) so /delete-worktree still
 # works, but uses `git worktree add -B <branch>` instead of --detach.
 #
-# Usage: create_pr_worktree.sh --pr N --repo owner/repo [--branch B]
+# Usage: create-pr-worktree.sh --pr N --repo owner/repo [--branch B]
 #   --pr N            - PR number (used to name the worktree)
 #   --repo owner/repo - Repo the PR lives in
 #   --branch B        - PR head branch (default: looked up via gh)
@@ -61,15 +61,30 @@ else
 fi
 REPO_KEY="${REPO_BASENAME}-${REPO_HASH}"
 
+info "Fetching origin/${BRANCH}"
+# `--` so a branch name starting with `-` is treated as a refspec, not an option.
+git fetch origin -- "$BRANCH"
+
+# -B moves an existing local branch to origin/<branch> even when that branch is
+# not checked out. Refuse when the local branch has commits the remote does not,
+# so Phase 1 cannot drop unpushed work before the user approves a plan. Check
+# this before creating any worktree directory.
+if git show-ref --verify --quiet "refs/heads/${BRANCH}"; then
+    if ! git show-ref --verify --quiet "refs/remotes/origin/${BRANCH}"; then
+        error "origin/${BRANCH} is missing after fetch. Refusing to reset local branch ${BRANCH}."
+    fi
+    # Fully qualified refs. A tag with the same name as the branch would
+    # otherwise win, and an ancestral tag would hide unpushed branch commits.
+    if ! git merge-base --is-ancestor "refs/heads/${BRANCH}" "refs/remotes/origin/${BRANCH}"; then
+        error "Local branch ${BRANCH} has commits that are not on origin/${BRANCH}. Refusing to reset it."
+    fi
+fi
+
 WORKTREE_ID="pr-${PR_NUMBER}-$(openssl rand -hex 4)"
 WORKTREE_DIR="${HOME}/.cursor/worktrees/${WORKTREE_ID}/${REPO_KEY}"
 
 [[ -d "$WORKTREE_DIR" ]] && error "Worktree directory already exists: ${WORKTREE_DIR}"
 mkdir -p "$(dirname "$WORKTREE_DIR")"
-
-info "Fetching origin/${BRANCH}"
-# `--` so a branch name starting with `-` is treated as a refspec, not an option.
-git fetch origin -- "$BRANCH"
 
 info "Creating worktree on branch ${BRANCH}"
 # -B resets/creates a real local branch tracking origin/<branch>, checked out

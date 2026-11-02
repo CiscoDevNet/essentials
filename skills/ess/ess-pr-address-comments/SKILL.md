@@ -1,20 +1,21 @@
 ---
-name: pr-address-comments-all
-description: Address GitHub PR review comments on one or more PRs in parallel, each in its own git worktree on the PR's branch, reusing the pr-address-comments procedure. Auto-starts (look up PRs, create worktrees, fetch comments), then pauses to show a per-PR addressing plan for approval; after approval each PR is handled by a background subagent that implements, commits, pushes to the PR branch, and resolves threads. With no PR given, it discovers your own open PRs on the current repo's remote that have changes-requested or unresolved review comments and runs the same workflow. Use when the user gives one or more PR URLs/numbers, or asks to address/fix review comments on their own open PRs on this repo without naming them, especially in parallel or batch.
+name: ess-pr-address-comments
+description: Address GitHub PR review comments, implement fixes on the PR branch, push, then reply to and resolve the addressed threads. Handles one PR or many in parallel, each in its own git worktree on the PR's branch. Auto-starts (look up PRs, create worktrees, fetch comments), then pauses to show a per-PR addressing plan for approval; after approval each PR is handled by a background subagent that implements, commits, pushes to the PR branch, and resolves threads. With no PR given, it discovers your own open PRs on the current repo's remote that have changes-requested or unresolved review comments and runs the same workflow. Use for /ess-pr-address-comments, when the user gives one or more PR URLs or numbers, or asks to address/fix review comments on their own open PRs on this repo without naming them.
 ---
 
-# PR Address Comments — All (parallel, one worktree per PR)
+# PR Address Comments
 
-Address review comments across **one or more** GitHub PRs at the same time. Each PR is
-isolated in its own git worktree checked out **on the PR's branch**, so work commits
-locally and pushes straight back to the PR. This skill orchestrates the existing single-PR
-procedure in [pr-address-comments/SKILL.md](../pr-address-comments/SKILL.md) — it does
-not re-document its `gh`/GraphQL/commit steps; helper scripts and reference docs hold the
-mechanics.
+Address review comments on **one or more** GitHub PRs, in parallel when there are several.
+Each PR is isolated in its own git worktree checked out **on the PR's branch**, so work
+commits locally and pushes straight back to the PR. Helper scripts and reference docs hold
+the `gh`/GraphQL/commit mechanics.
 
 ## Quick start
 
 ```
+/ess-pr-address-comments                     # discover my open PRs that need attention
+/ess-pr-address-comments 103
+/ess-pr-address-comments https://github.com/<owner>/<repo>/pull/103
 You: address the review comments on my open PRs
 You: fix my PRs that need changes
 You: address the review comments on PRs 103 and 110
@@ -58,15 +59,18 @@ subagent may not understand the whole-repo context.
 
 ## Scripts
 
-Invoke by workspace-relative path. Each takes `--help`.
+Every phase runs these from `SKILL_DIR`: the absolute path of the directory that
+contains this `SKILL.md`. Resolve it once, before Phase 0, and reuse it. Do not use a
+repo-relative path; the skill may be installed outside the repo you are working in.
+Each script takes `--help`.
 
 | Script | Purpose |
 |--------|---------|
-| [`scripts/find_my_prs.sh`](scripts/find_my_prs.sh) | Discover my open PRs on the current repo with changes-requested or unresolved comments |
-| [`scripts/fetch_pr.sh`](scripts/fetch_pr.sh) | Look up ONE PR ref -> `meta.env` + `comments.json` + `threads.json` |
-| [`scripts/create_pr_worktree.sh`](scripts/create_pr_worktree.sh) | Create a worktree on the PR branch (`-B`) + run repo setup |
-| [`scripts/safe_push.sh`](scripts/safe_push.sh) | Push HEAD to the PR branch without hanging — auto-rebases if the branch moved, fails cleanly on conflict |
-| [`scripts/reply_and_resolve.sh`](scripts/reply_and_resolve.sh) | Reply to a comment (REST `in_reply_to`) + resolve its thread (GraphQL) |
+| [`scripts/find-my-prs.sh`](scripts/find-my-prs.sh) | Discover my open PRs on the current repo with changes-requested or unresolved comments |
+| [`scripts/fetch-pr.sh`](scripts/fetch-pr.sh) | Look up ONE PR ref -> `meta.env` + `comments.json` + `threads.json` |
+| [`scripts/create-pr-worktree.sh`](scripts/create-pr-worktree.sh) | Create a worktree on the PR branch (`-B`) + run repo setup |
+| [`scripts/safe-push.sh`](scripts/safe-push.sh) | Push HEAD to the PR branch without hanging — auto-rebases if the branch moved, fails cleanly on conflict |
+| [`scripts/reply-and-resolve.sh`](scripts/reply-and-resolve.sh) | Reply to a comment (REST `in_reply_to`) + resolve its thread (GraphQL) |
 
 ---
 
@@ -76,11 +80,21 @@ If the user named no PR, find their own open PRs on the **current repo's remote*
 attention (review decision `CHANGES_REQUESTED`, or >=1 unresolved review thread):
 
 ```bash
-SKILL=skills/ess/pr-address-comments-all
-mapfile -t PRS < <("$SKILL/scripts/find_my_prs.sh")   # current repo, my open PRs
+SKILL_DIR=<absolute path of the directory containing this SKILL.md>
+# bash and zsh. Check the exit status yourself: a process substitution would hide a
+# failing script and look like an empty list, and mapfile is not available in zsh.
+PR_OUTPUT="$("$SKILL_DIR/scripts/find-my-prs.sh")" || {
+  echo "Discovery failed; stopping." >&2
+  exit 1
+}
+PRS=()
+while IFS= read -r pr; do
+  [ -n "$pr" ] && PRS+=("$pr")
+done <<< "$PR_OUTPUT"
 ```
 
-The script prints a table to stderr and the matching PR numbers to stdout. If `PRS` is
+The script prints a table to stderr and the matching PR numbers to stdout. If it exits
+non-zero, stop and report the failure. Do not treat that as an empty result. If `PRS` is
 empty, report "no open PRs need attention" and stop. Otherwise **auto-proceed** to Phase 1
 for each number in `PRS` (in parallel) — no extra confirmation; the per-PR plan GATE before
 any code still applies. Discovery is scoped to the current repo only; for other repos, pass
@@ -96,13 +110,11 @@ Pre-flight once: `gh auth status` and `git rev-parse --show-toplevel` must both 
 Then, **for each PR in parallel**:
 
 ```bash
-SKILL=skills/ess/pr-address-comments-all
-
 # 1) Look up the PR -> writes meta.env + comments.json + threads.json
-"$SKILL/scripts/fetch_pr.sh" <pr-ref>            # add --repo owner/repo for a bare number
+"$SKILL_DIR/scripts/fetch-pr.sh" <pr-ref>        # add --repo owner/repo for a bare number
 
 # 2) Create a worktree checked out on the PR's branch + run worktrees.json setup
-"$SKILL/scripts/create_pr_worktree.sh" --pr <N> --repo <owner>/<repo>
+"$SKILL_DIR/scripts/create-pr-worktree.sh" --pr <N> --repo <owner>/<repo>
 ```
 
 Record each PR's `meta.env` values plus the printed `WORKTREE_ID` / `WORKTREE_PATH`.
@@ -134,28 +146,33 @@ Compile every PR's returned plan into one view and **stop for the user**:
 ```
 
 The `File:Line` column comes straight from each thread's `path` and `line` in
-`threads.json` (see [`scripts/fetch_pr.sh`](scripts/fetch_pr.sh)).
+`threads.json` (see [`scripts/fetch-pr.sh`](scripts/fetch-pr.sh)).
 
 Wait for explicit approval. Allow the user to edit, drop, or skip items per PR. Do not
 start Phase 3 until approved; if changes are requested, revise and re-present.
 
 ## Phase 3 — Implement, commit, push, resolve (parallel)
 
+Pass each subagent the absolute `SKILL_DIR` resolved before Phase 0. The PR worktree
+may be an older checkout or another repository, so it may not contain
+`fix-procedure.md` or the helper scripts. The subagent reads procedures and runs helpers
+from `$SKILL_DIR`. Code edits stay in the PR worktree.
+
 For each approved PR, launch one background `generalPurpose` subagent using the
 implementation template in
 [references/subagent-prompts.md](references/subagent-prompts.md). Each subagent works
 entirely inside its `WORKTREE_PATH`, follows
-[pr-address-comments/SKILL.md](../pr-address-comments/SKILL.md) Steps 6–8
+`"$SKILL_DIR/references/fix-procedure.md"`
 (implement -> verify -> **non-interactive** conventional commit), pushes with
-`"$SKILL/scripts/safe_push.sh" --branch <BRANCH>` (with `SKILL=skills/ess/pr-address-comments-all`), then calls
-`"$SKILL/scripts/reply_and_resolve.sh"` for each ADDRESSED thread (never for "skip" threads).
+`"$SKILL_DIR/scripts/safe-push.sh" --branch <BRANCH>`, then calls
+`"$SKILL_DIR/scripts/reply-and-resolve.sh"` for each ADDRESSED thread (never for "skip" threads).
 
 Run all implementation subagents concurrently; each pushes to its own branch.
 
 > **Background subagents have no TTY.** Any command that waits for input (interactive
 > `cz c`, `git pull --rebase` that stops on a conflict, a pager, a credential prompt)
 > hangs that subagent forever. Subagents MUST use non-interactive git and push via
-> `safe_push.sh` — see [Resilience](#resilience--moving-branches--stuck-subagents).
+> `safe-push.sh` — see [Resilience](#resilience--moving-branches--stuck-subagents).
 
 ## Resilience — moving branches & stuck subagents
 
@@ -166,7 +183,7 @@ prompt it can never answer, so it hangs indefinitely. Guard against this on both
 
 **Subagent side (built into the template):**
 
-- Push only via `"$SKILL/scripts/safe_push.sh" --branch <BRANCH>`. It forces non-interactive git,
+- Push only via `"$SKILL_DIR/scripts/safe-push.sh" --branch <BRANCH>`. It forces non-interactive git,
   retries the push, auto-rebases when the remote moved with non-conflicting changes, and
   on a real conflict **aborts the rebase** (leaving a clean tree) and exits `3` instead of
   blocking. Never run a bare `git push`/`git pull --rebase` in a subagent.
@@ -175,15 +192,17 @@ prompt it can never answer, so it hangs indefinitely. Guard against this on both
   leave a rebase/merge in progress.
 
 **Orchestrator side (watchdog):** after dispatching the background subagents, do not block
-on them indefinitely. If a subagent runs far past its expected time with no result, or
-returns a `SAFE_PUSH_CONFLICT` / non-zero push, **finish that PR inline** instead of
-waiting or re-dispatching: in its worktree, `git fetch origin -- <BRANCH>` then rebase the
-subagent's fix commit onto `origin/<BRANCH>` (or `git reset --hard origin/<BRANCH>` and
-re-apply the approved fixes), `"$SKILL/scripts/safe_push.sh" --branch <BRANCH>` (with
-`SKILL=skills/ess/pr-address-comments-all`), and `"$SKILL/scripts/reply_and_resolve.sh"`.
-Never run two agents
-against the same branch at once — if a tick/retry finds a PR already has an in-flight fix,
-skip it.
+on them indefinitely. Never run two agents against the same branch at once — if a tick or
+retry finds a PR already has an in-flight fix, skip it.
+
+- If a subagent **returns** a `SAFE_PUSH_CONFLICT` or other non-zero push, it has stopped.
+  Finish that PR inline: in its worktree, `git fetch origin -- <BRANCH>`, then rebase the
+  subagent's fix commit onto `origin/<BRANCH>` (or `git reset --hard origin/<BRANCH>` and
+  re-apply the approved fixes), `"$SKILL_DIR/scripts/safe-push.sh" --branch <BRANCH>`, and
+  `"$SKILL_DIR/scripts/reply-and-resolve.sh"`.
+- If a subagent **times out** with no result, cancel it and confirm it has terminated
+  before touching its worktree. A timeout does not mean it has stopped. If termination
+  cannot be confirmed, report the stall and do not fetch, rebase, or reset that worktree.
 
 ## Aggregate summary
 
@@ -215,8 +234,8 @@ removing any worktree whose push failed.
 - Phase 2 / Phase 3 subagent prompt templates ->
   [references/subagent-prompts.md](references/subagent-prompts.md).
 - Script flags -> run any script with `--help`.
-- The per-PR commit / reply / resolve specifics ->
-  [pr-address-comments/SKILL.md](../pr-address-comments/SKILL.md) Steps 6–9.
+- The per-PR implement / verify / commit / reply / resolve specifics and API error
+  handling -> [references/fix-procedure.md](references/fix-procedure.md).
 
 ## Anti-patterns
 
@@ -225,14 +244,14 @@ removing any worktree whose push failed.
 - Fabricating comments/threads when `gh` fails — surface the failure instead.
 - Detached worktrees for this flow — use `-B` so commits land on the PR branch (see
   worktree-mechanics.md for the one exception).
-- Duplicating the command's Steps 6–9 in subagent prompts — reference them, don't copy.
+- Duplicating `fix-procedure.md` in subagent prompts — reference it, don't copy.
 - Stacking multiple PRs in one worktree — one worktree per PR, always.
 - Running discovery against a repo you didn't intend — Phase 0 always uses the current
   remote; pass explicit PR URLs for any other repo.
 - Interactive commands in a background subagent (`cz c`, `git pull --rebase` on a conflict,
   a pager) — they have no TTY and will hang forever. Commit with `git commit -m` and push
-  via `safe_push.sh`.
-- A bare `git push` in a subagent with no recovery — use `safe_push.sh` so a moved branch
+  via `safe-push.sh`.
+- A bare `git push` in a subagent with no recovery — use `safe-push.sh` so a moved branch
   rebases or fails cleanly instead of stalling.
 - Leaving a rebase/merge in progress when a subagent gives up — always abort to a clean
   tree and report, so the orchestrator can finish inline.

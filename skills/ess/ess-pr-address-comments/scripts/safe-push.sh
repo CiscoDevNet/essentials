@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# safe_push.sh
+# safe-push.sh
 # Push the current worktree HEAD to a PR branch WITHOUT ever hanging, even when
 # the remote branch moved while a subagent was working. This prevents the known
 # failure where a raw `git push` is rejected (non-fast-forward) and a follow-up
@@ -15,7 +15,7 @@
 #                          exit 3 so the caller re-applies on the fresh base or
 #                          escalates to the orchestrator. It never waits for input.
 #
-# Usage: safe_push.sh --branch B [--remote origin] [--max-attempts 3]
+# Usage: safe-push.sh --branch B [--remote origin] [--max-attempts 3]
 #
 # Exit codes:
 #   0  pushed successfully

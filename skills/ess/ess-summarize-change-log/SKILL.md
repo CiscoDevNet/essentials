@@ -1,10 +1,14 @@
 ---
-name: summarize-change-log
+name: ess-summarize-change-log
 description: >-
   Condense long commit logs, squash messages, or change narratives into 1–5
   GitHub-ready markdown bullets with Conventional Commit subjects (≤50 chars).
-  Use when the user asks to summarize a git log, boil down commits, write a
-  squash-merge message, or produce a five-bullet PR/merge summary.
+  Use for /ess-summarize-change-log, or when the user asks to summarize a git
+  log, boil down commits, write a squash-merge message, or produce a
+  five-bullet PR/merge summary.
+compatibility: >-
+  Requires uv. The validator fetches a pinned Commitizen on first run, which
+  needs network access.
 ---
 
 # Summarize Change Log
@@ -49,30 +53,32 @@ Every subject must state **what changed**. Ban vague/process subjects:
 
 ## Validation (required)
 
-Before returning output, run from this skill's directory:
+Before returning output, run the validator from `SKILL_DIR`: the absolute path of the
+directory that contains this `SKILL.md`. Do not use a repo-relative path; the skill may be
+installed outside the repo you are working in.
 
 ```bash
-scripts/validate-summary.sh /tmp/draft-summary.md
+"$SKILL_DIR/scripts/validate-summary.sh" /tmp/draft-summary.md
 ```
 
 Or validate the checked-in fixture:
 
 ```bash
-scripts/validate-summary.sh \
-  examples-good.md
+"$SKILL_DIR/scripts/validate-summary.sh" "$SKILL_DIR/examples-good.md"
 ```
 
 Or pipe stdin:
 
 ```bash
 printf '%s\n' '- **fix: short subject** — Details.' \
-  | scripts/validate-summary.sh
+  | "$SKILL_DIR/scripts/validate-summary.sh"
 ```
 
 The script enforces:
 
 - 1–5 bullets in the expected format
-- `uv run cz check -m … -l 50` (explicit 50-char limit; config alone is not applied without `-l`)
+- `cz check -m … -l 50` from a pinned Commitizen, run with `uv tool run` in an empty
+  directory, so the current repo's Commitizen config and dependencies do not apply
 - Vague-subject blocklist
 
 Fix every failure and re-run until exit 0. Only then return the markdown.

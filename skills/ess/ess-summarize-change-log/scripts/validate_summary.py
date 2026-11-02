@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate 1–5 markdown summary bullets for the summarize-change-log skill."""
+"""Validate 1–5 markdown summary bullets for the ess-summarize-change-log skill."""
 
 from __future__ import annotations
 
@@ -7,11 +7,13 @@ import argparse
 import re
 import subprocess
 import sys
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
 MESSAGE_LENGTH_LIMIT = 50
 MAX_BULLETS = 5
+COMMITIZEN_SPEC = "commitizen==4.16.3"
 
 BULLET_PATTERN = re.compile(r"^\s*-\s+\*\*([^*]+)\*\*\s*(—|-)\s*")
 LIST_LINE_PATTERN = re.compile(r"^\s*-\s+")
@@ -36,22 +38,6 @@ class SummaryDocument:
 
     subjects: list[str]
     footers: list[str]
-
-
-def find_repo_root(start: Path) -> Path:
-    """Walk parents until a pyproject.toml with Commitizen config is found."""
-    path = start.resolve()
-    while True:
-        pyproject = path / "pyproject.toml"
-        if pyproject.is_file() and "[tool.commitizen]" in pyproject.read_text(
-            encoding="utf-8"
-        ):
-            return path
-        if path.parent == path:
-            raise ValidationError(
-                "could not find repo root with [tool.commitizen] in pyproject.toml"
-            )
-        path = path.parent
 
 
 def is_vague_subject(subject: str) -> bool:
@@ -104,27 +90,33 @@ def parse_document(text: str) -> SummaryDocument:
     return SummaryDocument(subjects=subjects, footers=footers)
 
 
-def run_commitizen_check(subject: str, repo_root: Path) -> None:
-    """Run ``uv run cz check`` for a single Conventional Commit subject."""
-    result = subprocess.run(
-        [
-            "uv",
-            "run",
-            "cz",
-            "check",
-            "-m",
-            subject,
-            "-l",
-            str(MESSAGE_LENGTH_LIMIT),
-        ],
-        cwd=repo_root,
-        check=False,
-    )
+def run_commitizen_check(subject: str) -> None:
+    """Run a pinned ``cz check`` for a single Conventional Commit subject."""
+    # An empty working directory keeps the current repo's Commitizen config,
+    # which may use different rules, out of the check.
+    with tempfile.TemporaryDirectory() as empty_dir:
+        result = subprocess.run(
+            [
+                "uv",
+                "tool",
+                "run",
+                "--from",
+                COMMITIZEN_SPEC,
+                "cz",
+                "check",
+                "-m",
+                subject,
+                "-l",
+                str(MESSAGE_LENGTH_LIMIT),
+            ],
+            cwd=empty_dir,
+            check=False,
+        )
     if result.returncode != 0:
         raise ValidationError(f"failed Conventional Commits check for: {subject}")
 
 
-def validate_summary_text(text: str, *, repo_root: Path) -> int:
+def validate_summary_text(text: str) -> int:
     """Validate summary markdown. Returns bullet count on success."""
     document = parse_document(text)
     bullet_count = len(document.subjects)
@@ -143,7 +135,7 @@ def validate_summary_text(text: str, *, repo_root: Path) -> int:
             raise ValidationError(
                 f"vague subject (describe what changed, not process): {subject}"
             )
-        run_commitizen_check(subject, repo_root)
+        run_commitizen_check(subject)
 
     return bullet_count
 
@@ -158,7 +150,7 @@ def _read_input(path: Path | None) -> str:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Validate summarize-change-log markdown bullets.",
+        description="Validate ess-summarize-change-log markdown bullets.",
     )
     parser.add_argument(
         "path",
@@ -170,9 +162,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         input_path = Path(args.path).resolve() if args.path else None
         text = _read_input(input_path)
-        script_dir = Path(__file__).resolve().parent
-        repo_root = find_repo_root(script_dir)
-        bullet_count = validate_summary_text(text, repo_root=repo_root)
+        bullet_count = validate_summary_text(text)
     except ValidationError as exc:
         print(f"validate-summary: {exc}", file=sys.stderr)
         return 1
