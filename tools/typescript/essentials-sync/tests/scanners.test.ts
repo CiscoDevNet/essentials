@@ -45,6 +45,7 @@ describe("pii scanner", () => {
     "bob@example.org",
     "bob@corp.example.com",
     "ada@a.b.example.net",
+    "Alice.Smith@Example.COM",
     "Contact bob@example.com.",
   ])("allows %s", async (line) => {
     expect(await emailFindings(line)).toBe(0);
