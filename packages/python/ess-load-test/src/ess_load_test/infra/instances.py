@@ -128,7 +128,7 @@ def create_instance_profile(
     return profile
 
 
-def create_instances(
+def create_instances(  # noqa: PLR0913 -- options after * are keyword-only
     resource_prefix: str,
     config: LoadTestInfraConfig,
     placement: NetworkPlacement,

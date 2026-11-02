@@ -1,5 +1,9 @@
 """SSM orchestration for distributed Locust test runs."""
 
+# The remote shell scripts below are f-string templates, and a noqa comment
+# inside one would become part of the script, so line length is waived here.
+# ruff: noqa: E501
+
 import base64
 import logging
 import os

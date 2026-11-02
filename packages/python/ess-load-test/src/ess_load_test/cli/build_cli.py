@@ -38,7 +38,9 @@ from ess_load_test.ui import (
 )
 
 
-def build_cli(app_config: AppConfig) -> click.Command:
+# One closure per command, all sharing app_config, so the size and branch
+# count grow with the command list rather than with any one command.
+def build_cli(app_config: AppConfig) -> click.Command:  # noqa: C901, PLR0915
     """Build a Click command group for load-test operations."""
 
     @click.group()
@@ -243,7 +245,10 @@ def build_cli(app_config: AppConfig) -> click.Command:
         help="AWS region.",
     )
     def ui_reset_cluster_command(stack: str, profile: str, region: str) -> None:
-        """Stop stale Locust processes on all EC2 instances (ports 5557–5558 and 8089)."""
+        """Stop stale Locust processes on all EC2 instances.
+
+        Frees the master ports 5557–5558 and the web UI port 8089.
+        """
         try:
             reset_cluster_locust(
                 stack=stack,
@@ -365,7 +370,8 @@ def build_cli(app_config: AppConfig) -> click.Command:
             click.echo(header)
         if not write_env_file and not print_header:
             click.echo(
-                "Auth header fetched. Use --write-env-file or --print-header to export it."
+                "Auth header fetched. Use --write-env-file or --print-header "
+                "to export it."
             )
 
     @click.command("run")

@@ -1023,7 +1023,8 @@ def test_hand_edited_prefixed_email_resolves_bare_and_warns(config: Path) -> Non
     assert _keys(_resolve("a")) == ["new@example.com"]
     _, warnings = my_groups.validate(my_groups.load_document(config))
     assert warnings == [
-        "Group 'a': no user has the email in 'user:new@example.com'; store the bare address."
+        "Group 'a': no user has the email in 'user:new@example.com'; "
+        "store the bare address."
     ]
 
 

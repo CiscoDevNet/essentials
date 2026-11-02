@@ -88,7 +88,10 @@ def browser_auth_options(app_config: AppConfig):
         func = click.option(
             "--browser-auth",
             is_flag=True,
-            help="Authenticate via system Chrome SSO instead of OAuth client credentials.",
+            help=(
+                "Authenticate via system Chrome SSO instead of OAuth client "
+                "credentials."
+            ),
         )(func)
         func = click.option(
             "--headed",
@@ -145,7 +148,10 @@ def workflow_options(app_config: AppConfig):
             "--fetch-token/--no-fetch-token",
             default=True,
             show_default=True,
-            help="Fetch OAuth token when credentials are set and --auth-header is omitted.",
+            help=(
+                "Fetch OAuth token when credentials are set and --auth-header "
+                "is omitted."
+            ),
         )(func)
         func = click.option(
             "--stack",
