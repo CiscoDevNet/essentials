@@ -1,5 +1,6 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { REPO_OWNED_ITEM_FILES } from "./ess-items.js";
 import { listPublishableFiles } from "./file-set.js";
 import { isUnscannableTextFile } from "./scanners/text-files.js";
 
@@ -13,7 +14,8 @@ export interface CopyTreeResult {
 }
 
 // Copies sourceAbs into targetAbs without deleting anything already in the
-// target, so target-only files (LICENSE, NOTICE) survive a re-sync.
+// target, so target-only files (LICENSE, NOTICE) survive a re-sync. The item's
+// own LICENSE is never copied, in either direction (REPO_OWNED_ITEM_FILES).
 //
 // The file list is the same one the scanners read (listPublishableFiles). That
 // invariant is what makes the fast path safe -- every file this copies is a
@@ -31,6 +33,7 @@ export async function copyTreeVerbatim(
   const symlinksSkipped: string[] = [];
 
   for (const relPath of relPaths) {
+    if (REPO_OWNED_ITEM_FILES.has(relPath)) continue;
     const from = path.join(sourceAbs, relPath);
     const to = path.join(targetAbs, relPath);
 

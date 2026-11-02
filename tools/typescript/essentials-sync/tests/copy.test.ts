@@ -27,6 +27,20 @@ afterEach(async () => {
 });
 
 describe("copyTreeVerbatim", () => {
+  it("leaves the item's own LICENSE to each repo", async () => {
+    const source = await makeTree({
+      "SKILL.md": "# Skill\n",
+      LICENSE: "source license\n",
+      "vendor/LICENSE": "vendored license\n",
+    });
+    const target = await makeTree({ LICENSE: "target license\n" });
+
+    const result = await copyTreeVerbatim(source, target);
+
+    expect(result.filesCopied.sort()).toEqual(["SKILL.md", "vendor/LICENSE"]);
+    expect(await fs.readFile(path.join(target, "LICENSE"), "utf8")).toBe("target license\n");
+  });
+
   it("copies files byte-for-byte", async () => {
     const source = await makeTree({
       "SKILL.md": "# Skill\nbody\n",

@@ -3,7 +3,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import { Command } from "commander";
 import chalk from "chalk";
-import { findEssItemRoot } from "./ess-items.js";
+import { findEssItemRoot, REPO_OWNED_ITEM_FILES } from "./ess-items.js";
 import { listPublishableFiles } from "./file-set.js";
 
 export type ItemState = "identical" | "differs" | "only in source" | "only in target";
@@ -14,10 +14,6 @@ export interface ItemStatus {
   state: ItemState;
   files: Array<{ path: string; state: FileState }>;
 }
-
-// Each item's own LICENSE is allowed to differ: the open-source copy carries
-// the license text, the source repo may not.
-const IGNORED_ITEM_FILES = new Set(["LICENSE"]);
 
 // `essentials-sync status`: compares every ess-* item in two repos, file by
 // file. Read-only, so it never prompts and has no --dry-run. Returns the
@@ -76,7 +72,7 @@ async function indexEssItems(repoRoot: string): Promise<Map<string, Map<string, 
     const item = findEssItemRoot(relPath);
     if (!item) continue;
     const inner = relPath === item ? "" : relPath.slice(item.length + 1);
-    if (IGNORED_ITEM_FILES.has(inner)) continue;
+    if (REPO_OWNED_ITEM_FILES.has(inner)) continue;
 
     let files = items.get(item);
     if (!files) {
