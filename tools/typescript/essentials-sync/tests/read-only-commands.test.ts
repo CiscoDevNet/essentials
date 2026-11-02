@@ -36,7 +36,7 @@ describe("findEssItemRoot", () => {
     ["skills/ess/ess-git-tidy/SKILL.md", "skills/ess/ess-git-tidy"],
     ["instructions/ess/ess-okf-docs.instructions.md", "instructions/ess/ess-okf-docs.instructions.md"],
     [".agents/skills/ess-git-tidy/SKILL.md", null],
-    ["tools/typescript/essentials-sync/scripts/ess-scan.sh", null],
+    ["tools/typescript/essentials-sync/src/ess-scan.ts", null],
     ["plans/ess-verbatim-sync.md", null],
     ["tools/python/langsmith-onboarding/README.md", null],
   ])("%s -> %s", (relPath, expected) => {

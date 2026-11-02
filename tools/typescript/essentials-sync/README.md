@@ -149,7 +149,7 @@ Repos that keep `ess-*` items to sync here can run the same deterministic scanne
     - id: ess-scan
 ```
 
-It runs `essentials-sync scan` on each changed item and fails on critical findings. Its first run installs and builds the tool inside pre-commit's clone, which needs Node.js 22 or later.
+It runs `essentials-sync scan` on each changed item and fails on critical findings. pre-commit installs it from this repo's root `package.json`, which carries only the scanners' dependencies, and needs Node.js 22 or later.
 
 ## Usage
 

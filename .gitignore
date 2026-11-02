@@ -272,6 +272,9 @@ Pulumi.*.yaml
 # Output files
 output/
 
+# Node.js
+node_modules/
+
 # Claude
 .claude/settings.json
 

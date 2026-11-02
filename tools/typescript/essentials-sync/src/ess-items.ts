@@ -4,7 +4,7 @@ import { execa } from "execa";
 // path). An item is either a directory named ess-* (packages/python/ess-auth)
 // or a file named ess-* directly inside a directory named ess
 // (instructions/ess/ess-okf-docs.instructions.md). Other files that merely
-// start with ess- (scripts/ess-scan.sh) are not items. Returns null when
+// start with ess- (src/ess-scan.ts) are not items. Returns null when
 // nothing matches, or when a dot-directory comes first (.agents/skills/ess-*,
 // .cursor/rules/ess-*): those are installed copies of an item.
 export function findEssItemRoot(repoRelPath: string): string | null {
