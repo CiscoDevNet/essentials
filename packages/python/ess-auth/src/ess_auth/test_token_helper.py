@@ -1,9 +1,8 @@
 """Tests for the sync token helper's cooldown and scope behaviour.
 
-The cooldown exists because of an observed production incident: a denied
-token request was not cached, so every subsequent caller retried immediately
-against an endpoint that rate-limits per source IP, turning an intermittent
-denial into a sustained one.
+The cooldown exists because a denied token request is not cached: without it,
+every subsequent caller retries immediately against an endpoint that
+rate-limits per source IP, turning an intermittent denial into a sustained one.
 """
 
 from __future__ import annotations
@@ -48,7 +47,9 @@ def _client(
 
 
 def _helper(**kwargs: Any) -> TokenHelper:
-    return TokenHelper("cid", "sec", token_url="https://idp.example.com/token", **kwargs)
+    return TokenHelper(
+        "cid", "sec", token_url="https://idp.example.com/token", **kwargs
+    )
 
 
 class TestCooldown:

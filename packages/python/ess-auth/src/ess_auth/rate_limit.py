@@ -35,10 +35,9 @@ _LIMIT_HEADERS = ("x-rate-limit-limit", "x-ratelimit-limit")
 _REMAINING_HEADERS = ("x-rate-limit-remaining", "x-ratelimit-remaining")
 _RESET_HEADERS = ("x-rate-limit-reset", "x-ratelimit-reset")
 
-# Headers worth keeping when a request fails. Identity-platform support will
-# ask for a request or reference ID before it looks at a denial; without one,
-# an escalation turns into days of exchanging evidence. Credentials and
-# cookies are deliberately absent.
+# Headers worth keeping when a request fails. Identity-platform support asks
+# for a request or reference ID before it looks at a denial, and without one a
+# denial is hard to trace. Credentials and cookies are deliberately absent.
 DIAGNOSTIC_HEADERS: tuple[str, ...] = (
     "x-okta-request-id",
     "x-request-id",

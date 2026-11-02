@@ -8,9 +8,9 @@ upstream request per call.
 That is a feedback loop rather than mere noise. Token endpoints commonly
 rate-limit per source IP, and a whole Kubernetes cluster egresses through a
 single NAT address, so retries escalate an intermittent denial into a
-sustained one. A production deployment that hit this measured roughly ten
-times its normal token-request rate, with more than twice as many denials as
-successes over ten minutes, escalating to a total block.
+sustained one: the request rate climbs far above normal, denials come to
+outnumber successes, and the endpoint can end up blocking the address
+outright.
 
 This is a circuit breaker, not a retry policy
 ---------------------------------------------

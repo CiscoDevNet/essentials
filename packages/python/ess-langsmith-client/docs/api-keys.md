@@ -34,11 +34,24 @@ The table shows description, short key, age in days, expiry (with an `EXPIRED` m
 Create a new service API key.
 
 ```bash
-uv run langsmith-client keys create "my-service-key" --format json
+# Create a key after confirming at the prompt
+uv run langsmith-client keys create "my-service-key"
+
+# Show the key that would be created, then stop
+uv run langsmith-client keys create "my-service-key" --dry-run
+
+# Create without a prompt and print JSON, for scripts
+uv run langsmith-client keys create "my-service-key" --format json --yes
 ```
 
 - Argument: `DESCRIPTION` — the human-readable name shown in the LangSmith UI.
 - The **full key value is displayed once, at creation time only.** Copy it immediately.
+
+| Option | Description |
+| --- | --- |
+| `--format` | `table` (default) or `json`. |
+| `--dry-run` | Show the key that would be created, then exit without creating it. Wins over `--yes`. |
+| `--yes`, `-y` | Skip the confirmation prompt. Required with `--format json` or when there is no terminal to prompt on. |
 
 ## `keys delete`
 
