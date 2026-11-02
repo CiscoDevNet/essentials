@@ -1,15 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { globbyStream } from "globby";
 import type { Finding } from "../types.js";
-
-// Always skipped, even when the scanned tree has no .gitignore. These are
-// caches, build output, and VCS/dependency directories that never carry
-// meaningful findings.
-export const HARD_SKIP_DIRECTORIES = [
-  "node_modules", ".git", ".venv", "venv", "__pycache__", ".pytest_cache",
-  ".ruff_cache", ".mypy_cache", "dist", "build", ".pulumi",
-];
+import { listPublishableFiles } from "../file-set.js";
 
 const BINARY_EXTENSIONS = [
   ".png", ".jpg", ".jpeg", ".gif", ".webp", ".pdf", ".zip", ".tar", ".gz",
@@ -30,28 +22,14 @@ export async function isUnscannableTextFile(filePath: string): Promise<boolean> 
   return stat.size > MAX_FILE_BYTES;
 }
 
-// Yields absolute paths of candidate text files under rootPath. Traversal,
-// .gitignore handling, and directory/extension skipping are delegated to
-// globby; the only thing globby cannot express is the per-file size cap, so
-// oversized files are filtered with a stat after globbing.
+// Yields absolute paths of the publishable text files under rootPath: the
+// shared file set minus symlinks, binary extensions, and oversized files.
 export async function* walkTextFiles(rootPath: string): AsyncGenerator<string> {
-  const ignore = [
-    ...HARD_SKIP_DIRECTORIES.map((dir) => `**/${dir}/**`),
-    ...BINARY_EXTENSIONS.map((ext) => `**/*${ext}`),
-    "**/tmp-*",
-    "**/tmp.*",
-  ];
-  const stream = globbyStream("**/*", {
-    cwd: rootPath,
-    absolute: true,
-    dot: true,
-    gitignore: true,
-    ignore,
-  });
-  for await (const entry of stream) {
-    const filePath = entry as string;
-    const stat = await fs.stat(filePath);
-    if (stat.size > MAX_FILE_BYTES) continue;
+  for (const relPath of await listPublishableFiles(rootPath)) {
+    const filePath = path.join(rootPath, relPath);
+    const stat = await fs.lstat(filePath);
+    if (!stat.isFile()) continue;
+    if (await isUnscannableTextFile(filePath)) continue;
     yield filePath;
   }
 }

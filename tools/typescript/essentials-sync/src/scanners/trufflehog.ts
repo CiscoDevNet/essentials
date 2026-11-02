@@ -1,5 +1,10 @@
+import path from "node:path";
 import { execa } from "execa";
 import type { Finding } from "../types.js";
+import { listPublishableFiles } from "../file-set.js";
+
+// Keeps each trufflehog invocation's argv well under the OS limit.
+const FILES_PER_INVOCATION = 500;
 
 export interface TrufflehogOptions {
   binary?: string;
@@ -24,12 +29,24 @@ export async function scanWithTrufflehog(
   options: TrufflehogOptions = {},
 ): Promise<Finding[]> {
   const binary = options.binary ?? "trufflehog";
+  // Scan the publishable files rather than the directory: a directory scan
+  // reads gitignored files (.env, .venv) that never ship.
+  const files = (await listPublishableFiles(rootPath)).map((relPath) => path.join(rootPath, relPath));
 
+  const findings: Finding[] = [];
+  for (let start = 0; start < files.length; start += FILES_PER_INVOCATION) {
+    const batch = files.slice(start, start + FILES_PER_INVOCATION);
+    findings.push(...(await runTrufflehog(binary, batch)));
+  }
+  return findings;
+}
+
+async function runTrufflehog(binary: string, files: string[]): Promise<Finding[]> {
   let result;
   try {
     result = await execa(
       binary,
-      ["filesystem", rootPath, "--json", "--no-update"],
+      ["filesystem", ...files, "--json", "--no-update"],
       {
         reject: false,
         stripFinalNewline: false,

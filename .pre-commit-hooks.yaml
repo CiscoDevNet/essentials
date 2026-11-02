@@ -1,0 +1,10 @@
+- id: ess-scan
+  name: ess-scan (secrets, jargon, PII in ess-* items)
+  description: >-
+    Runs the essentials-sync deterministic scanners on each changed ess-* item
+    and fails on critical findings. Needs Node.js 22 or later; trufflehog is
+    used when installed.
+  entry: tools/typescript/essentials-sync/scripts/ess-scan.sh
+  language: script
+  files: '(^|/)ess-[^/]+/|(^|/)ess/ess-[^/]+$'
+  require_serial: true

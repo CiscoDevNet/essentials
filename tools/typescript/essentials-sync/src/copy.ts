@@ -1,7 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { globby } from "globby";
-import { HARD_SKIP_DIRECTORIES, isUnscannableTextFile } from "./scanners/text-files.js";
+import { listPublishableFiles } from "./file-set.js";
+import { isUnscannableTextFile } from "./scanners/text-files.js";
 
 export interface CopyTreeResult {
   filesCopied: string[];
@@ -15,28 +15,16 @@ export interface CopyTreeResult {
 // Copies sourceAbs into targetAbs without deleting anything already in the
 // target, so target-only files (LICENSE, NOTICE) survive a re-sync.
 //
-// Traversal deliberately mirrors the scanners: .gitignore is honored and the
-// same cache/build directories are skipped. That invariant is what makes the
-// fast path safe -- every file this copies is a file the scanners inspected, so
-// a clean scan really does cover the whole payload. Copying gitignored files
-// would break it, since those are exactly the paths (.env, local credentials)
-// the scanners never see.
+// The file list is the same one the scanners read (listPublishableFiles). That
+// invariant is what makes the fast path safe -- every file this copies is a
+// file the scanners inspected, so a clean scan really does cover the whole
+// payload. Copying gitignored files would break it, since those are exactly
+// the paths (.env, local credentials) the scanners never see.
 export async function copyTreeVerbatim(
   sourceAbs: string,
   targetAbs: string,
 ): Promise<CopyTreeResult> {
-  // onlyFiles is off so symlinks come back as entries we can classify and
-  // report; with it on, globby drops them silently and the copy would be
-  // quietly incomplete.
-  const relPaths = await globby("**/*", {
-    cwd: sourceAbs,
-    dot: true,
-    gitignore: true,
-    onlyFiles: false,
-    followSymbolicLinks: false,
-    ignore: HARD_SKIP_DIRECTORIES.map((dir) => `**/${dir}/**`),
-  });
-  relPaths.sort();
+  const relPaths = await listPublishableFiles(sourceAbs);
 
   const filesCopied: string[] = [];
   const unscannedFiles: string[] = [];

@@ -1,6 +1,10 @@
 import path from "node:path";
 import { execa } from "execa";
 import type { Finding } from "../types.js";
+import { listPublishableFiles } from "../file-set.js";
+
+// Keeps each secretlint invocation's argv well under the OS limit.
+const FILES_PER_INVOCATION = 500;
 
 interface SecretlintJsonResult {
   filePath: string;
@@ -22,7 +26,23 @@ export async function scanWithSecretlint(
 ): Promise<Finding[]> {
   const packageRoot = packageRootPath();
   const configPath = options.configPath ?? path.join(packageRoot, ".secretlintrc.json");
+  // Pass the publishable files rather than a glob over rootPath, which would
+  // also read gitignored files that never ship.
+  const files = (await listPublishableFiles(rootPath)).map((relPath) => path.join(rootPath, relPath));
 
+  const findings: Finding[] = [];
+  for (let start = 0; start < files.length; start += FILES_PER_INVOCATION) {
+    const batch = files.slice(start, start + FILES_PER_INVOCATION);
+    findings.push(...(await runSecretlint(packageRoot, configPath, batch)));
+  }
+  return findings;
+}
+
+async function runSecretlint(
+  packageRoot: string,
+  configPath: string,
+  files: string[],
+): Promise<Finding[]> {
   let result;
   try {
     result = await execa(
@@ -34,7 +54,8 @@ export async function scanWithSecretlint(
         configPath,
         "--format",
         "json",
-        `${rootPath}/**/*`,
+        "--maskSecrets",
+        ...files,
       ],
       {
         reject: false,
