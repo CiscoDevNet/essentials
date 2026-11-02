@@ -15,14 +15,15 @@ interface PiiPattern {
 // (`PLR0913`) in the wild.
 const PII_PATTERNS: readonly PiiPattern[] = [
   {
-    // Allows example.com, example.net, example.org, and any subdomain of them
-    // (bob@corp.example.com), in any case. The domain must end there, so a
-    // lookalike such as x@example.com.evil.org is still flagged. Other
-    // reserved names (.example, .invalid, .test) are flagged on purpose:
-    // placeholders use example.com everywhere.
+    // Allows the four domains IANA reserves for documentation (example.com,
+    // .net, .org, .edu) and any subdomain of them (bob@corp.example.com), in
+    // any case. The domain must end there, so a lookalike such as
+    // x@example.com.evil.org is still flagged. Other reserved names (.example,
+    // .invalid, .test) and registrable ones (example.io) are flagged on
+    // purpose: placeholders stick to the four.
     name: "email",
-    regex: /\b[A-Za-z0-9._%+-]+@(?!(?:[A-Za-z0-9-]+\.)*example\.(?:com|org|net)(?!\.?[A-Za-z0-9-]))[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/gi,
-    message: "Email address that is not on example.com, example.net, or example.org.",
+    regex: /\b[A-Za-z0-9._%+-]+@(?!(?:[A-Za-z0-9-]+\.)*example\.(?:com|org|net|edu)(?!\.?[A-Za-z0-9-]))[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/gi,
+    message: "Email address that is not on example.com, example.net, example.org, or example.edu.",
   },
   {
     name: "phone",
