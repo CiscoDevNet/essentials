@@ -4,6 +4,7 @@ import { promises as fs } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { findJargonTerms, loadJargonConfig } from "../src/jargon-list.js";
 import { scanJargon } from "../src/scanners/jargon.js";
 import { scanPii } from "../src/scanners/pii.js";
 import { scanWithSecretlint } from "../src/scanners/secretlint.js";
@@ -23,6 +24,15 @@ describe("jargon scanner", () => {
     expect(findings.length).toBeGreaterThan(0);
     expect(findings.some((f) => f.term === "cisco")).toBe(true);
     expect(findings.some((f) => f.term === "*.cisco.com")).toBe(true);
+  });
+
+  it.each([
+    ["Deploy it to the AOH dev account.", "aoh"],
+    ["Owned by the Sales_AI team.", "sales_ai"],
+    ["Run aws-sso first.", "aws-sso"],
+    ["Seed the NPI scenarios.", "npi"],
+  ])("flags internal names without an override file: %s", (line, term) => {
+    expect(findJargonTerms(line, loadJargonConfig()).map((p) => p.term)).toContain(term);
   });
 
   it("respects custom severity", async () => {

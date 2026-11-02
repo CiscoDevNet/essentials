@@ -41,6 +41,46 @@ export const DEFAULT_JARGON_PATTERNS: readonly JargonPattern[] = [
     regex: wordBoundary("honeycomb"),
     message: "References the internal 'honeycomb' repo name.",
   },
+  {
+    term: "ceto",
+    regex: wordBoundary("ceto"),
+    message: "References the internal 'ceto' org.",
+  },
+  ...["sales-ai", "sales_ai"].map((term) => ({
+    term,
+    regex: wordBoundary(term),
+    message: "References the internal 'sales-ai' team.",
+  })),
+  ...["agentic-ops-hub", "agentic ops hub", "aoh"].map((term) => ({
+    term,
+    regex: wordBoundary(term),
+    message: "References the internal Agentic Ops Hub platform.",
+  })),
+  {
+    term: "edag",
+    regex: wordBoundary("edag"),
+    message: "References the internal 'edag' service.",
+  },
+  {
+    term: "sspo",
+    regex: wordBoundary("sspo"),
+    message: "References the internal 'sspo' workspace prefix.",
+  },
+  {
+    term: "runon",
+    regex: wordBoundary("runon"),
+    message: "References the internal RunOn platform.",
+  },
+  {
+    term: "npi",
+    regex: wordBoundary("npi"),
+    message: "References the internal 'npi' program.",
+  },
+  {
+    term: "aws-sso",
+    regex: wordBoundary("aws-sso"),
+    message: "References the internal 'aws-sso' login tool.",
+  },
 ];
 
 export interface JargonConfig {
