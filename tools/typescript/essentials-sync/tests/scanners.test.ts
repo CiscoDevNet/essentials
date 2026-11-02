@@ -86,6 +86,23 @@ describe("secretlint scanner", () => {
       await fs.rm(dir, { recursive: true, force: true });
     }
   });
+
+  // The JSON report embeds each file's source. Read from a pipe, it was cut
+  // off at the 64 KiB pipe buffer on macOS, and the unparseable rest was
+  // taken for a clean scan.
+  it("flags a private key when the report is larger than a pipe buffer", async () => {
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "secretlint-test-"));
+    try {
+      await fs.writeFile(path.join(dir, "a-notes.md"), "plain text\n".repeat(20_000), "utf8");
+      const { privateKey } = generateKeyPairSync("ec", { namedCurve: "P-256" });
+      const pem = privateKey.export({ type: "pkcs8", format: "pem" }).toString();
+      await fs.writeFile(path.join(dir, "key.pem"), pem, "utf8");
+      const findings = await scanWithSecretlint(dir);
+      expect(findings.map((f) => f.term)).toEqual(["@secretlint/secretlint-rule-privatekey"]);
+    } finally {
+      await fs.rm(dir, { recursive: true, force: true });
+    }
+  });
 });
 
 async function emailFindings(line: string): Promise<number> {
