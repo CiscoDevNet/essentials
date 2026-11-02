@@ -290,6 +290,8 @@ class TestSafeOrigin:
         )
 
     def test_strips_userinfo(self):
+        # The credentials are fake; stripping them is what this test checks.
+        # secretlint-disable-next-line @secretlint/secretlint-rule-basicauth
         assert _safe_origin("https://alice:x@host.example.com/p") == (
             "https://host.example.com"
         )
