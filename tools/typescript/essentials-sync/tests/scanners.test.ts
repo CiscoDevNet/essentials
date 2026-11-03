@@ -4,7 +4,12 @@ import { promises as fs } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { findJargonTerms, loadJargonConfig } from "../src/jargon-list.js";
+import {
+  COMPANY_MESSAGE,
+  DEFAULT_JARGON_PATTERNS,
+  findJargonTerms,
+  loadJargonConfig,
+} from "../src/jargon-list.js";
 import { scanJargon } from "../src/scanners/jargon.js";
 import { scanPii } from "../src/scanners/pii.js";
 import { scanWithSecretlint } from "../src/scanners/secretlint.js";
@@ -33,6 +38,12 @@ describe("jargon scanner", () => {
     ["Seed the NPI scenarios.", "npi"],
   ])("flags internal names without an override file: %s", (line, term) => {
     expect(findJargonTerms(line, loadJargonConfig()).map((p) => p.term)).toContain(term);
+  });
+
+  it("gives every default pattern the same generic message", () => {
+    expect(new Set(DEFAULT_JARGON_PATTERNS.map((p) => p.message))).toEqual(
+      new Set([COMPANY_MESSAGE]),
+    );
   });
 
   it("respects custom severity", async () => {

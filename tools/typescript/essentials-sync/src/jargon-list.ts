@@ -10,77 +10,29 @@ const wordBoundary = (word: string): RegExp =>
 const hostnameSuffix = (suffix: string): RegExp =>
   new RegExp(`[a-z0-9-]+\\.${suffix.replace(/\./g, "\\.")}`, "i");
 
+export const COMPANY_MESSAGE = "References company systems.";
+
+const COMPANY_TERMS = [
+  "cisco",
+  "myid",
+  "cec",
+  "honeycomb",
+  "ceto",
+  "sales-ai",
+  "sales_ai",
+  "agentic-ops-hub",
+  "agentic ops hub",
+  "aoh",
+  "edag",
+  "sspo",
+  "runon",
+  "npi",
+  "aws-sso",
+] as const;
+
 export const DEFAULT_JARGON_PATTERNS: readonly JargonPattern[] = [
-  {
-    term: "cisco",
-    regex: wordBoundary("cisco"),
-    message: "Contains the company name 'cisco' (case-insensitive).",
-  },
-  {
-    term: "*.cisco.com",
-    regex: hostnameSuffix("cisco.com"),
-    message: "Contains an internal Cisco hostname.",
-  },
-  {
-    term: "myid",
-    regex: wordBoundary("myid"),
-    message: "References 'myid' identity service.",
-  },
-  {
-    term: "cec",
-    regex: wordBoundary("cec"),
-    message: "References 'cec' (Cisco employee credential).",
-  },
-  {
-    term: "cisco-ceto",
-    regex: wordBoundary("cisco-ceto"),
-    message: "References internal cisco-ceto org.",
-  },
-  {
-    term: "honeycomb",
-    regex: wordBoundary("honeycomb"),
-    message: "References the internal 'honeycomb' repo name.",
-  },
-  {
-    term: "ceto",
-    regex: wordBoundary("ceto"),
-    message: "References the internal 'ceto' org.",
-  },
-  ...["sales-ai", "sales_ai"].map((term) => ({
-    term,
-    regex: wordBoundary(term),
-    message: "References the internal 'sales-ai' team.",
-  })),
-  ...["agentic-ops-hub", "agentic ops hub", "aoh"].map((term) => ({
-    term,
-    regex: wordBoundary(term),
-    message: "References the internal Agentic Ops Hub platform.",
-  })),
-  {
-    term: "edag",
-    regex: wordBoundary("edag"),
-    message: "References the internal 'edag' service.",
-  },
-  {
-    term: "sspo",
-    regex: wordBoundary("sspo"),
-    message: "References the internal 'sspo' workspace prefix.",
-  },
-  {
-    term: "runon",
-    regex: wordBoundary("runon"),
-    message: "References the internal RunOn platform.",
-  },
-  {
-    term: "npi",
-    regex: wordBoundary("npi"),
-    message: "References the internal 'npi' program.",
-  },
-  {
-    term: "aws-sso",
-    regex: wordBoundary("aws-sso"),
-    message: "References the internal 'aws-sso' login tool.",
-  },
+  { term: "*.cisco.com", regex: hostnameSuffix("cisco.com"), message: COMPANY_MESSAGE },
+  ...COMPANY_TERMS.map((term) => ({ term, regex: wordBoundary(term), message: COMPANY_MESSAGE })),
 ];
 
 export interface JargonConfig {
