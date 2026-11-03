@@ -47,7 +47,7 @@ function buildSyncProgram(): Command {
       + " in the source repo, then sync that shared package to the open-source essentials repo."
       + " Default behavior runs both phases; pass --no-extract for sources that are already generic.",
     )
-    .option("-s, --source <path>", "Absolute path to the source tool directory (tools/python/<name>/)")
+    .option("-s, --source <path>", "Absolute path to the source. Extract mode: a tools/python/<name>/ directory. --no-extract: a directory or a single file")
     .option("-r, --target-repo <path>", "Absolute path to the target repo root (must be a git working tree)")
     .option("-t, --target-path <path>", "Path relative to --target-repo where the package should land (default: packages/python/<package-name>)")
     .option("--source-repo <path>", "Source repo root (default: git root of --source)")

@@ -30,8 +30,9 @@ export type SyncMode = "COPY" | "SYNC";
 
 export interface SyncPlan {
   mode: SyncMode;
-  // sourceAbs is the directory that Phase B copies INTO essentials. When extract
-  // is enabled, it points at the path where Phase A will materialize the
+  // sourceAbs is what Phase B copies INTO essentials: a directory, or a single
+  // file when --no-extract syncs one instructions/ess item. When extract is
+  // enabled, it points at the path where Phase A will materialize the
   // extracted package -- that path will not exist on disk at plan time.
   sourceAbs: string;
   targetRepoAbs: string;

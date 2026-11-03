@@ -159,7 +159,7 @@ essentials-sync [options]
 
 | Option | Required | Description |
 | --- | --- | --- |
-| `--source <path>` | yes | Absolute path to the source tool directory. In default (extract) mode this must be a `tools/python/<name>/` directory inside the source repo. |
+| `--source <path>` | yes | Absolute path to the source. In default (extract) mode this must be a `tools/python/<name>/` directory inside the source repo. With `--no-extract` it may be a directory or a single file, such as `instructions/ess/ess-<name>.instructions.md`. |
 | `--target-repo <path>` | yes | Absolute path to the target repo root. Must be a git working tree. |
 | `--target-path <path>` | no | Path relative to `--target-repo` where the synced package lands. Default: `packages/python/<package-name>`. Required when `--no-extract` is set. |
 | `--source-repo <path>` | no | Source repo root. Default: the git root discovered by walking up from `--source`. |
