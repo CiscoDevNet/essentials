@@ -7,6 +7,7 @@ description: >-
   environment variable", "API key not found", "Authentication failed",
   "Credentials not configured", or "passphrase must be set with
   PULUMI_CONFIG_PASSPHRASE".
+license: Apache-2.0
 compatibility: Requires a POSIX shell (bash or zsh).
 ---
 

@@ -6,6 +6,7 @@ description: >-
   an explicit revision or range. Use when asked to "review this branch with Copilot", "get a
   Copilot review", "Copilot review since last time", or "have Copilot check
   HEAD~3..HEAD".
+license: Apache-2.0
 compatibility: >-
   Requires bash, git, and GitHub Copilot CLI (`copilot` on PATH). Must run outside
   any agent sandbox, because Copilot CLI spawns subprocesses that need PTY access.

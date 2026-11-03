@@ -4,6 +4,7 @@ description: >-
   Answer PostgreSQL and psql questions from current documentation through the
   Context7 MCP instead of training data. Use when the user asks about SQL
   syntax, the psql CLI, PostgreSQL administration, or configuration settings.
+license: Apache-2.0
 compatibility: Requires the Context7 MCP server.
 ---
 

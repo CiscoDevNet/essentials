@@ -6,6 +6,7 @@ description: >-
   (~/.local/share/cursor-mcp/ by default) and loading them via a LaunchAgent at login. Use when the user runs /ess-mcp-hide-secrets, asks to
   secure MCP config, externalize MCP secrets, set up mcp.env, or fix MCP auth after
   cleaning up mcp.json. macOS only — do not use on Windows or Linux.
+license: Apache-2.0
 compatibility: >-
   macOS only. Requires bash, python3, launchctl, and write access to
   ~/Library/LaunchAgents. Windows support is planned via scripts/windows/ (not yet

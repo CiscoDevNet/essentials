@@ -6,6 +6,7 @@ description: >-
   writing shell commands in zsh, especially repeated gh, aws, or pulumi calls
   that share the same flags, or when a command fails with an unknown flag or a
   bad repo name.
+license: Apache-2.0
 compatibility: >-
   Written for zsh, which does not word-split unquoted variables. The rule also
   avoids quoting bugs in bash.

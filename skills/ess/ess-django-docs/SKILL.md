@@ -4,6 +4,7 @@ description: >-
   Answer Django questions from current documentation through the Context7 MCP
   instead of training data. Use when the user asks about Django APIs, settings,
   the ORM, migrations, management commands, or Django REST Framework details.
+license: Apache-2.0
 compatibility: Requires the Context7 MCP server.
 ---
 

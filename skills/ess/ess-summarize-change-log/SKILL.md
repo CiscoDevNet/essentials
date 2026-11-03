@@ -6,6 +6,7 @@ description: >-
   Use for /ess-summarize-change-log, or when the user asks to summarize a git
   log, boil down commits, write a squash-merge message, or produce a
   five-bullet PR/merge summary.
+license: Apache-2.0
 compatibility: >-
   Requires uv. The validator fetches a pinned Commitizen on first run, which
   needs network access.

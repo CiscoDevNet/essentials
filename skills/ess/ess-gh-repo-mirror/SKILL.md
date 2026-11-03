@@ -5,6 +5,7 @@ description: >-
   owner or org, or sync an existing mirror. Use when asked to mirror, fork, copy,
   or sync a repo or action into another org, or when a workflow cannot use an
   Action from outside its own org.
+license: Apache-2.0
 compatibility: >-
   Requires git and an authenticated gh CLI with permission to create repos in the
   target owner. GitHub only.

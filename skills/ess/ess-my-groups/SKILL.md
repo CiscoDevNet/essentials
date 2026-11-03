@@ -9,6 +9,7 @@ description: >-
   when the user asks to add, rename, or remove a user or a group, or asks who is in
   a group. These are personal groups kept in a local file, not corporate directory
   groups.
+license: Apache-2.0
 compatibility: >-
   Requires uv. The first run fetches the pinned tomlkit package, which needs network
   access.

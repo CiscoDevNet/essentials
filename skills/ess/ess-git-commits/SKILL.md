@@ -6,6 +6,7 @@ description: >-
   commit and let a commit-msg hook strip the trailer Cursor injects. Use when
   committing, amending, creating or editing a pull request, or when a commit
   shows a "Co-authored-by: Cursor" trailer.
+license: Apache-2.0
 compatibility: >-
   Targets Cursor agents, which add the trailer. Requires git; the hook needs
   pre-commit with the commit-msg stage installed.

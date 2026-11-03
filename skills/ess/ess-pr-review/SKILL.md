@@ -10,6 +10,7 @@ description: >-
   /ess-pr-review, "review PR <number/URL>", "review my requested PRs", "code review
   these pull requests", "review PRs from <person>", "review my teammate's PRs",
   "review the PRs from <team>". Requires gh and a git checkout.
+license: Apache-2.0
 metadata:
   version: "2.0"
 ---

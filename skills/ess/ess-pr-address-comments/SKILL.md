@@ -1,6 +1,7 @@
 ---
 name: ess-pr-address-comments
 description: Address GitHub PR review comments, implement fixes on the PR branch, push, then reply to and resolve the addressed threads. Handles one PR or many in parallel, each in its own git worktree on the PR's branch. Auto-starts (look up PRs, create worktrees, fetch comments), then pauses to show a per-PR addressing plan for approval; after approval each PR is handled by a background subagent that implements, commits, pushes to the PR branch, and resolves threads. With no PR given, it discovers your own open PRs on the current repo's remote that have changes-requested or unresolved review comments and runs the same workflow. Use for /ess-pr-address-comments, when the user gives one or more PR URLs or numbers, or asks to address/fix review comments on their own open PRs on this repo without naming them.
+license: Apache-2.0
 ---
 
 # PR Address Comments

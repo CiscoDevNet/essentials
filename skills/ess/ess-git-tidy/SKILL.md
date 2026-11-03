@@ -8,6 +8,7 @@ description: >-
   fresh work starts and are never auto-deleted. Use for /ess-git-tidy, "clean up my
   branches", "which worktrees are stale", "what can I delete before I start", or
   a branch/worktree status review. Requires git; gh adds PR state.
+license: Apache-2.0
 compatibility: >-
   Any git repo, macOS or Linux, bash 3.2+. GitHub PR state needs gh
   authenticated against the repo's remote; without it the audit still runs and
