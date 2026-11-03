@@ -3,6 +3,7 @@ name = "ess-load-test"
 version = "0.1.0"
 description = "Generic EC2 Locust load testing engine and CLI"
 readme = "README.md"
+license = "Apache-2.0"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "boto3>=1.35.0",
@@ -26,7 +27,7 @@ ess-auth = { workspace = true }
 ess-browser = { workspace = true }
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]

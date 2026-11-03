@@ -3,6 +3,7 @@ name = "ess-browser"
 version = "0.1.0"
 description = "Shared Playwright browser session with SSO handling"
 readme = "README.md"
+license = "Apache-2.0"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "playwright>=1.40.0",
@@ -14,7 +15,7 @@ dev = [
 ]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build]
