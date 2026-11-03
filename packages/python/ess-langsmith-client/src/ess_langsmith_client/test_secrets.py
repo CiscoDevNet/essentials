@@ -46,6 +46,55 @@ def test_merge_secrets_cli_wins_over_environment(monkeypatch):
     ]
 
 
+def test_merge_secrets_omits_platform_managed_cli_secret():
+    assert merge_secrets(
+        [
+            "LANGSMITH_CONTROL_PLANE_API_KEY=platform-owned",
+            "LANGSMITH_ENDPOINT=https://langsmith.example.com",
+            "LANGSMITH_PROJECT=platform-project",
+            "LANGSMITH_TRACING=true",
+            "LANGSMITH_API_KEY=deployment-key",
+        ]
+    ) == [{"name": "LANGSMITH_API_KEY", "value": "deployment-key"}]
+
+
+def test_merge_secrets_omits_platform_managed_environment_secret(monkeypatch):
+    monkeypatch.setenv("LANGSMITH_CONTROL_PLANE_API_KEY", "platform-owned")
+    monkeypatch.setenv("LANGSMITH_API_KEY", "deployment-key")
+
+    assert merge_secrets(
+        [],
+        auto_detect_keys=[
+            "LANGSMITH_CONTROL_PLANE_API_KEY",
+            "LANGSMITH_API_KEY",
+        ],
+    ) == [{"name": "LANGSMITH_API_KEY", "value": "deployment-key"}]
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "LANGSMITH_CONTROL_PLANE_API_KEY",
+        "LANGSMITH_ENDPOINT",
+        "LANGSMITH_PROJECT",
+        "LANGSMITH_TRACING",
+    ],
+)
+def test_merge_secrets_rejects_platform_managed_only_cli_input(name: str):
+    with pytest.raises(ValueError, match=name):
+        merge_secrets([f"{name}=platform-owned"])
+
+
+def test_merge_secrets_rejects_platform_managed_only_environment_input(monkeypatch):
+    monkeypatch.setenv("LANGSMITH_CONTROL_PLANE_API_KEY", "platform-owned")
+
+    with pytest.raises(ValueError, match="LANGSMITH_CONTROL_PLANE_API_KEY"):
+        merge_secrets(
+            [],
+            auto_detect_keys=["LANGSMITH_CONTROL_PLANE_API_KEY"],
+        )
+
+
 @pytest.mark.parametrize("cli_secrets", [(), []])
 def test_merge_secrets_accepts_tuple_or_list(cli_secrets):
     assert merge_secrets(cli_secrets) == []

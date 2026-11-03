@@ -49,10 +49,10 @@ from ess_langsmith_client import (
     get_git_sha,
     get_project_info,
     handle_wait,
-    merge_secrets,
     print_deployments,
 )
 from ess_langsmith_client.client import _REQUEST_TIMEOUT
+from ess_langsmith_client.tools.secret_options import merge_cli_secrets
 
 
 class GitHubDeploymentClient(ControlPlaneClient):
@@ -266,6 +266,7 @@ def create(
     - creates a git-SHA rescue name (<service>-<env>-<sha>) only when the
       canonical name is stuck/orphaned.
     """
+    secret_list = merge_cli_secrets(secrets)
     if not integration_id:
         raise click.ClickException(
             "GitHub integration ID is required.\n"
@@ -301,7 +302,7 @@ def create(
                 branch=branch,
                 config_path=config_path,
                 build_on_push=auto_build,
-                secrets=merge_secrets(secrets),
+                secrets=secret_list,
                 min_scale=min_scale,
                 max_scale=max_scale,
                 cpu=cpu,
@@ -340,7 +341,7 @@ def create(
             deployment_type=deployment_type,
             build_on_push=auto_build,
             shareable=shareable,
-            secrets=merge_secrets(secrets),
+            secrets=secret_list,
             min_scale=min_scale,
             max_scale=max_scale,
             cpu=cpu,

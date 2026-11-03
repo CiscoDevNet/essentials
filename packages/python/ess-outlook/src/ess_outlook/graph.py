@@ -2,26 +2,65 @@
 
 from __future__ import annotations
 
+import base64
+import binascii
 import json
 import logging
 import os
+import time
 import webbrowser
 from datetime import datetime, timezone
 from http import HTTPStatus
 
 import msal
 import requests
+from decouple import strtobool
 from ess_dirs import write_secure
 
 GRAPH_BASE = "https://graph.microsoft.com/v1.0/me"
 TOKEN_CACHE = os.path.expanduser("~/.cache/ess-outlook/graph_token_cache.json")
 SCOPES = ["Mail.ReadWrite"]
 
+# Treat a token as spent this many seconds before its actual expiry, so a
+# long-running command does not fail mid-flight.
+_EXPIRY_BUFFER_SECONDS = 300
+
+# Loopback port for the interactive flow. 0 lets MSAL pick any free port,
+# which requires the app registration to list "http://localhost" as a redirect
+# URI. Registrations without one fail with AADSTS50011, so the flow is opt-in
+# via GRAPH_INTERACTIVE_AUTH rather than attempted by default.
+_INTERACTIVE_REDIRECT_PORT = 0
+
+# Cap the wait on the loopback redirect. Without this, a rejected redirect URI
+# leaves the browser on an error page and MSAL listening forever.
+_INTERACTIVE_TIMEOUT_SECONDS = 90
+
 logger = logging.getLogger(__name__)
 
 
 class GraphAuthError(Exception):
     """Raised when Graph API authentication fails."""
+
+
+def _cast_bool(value: str) -> bool:
+    """Coerce an environment value to a bool, tolerating stray whitespace.
+
+    Uses decouple's vocabulary (``1``/``true``/``yes``/``y``/``on``/``t`` and
+    their negatives) and raises ``ValueError`` on anything else, so a typo
+    surfaces instead of silently leaving a flag off.
+    """
+    value = value.strip()
+    return bool(strtobool(value)) if value else False
+
+
+def _get_env(name: str) -> str:
+    """Read a stripped environment value.
+
+    Reads the process environment only. Populating it from a ``.env`` file is
+    the entrypoint's job (``__main__.load_dotenv``), so importing this module
+    never picks up configuration the caller did not supply.
+    """
+    return os.environ.get(name, "").strip()
 
 
 def _parse_date(value: str) -> datetime:
@@ -36,8 +75,8 @@ def _parse_date(value: str) -> datetime:
 
 def _get_app() -> msal.PublicClientApplication:
     """Build an MSAL app using env vars for client/tenant."""
-    client_id = os.environ.get("CLIENT_ID")
-    tenant_id = os.environ.get("TENANT_ID")
+    client_id = _get_env("CLIENT_ID")
+    tenant_id = _get_env("TENANT_ID")
     if not client_id or not tenant_id:
         msg = "CLIENT_ID and TENANT_ID must be set in environment or .env"
         raise GraphAuthError(msg)
@@ -60,11 +99,126 @@ def _save_cache(app: msal.PublicClientApplication) -> None:
         write_secure(TOKEN_CACHE, cache.serialize())
 
 
+def _is_token_expired(token: str) -> bool:
+    """Report whether a JWT's ``exp`` claim has passed.
+
+    Unparseable tokens are reported as expired so the caller falls back to a
+    real sign-in rather than sending a malformed header.
+    """
+    try:
+        payload = token.split(".")[1]
+        payload += "=" * (-len(payload) % 4)
+        claims = json.loads(base64.urlsafe_b64decode(payload))
+    except (IndexError, ValueError, binascii.Error, UnicodeDecodeError):
+        return True
+
+    expires_at = claims.get("exp")
+    if expires_at is None:
+        return True
+
+    try:
+        expires_at = int(expires_at)
+    except (TypeError, ValueError):
+        return True
+
+    return time.time() > (expires_at - _EXPIRY_BUFFER_SECONDS)
+
+
+def _get_supplied_token() -> str | None:
+    """Return a usable ``GRAPH_ACCESS_TOKEN``, or None if absent or expired."""
+    token = _get_env("GRAPH_ACCESS_TOKEN")
+    if not token:
+        return None
+
+    if _is_token_expired(token):
+        logger.warning(
+            "GRAPH_ACCESS_TOKEN is expired or invalid; falling back to sign-in. "
+            "Paste a fresh token to skip this."
+        )
+        os.environ.pop("GRAPH_ACCESS_TOKEN", None)
+        return None
+
+    return token
+
+
+def _is_interactive_enabled() -> bool:
+    """Report whether ``GRAPH_INTERACTIVE_AUTH`` opts in to browser sign-in."""
+    return _cast_bool(_get_env("GRAPH_INTERACTIVE_AUTH"))
+
+
+def _acquire_interactive(app: msal.PublicClientApplication) -> dict | None:
+    """Sign in through the system browser via a loopback redirect.
+
+    Preferred over the device-code flow: Conditional Access policies commonly
+    block device code specifically, while allowing the same authorization-code
+    grant from a browser on a managed device.
+
+    Opt in with ``GRAPH_INTERACTIVE_AUTH``, which requires an app registration
+    listing ``http://localhost`` as a redirect URI. Returns None when opted
+    out, the browser is unreachable, or the user never completes sign-in,
+    leaving device code as the fallback.
+    """
+    if not _is_interactive_enabled():
+        logger.debug("Interactive sign-in not enabled; skipping")
+        return None
+
+    logger.info("Opening browser for Microsoft sign-in...")
+    try:
+        result = app.acquire_token_interactive(
+            SCOPES,
+            port=_INTERACTIVE_REDIRECT_PORT,
+            timeout=_INTERACTIVE_TIMEOUT_SECONDS,
+        )
+    except (KeyboardInterrupt, SystemExit):
+        raise
+    except Exception:
+        logger.warning("Interactive sign-in failed; falling back to device code.")
+        logger.debug("Interactive sign-in unavailable", exc_info=True)
+        return None
+
+    if result and "access_token" in result:
+        return result
+
+    logger.warning(
+        "Interactive sign-in did not complete. If the browser showed "
+        "AADSTS50011 (redirect URI mismatch), client %s has no "
+        "'http://localhost' redirect URI -- use an app registration that "
+        "does, or set GRAPH_ACCESS_TOKEN.",
+        app.client_id,
+    )
+    return None
+
+
+def _acquire_by_device_code(app: msal.PublicClientApplication) -> dict:
+    """Sign in by entering a code at microsoft.com/devicelogin."""
+    flow = app.initiate_device_flow(scopes=SCOPES)
+    if "user_code" not in flow:
+        msg = flow.get("error_description", "Failed to initiate device flow")
+        raise GraphAuthError(msg)
+
+    logger.warning(
+        "\n  Visit: https://microsoft.com/devicelogin\n  Code:  %s\n",
+        flow["user_code"],
+    )
+    webbrowser.open("https://microsoft.com/devicelogin")
+    return app.acquire_token_by_device_flow(flow)
+
+
 def get_token() -> str:
-    """Acquire a Graph API access token (silent refresh or device-code flow)."""
+    """Acquire a Graph API access token.
+
+    Tries each source in turn: an unexpired ``GRAPH_ACCESS_TOKEN``, a silent
+    refresh from the on-disk cache, interactive browser sign-in (only when
+    ``GRAPH_INTERACTIVE_AUTH`` opts in), then the device-code flow. Only the
+    latter two prompt, and both cache a refresh token so subsequent calls
+    renew silently.
+    """
+    supplied_token = _get_supplied_token()
+    if supplied_token:
+        return supplied_token
+
     app = _get_app()
 
-    # 1. Try silent refresh from cached account
     accounts = app.get_accounts()
     if accounts:
         result = app.acquire_token_silent(SCOPES, account=accounts[0])
@@ -72,29 +226,19 @@ def get_token() -> str:
             _save_cache(app)
             return result["access_token"]
 
-    # 2. Device-code flow -- open browser automatically
-    flow = app.initiate_device_flow(scopes=SCOPES)
-    if "user_code" not in flow:
-        msg = flow.get("error_description", "Failed to initiate device flow")
-        raise GraphAuthError(msg)
-
-    code = flow["user_code"]
-    logger.warning(
-        "\n  Visit: https://microsoft.com/devicelogin\n  Code:  %s\n",
-        code,
-    )
-    webbrowser.open("https://microsoft.com/devicelogin")
-    result = app.acquire_token_by_device_flow(flow)
+    result = _acquire_interactive(app)
+    if not result or "access_token" not in result:
+        result = _acquire_by_device_code(app)
 
     if "access_token" in result:
         _save_cache(app)
         return result["access_token"]
 
-    # 3. Auth failed -- give actionable error
     error = result.get("error_description", "Authentication failed")
     msg = (
         f"Authentication failed: {error}\n"
-        "If blocked by Conditional Access, try from your terminal."
+        "If Conditional Access blocks these flows, set GRAPH_ACCESS_TOKEN "
+        "from https://developer.microsoft.com/graph/graph-explorer."
     )
     raise GraphAuthError(msg)
 
@@ -103,6 +247,11 @@ def _handle_response(resp: requests.Response) -> dict:
     """Raise on HTTP errors, return parsed JSON."""
     if resp.status_code == HTTPStatus.UNAUTHORIZED:
         msg = "Token expired or invalid. Re-run to authenticate."
+        if _get_env("GRAPH_ACCESS_TOKEN"):
+            msg = (
+                "GRAPH_ACCESS_TOKEN was rejected. Confirm it grants Mail.Read "
+                "(Mail.ReadWrite to modify), or unset it to sign in instead."
+            )
         raise GraphAuthError(msg)
     resp.raise_for_status()
     return resp.json()

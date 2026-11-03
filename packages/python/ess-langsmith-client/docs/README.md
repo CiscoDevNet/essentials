@@ -6,6 +6,6 @@ Detailed guides for each `langsmith-client` subcommand. Start with the [package 
 - [Workspaces](workspaces.md) — `workspaces` list/get; find the workspace IDs other commands need.
 - [Deploying agents](deploying-agents.md) — `deploy docker` and `deploy github`: canonical naming, idempotent upsert, git-SHA rescue, secrets, scale.
 - [Building images](building-images.md) — `build`: LangGraph image build, tagging, `--push`.
-- [Listeners](listeners.md) — `listeners list` for hybrid (self-hosted) deployments.
+- [Listeners](listeners.md) — `listeners list` and `listeners delete` for hybrid (self-hosted) deployments.
 - [Projects](projects.md) — `projects` (tracing) vs `control-plane` (control-plane records).
 - [Testing agents](testing-agents.md) — `test-deployed` resolution flags.

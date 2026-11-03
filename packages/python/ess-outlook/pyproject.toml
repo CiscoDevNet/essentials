@@ -3,11 +3,13 @@ name = "ess-outlook"
 version = "0.1.0"
 description = "CLI tool for reading and managing Microsoft Outlook emails via Microsoft Graph"
 readme = "README.md"
+license = "Apache-2.0"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "click>=8.1",
     "ess-dirs",
     "msal>=1.28.0",
+    "python-decouple>=3.8",
     "python-dotenv>=1.0.0",
     "requests>=2.31.0",
 ]
@@ -24,7 +26,7 @@ dev = [
 ]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]

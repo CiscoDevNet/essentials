@@ -26,6 +26,7 @@ members = [
     "packages/python/ess-browser",
     "packages/python/ess-dirs",
     "packages/python/ess-langsmith-client",
+    "packages/python/ess-load-test",
     "packages/python/ess-outlook",
     "packages/python/ess-passwords",
     "packages/python/ess-service-now-incident",

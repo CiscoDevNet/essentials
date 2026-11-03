@@ -159,6 +159,7 @@ def _fetch_via_browser(
     target_url: str,
     headed: bool,
     profile_dir: str,
+    extra_auth_domains: tuple[str, ...] = (),
 ) -> tuple[int, str]:
     """Run the Table API call inside an authenticated browser session.
 
@@ -173,7 +174,11 @@ def _fetch_via_browser(
         logger.info("Navigating to %s", target_url)
         page.goto(target_url, wait_until="load", timeout=_NAV_TIMEOUT_MS)
 
-        if session.is_auth_redirect(page.url, target_url):
+        if session.is_auth_redirect(
+            page.url,
+            target_url,
+            extra_auth_domains=extra_auth_domains,
+        ):
             logger.info("SSO redirect detected -- waiting for login")
             try:
                 session.wait_for_login(page, target_url, timeout_ms=LOGIN_TIMEOUT_MS)
@@ -240,6 +245,7 @@ def get_incident(
     instance: str | None = None,
     headed: bool = False,
     profile_dir: str | None = None,
+    extra_auth_domains: tuple[str, ...] = (),
 ) -> dict[str, Any]:
     """Fetch an incident record from a ServiceNow instance.
 
@@ -254,6 +260,9 @@ def get_incident(
         headed: Show the browser window for first-time SSO login.
         profile_dir: Browser profile directory for session persistence.
             Defaults to ``DEFAULT_PROFILE_DIR`` when omitted.
+        extra_auth_domains: IdP host patterns to recognize as an SSO
+            redirect in addition to ``ess_browser.AUTH_DOMAINS``. Name
+            your organization's own login hosts here.
 
     Returns:
         A dict with keys ``number``, ``sys_id``, ``short_description``,
@@ -275,5 +284,6 @@ def get_incident(
         target_url=f"https://{effective_instance}/",
         headed=headed,
         profile_dir=effective_profile,
+        extra_auth_domains=extra_auth_domains,
     )
     return _unwrap_result(query, status, body)

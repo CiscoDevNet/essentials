@@ -102,11 +102,19 @@ Wrappers can use `build_cli()` to construct a CLI with an
 organization-specific default. The user can still override with
 `--instance` or `SERVICENOW_INSTANCE`.
 
+If your SSO lands on a host that `ess_browser.AUTH_DOMAINS` does not
+match, pass it as `extra_auth_domains`. Otherwise the login page is
+mistaken for ServiceNow and the run fails instead of waiting for login.
+`get_incident()` takes the same argument.
+
 ```python
 # tools/python/my-team-tool/src/my_team_tool/__main__.py
 from ess_service_now_incident import build_cli
 
-main = build_cli(default_instance="my-org.service-now.com")
+main = build_cli(
+    default_instance="my-org.service-now.com",
+    extra_auth_domains=("login.my-org.example.com",),
+)
 
 if __name__ == "__main__":
     main()

@@ -26,8 +26,8 @@ from ess_langsmith_client.tools import (
     deploy_docker,
     deploy_github,
     keys,
-    list_listeners,
     list_workspaces,
+    listeners,
     projects,
 )
 
@@ -51,7 +51,7 @@ def deploy() -> None:
 
 cli.add_command(keys.cli, name="keys")
 cli.add_command(list_workspaces.cli, name="workspaces")
-cli.add_command(list_listeners.cli, name="listeners")
+cli.add_command(listeners.cli, name="listeners")
 cli.add_command(projects.cli, name="projects")
 cli.add_command(control_plane.cli, name="control-plane")
 cli.add_command(build.build, name="build")

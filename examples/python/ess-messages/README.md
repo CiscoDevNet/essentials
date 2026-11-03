@@ -33,12 +33,27 @@ uv sync --all-packages
 ## Auth
 
 Requires credentials for one or both sources. See:
-- [Outlook setup](../../../packages/python/ess-outlook/.env.example) -- `CLIENT_ID`, `TENANT_ID`
+- [Outlook setup](../../../packages/python/ess-outlook/README.md#configuration) --
+  `CLIENT_ID` and `TENANT_ID`, both required unless `GRAPH_ACCESS_TOKEN` is set
 - [Webex setup](../../../packages/python/ess-webex/.env.example) -- `WEBEX_CLIENT_ID`/`WEBEX_CLIENT_SECRET` or `WEBEX_ACCESS_TOKEN`
 
 Copy this example's `.env.example` to `.env` and fill in values, or set the
 variables in your shell environment. Never commit `.env` -- it is meant to
 hold secrets.
+
+If Conditional Access blocks the Outlook device-code flow, set
+`GRAPH_ACCESS_TOKEN` to a token from
+[Graph Explorer](https://developer.microsoft.com/graph/graph-explorer) --
+see [Bring your own token](../../../packages/python/ess-outlook/README.md#bring-your-own-token).
+If Outlook authentication fails, the command exits unless you pass
+`--webex-only`, which skips Outlook and fetches Webex only. Within
+ess-outlook, multiple auth methods are tried before failure (supplied token,
+cached refresh, optional browser sign-in, then device code).
+
+For a permanent fix, ask your identity team for a dedicated app registration: a
+single-tenant public client with delegated `Mail.ReadWrite` on Microsoft Graph and
+`http://localhost` as a redirect URI. Set its Application (client) ID and Directory
+(tenant) ID as `CLIENT_ID` and `TENANT_ID`.
 
 ## Usage
 

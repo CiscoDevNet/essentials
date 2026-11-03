@@ -138,6 +138,17 @@ class TestGetIncidentAuthErrors:
         ):
             get_incident("INC0000001", instance=_INSTANCE)
 
+    def test_extra_auth_domains_reach_the_redirect_check(self):
+        session = _make_session()
+        with patch(_PATCH_TARGET, return_value=session):
+            get_incident(
+                "INC0000001",
+                instance=_INSTANCE,
+                extra_auth_domains=("login.corp.example.net",),
+            )
+        kwargs = session.is_auth_redirect.call_args.kwargs
+        assert kwargs["extra_auth_domains"] == ("login.corp.example.net",)
+
 
 class TestGetIncidentApiErrors:
     def test_non_ok_http_raises_api_error(self):

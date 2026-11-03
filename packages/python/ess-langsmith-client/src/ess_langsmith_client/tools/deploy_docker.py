@@ -52,12 +52,12 @@ from ess_langsmith_client import (
     get_git_sha,
     get_project_info,
     handle_wait,
-    merge_secrets,
     print_deployments,
     resolve_live_deployment_record,
 )
 from ess_langsmith_client.client import _REQUEST_TIMEOUT
 from ess_langsmith_client.naming import resolve_deploy_base
+from ess_langsmith_client.tools.secret_options import merge_cli_secrets
 
 
 def extract_name_from_image_uri(image_uri: str) -> str:
@@ -271,6 +271,7 @@ def create(
     - creates a git-SHA rescue name (<service>-<env>-<sha>) only when the
       canonical name is stuck/orphaned.
     """
+    secret_list = merge_cli_secrets(secrets)
     client = create_client(DockerDeploymentClient, api_key, workspace_id, region)
 
     # Get project info from pyproject.toml
@@ -305,8 +306,6 @@ def create(
                 "Could not determine image URI. "
                 "Provide --image-uri or ensure pyproject.toml exists"
             )
-
-    secret_list = merge_secrets(secrets)
 
     try:
         live = client.resolve_live_deployment(base)
@@ -395,6 +394,7 @@ def update(
     wait: bool,
 ):
     """Update an existing deployment with a new Docker image."""
+    secret_list = merge_cli_secrets(secrets)
     # Derive image URI from pyproject.toml if not provided
     if not image_uri:
         project = get_project_info(start_path=Path(project_dir))
@@ -407,8 +407,6 @@ def update(
                 "Provide --image-uri or ensure pyproject.toml exists"
             )
     client = create_client(DockerDeploymentClient, api_key, workspace_id, region)
-
-    secret_list = merge_secrets(secrets)
 
     click.echo(f"Updating deployment: {deployment_id}")
     click.echo(f"  New image: {image_uri}")

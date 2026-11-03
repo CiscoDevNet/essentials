@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import sys
+from pathlib import Path
 from urllib.parse import urlparse
 
 from playwright.sync_api import Page
@@ -11,11 +12,12 @@ from playwright.sync_api import Page
 logger = logging.getLogger(__name__)
 
 LOGIN_TIMEOUT_MS = 5 * 60 * 1000  # 5 minutes
+SSO_SETTLE_MS = 5_000
+NAV_TIMEOUT_MS = 60_000
 
+# Public IdPs only. Callers pass a company's own login hosts as
+# ``extra_auth_domains``.
 AUTH_DOMAINS: tuple[str, ...] = (
-    # Cisco
-    "id.cisco.com",
-    "cloudsso.cisco.com",
     # Duo
     "duosecurity.com",
     "login.duosecurity.com",
@@ -43,6 +45,7 @@ DUO_SKIP_UPDATE_SCRIPT = """\
 (() => {
   "use strict";
   const hostname = location.hostname;
+  // Init script runs on every navigation; no-op outside Duo-hosted pages.
   if (hostname !== "duosecurity.com" && !hostname.endsWith(".duosecurity.com")) return;
 
   const SKIP_TEXT = "Skip for now";
@@ -99,13 +102,83 @@ DUO_SKIP_UPDATE_SCRIPT = """\
 """
 
 
-def is_auth_redirect(current_url: str, target_url: str) -> bool:
-    """Return True if the browser landed on an SSO page instead of the target."""
+def is_auth_redirect(
+    current_url: str,
+    target_url: str,
+    *,
+    extra_auth_domains: tuple[str, ...] = (),
+) -> bool:
+    """Return True if the browser landed on an SSO page instead of the target.
+
+    Args:
+        current_url: Where the browser actually is.
+        target_url: Where it was asked to go.
+        extra_auth_domains: Host patterns to recognize as IdPs in
+            addition to :data:`AUTH_DOMAINS`. Lets one caller teach this
+            check about a tenant-specific IdP without widening the
+            shared tuple for everybody.
+    """
     current_host = urlparse(current_url).netloc.lower()
     target_host = urlparse(target_url).netloc.lower()
     if current_host == target_host:
         return False
-    return any(domain in current_host for domain in AUTH_DOMAINS)
+    domains = AUTH_DOMAINS + extra_auth_domains
+    return any(domain in current_host for domain in domains)
+
+
+def _is_profile_empty(profile_dir: Path) -> bool:
+    if not profile_dir.is_dir():
+        return True
+    return not any(profile_dir.iterdir())
+
+
+def is_sso_login_required(
+    target_url: str,
+    *,
+    profile_dir: Path | str,
+    settle_timeout_ms: int = SSO_SETTLE_MS,
+    extra_auth_domains: tuple[str, ...] = (),
+) -> bool:
+    """Return True when a headless visit to ``target_url`` lands on SSO.
+
+    Best-effort probe: navigation or browser errors are logged and treated as
+    ``False`` so callers can attempt headless execution and apply their own
+    SSO retry logic.
+
+    Args:
+        target_url: The page to probe.
+        profile_dir: Browser profile directory holding the saved session.
+        settle_timeout_ms: Grace period before reading the landed URL.
+        extra_auth_domains: Additional IdP host patterns, passed through
+            to :func:`is_auth_redirect` so the probe agrees with the
+            real run.
+    """
+    from ess_browser.session import BrowserSession  # noqa: PLC0415, I001 — session imports auth; lazy import breaks cycle
+
+    effective_profile = Path(profile_dir)
+
+    try:
+        # No persisted cookies yet — skip the probe and require headed login once.
+        if _is_profile_empty(effective_profile):
+            return True
+
+        with BrowserSession(headed=False, profile_dir=effective_profile) as session:
+            page = session.new_page()
+            page.goto(target_url, wait_until="load", timeout=NAV_TIMEOUT_MS)
+            page.wait_for_timeout(settle_timeout_ms)
+            return is_auth_redirect(
+                page.url,
+                target_url,
+                extra_auth_domains=extra_auth_domains,
+            )
+    except Exception as exc:
+        logger.warning(
+            "SSO probe failed for %s (profile %s): %s — assuming session is valid",
+            target_url,
+            effective_profile,
+            exc,
+        )
+        return False
 
 
 def wait_for_login(

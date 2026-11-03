@@ -1,0 +1,13 @@
+- id: ess-scan
+  name: ess-scan (secrets, jargon, PII in ess-* items)
+  description: >-
+    Runs the essentials-sync deterministic scanners on each changed ess-* item
+    and fails on critical findings. Needs Node.js 22 or later; trufflehog is
+    used when installed.
+  entry: ess-scan
+  language: node
+  # Use the Node on PATH. Otherwise pre-commit skips a Node under $HOME (nvm)
+  # and downloads one through nodeenv, which fails on prerelease versions.
+  language_version: system
+  files: '(^|/)ess-[^/]+/|(^|/)ess/ess-[^/]+$'
+  require_serial: true

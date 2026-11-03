@@ -19,7 +19,11 @@ from .exceptions import ServiceNowIncidentError
 INSTANCE_ENV_VAR = "SERVICENOW_INSTANCE"
 
 
-def build_cli(*, default_instance: str | None = None) -> click.Command:
+def build_cli(
+    *,
+    default_instance: str | None = None,
+    extra_auth_domains: tuple[str, ...] = (),
+) -> click.Command:
     """Build a Click command for fetching ServiceNow incidents.
 
     Args:
@@ -29,6 +33,8 @@ def build_cli(*, default_instance: str | None = None) -> click.Command:
             explicit ``--instance`` flag wins over both.  Pass ``None``
             to require the user to supply an instance (either via the
             flag, the environment variable, or a full URL identifier).
+        extra_auth_domains: Your organization's IdP host patterns, passed
+            to :func:`get_incident` so its SSO login is recognized.
 
     Returns:
         A :class:`click.Command` ready to be exposed as a console
@@ -101,6 +107,7 @@ def build_cli(*, default_instance: str | None = None) -> click.Command:
                 instance=instance,
                 headed=headed,
                 profile_dir=profile_dir,
+                extra_auth_domains=extra_auth_domains,
             )
         except ServiceNowIncidentError as exc:
             click.echo(f"Error: {exc}", err=True)

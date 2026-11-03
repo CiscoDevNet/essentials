@@ -8,43 +8,68 @@ import { runScanners, formatFindings } from "./scanners/index.js";
 import { planSync, composeFullPlan } from "./sync.js";
 import { planExtract } from "./extract-plan.js";
 import { runSyncSession } from "./agent.js";
-import { parseJargonOverrides } from "./jargon-list.js";
+import { loadJargonOverrides } from "./jargon-overrides.js";
 import {
   listAvailableModels,
   parseModelSpec,
   resolveModels,
 } from "./model-resolver.js";
-
-loadEnvFiles();
+import { runScanCommand } from "./scan-command.js";
+import { runStatusCommand } from "./status-command.js";
 
 const DEFAULT_PRIMARY = "opus";
 const DEFAULT_REVIEW = "codex";
 const DEFAULT_MAX_REVISIONS = 3;
 
-const program = new Command()
-  .name("essentials-sync")
-  .description(
-    "Extract a jargon-free ess-* shared package out of a team-/account-specific tool"
-    + " in the source repo, then sync that shared package to the open-source essentials repo."
-    + " Default behavior runs both phases; pass --no-extract for sources that are already generic.",
-  )
-  .option("-s, --source <path>", "Absolute path to the source tool directory (tools/python/<name>/)")
-  .option("-r, --target-repo <path>", "Absolute path to the target repo root (must be a git working tree)")
-  .option("-t, --target-path <path>", "Path relative to --target-repo where the package should land (default: packages/python/<package-name>)")
-  .option("--source-repo <path>", "Source repo root (default: git root of --source)")
-  .option("--package-name <name>", "Name of the extracted ess-* package (default: derived from --source basename)")
-  .option("-m, --model <spec>", "Primary agent model id, family sentinel, or 'auto'")
-  .option("--review-model <spec>", "Adversarial reviewer model id, family sentinel, or 'auto'")
-  .option("--max-revisions <n>", "Maximum scan-and-revise iterations per phase", parseInteger, DEFAULT_MAX_REVISIONS)
-  .option("--dry-run", "Write everything to a temp directory instead of --target-path", false)
-  .option("--no-source-scan", "Skip the informational source pre-scan")
-  .option("--no-adversarial-review", "Skip the LLM reviewer; deterministic scanners only")
-  .option("--no-extract", "Skip the in-source extract phase; assume --source is already a generic package and only run the sync to essentials")
-  .option("--no-fast-copy", "Always let the primary agent author the sync, even when the source scan is completely clean")
-  .option("--list-models", "Print the model catalog for the current API key and exit", false)
-  .parse(process.argv);
+// The read-only subcommands need no API key and none of the sync options, so
+// they are dispatched before the sync program is parsed.
+const READ_ONLY_COMMANDS: Record<string, (argv: string[]) => Promise<number>> = {
+  scan: runScanCommand,
+  status: runStatusCommand,
+};
 
-void main(program);
+const readOnlyCommand = READ_ONLY_COMMANDS[process.argv[2] ?? ""];
+if (readOnlyCommand) {
+  readOnlyCommand(process.argv.slice(3)).then(
+    (exitCode) => process.exit(exitCode),
+    (error: unknown) => fail(1, error instanceof Error ? error.message : String(error)),
+  );
+} else {
+  loadEnvFiles();
+  void main(buildSyncProgram().parse(process.argv));
+}
+
+function buildSyncProgram(): Command {
+  return new Command()
+    .name("essentials-sync")
+    .description(
+      "Extract a jargon-free ess-* shared package out of a team-/account-specific tool"
+      + " in the source repo, then sync that shared package to the open-source essentials repo."
+      + " Default behavior runs both phases; pass --no-extract for sources that are already generic.",
+    )
+    .option("-s, --source <path>", "Absolute path to the source tool directory (tools/python/<name>/)")
+    .option("-r, --target-repo <path>", "Absolute path to the target repo root (must be a git working tree)")
+    .option("-t, --target-path <path>", "Path relative to --target-repo where the package should land (default: packages/python/<package-name>)")
+    .option("--source-repo <path>", "Source repo root (default: git root of --source)")
+    .option("--package-name <name>", "Name of the extracted ess-* package (default: derived from --source basename)")
+    .option("-m, --model <spec>", "Primary agent model id, family sentinel, or 'auto'")
+    .option("--review-model <spec>", "Adversarial reviewer model id, family sentinel, or 'auto'")
+    .option("--max-revisions <n>", "Maximum scan-and-revise iterations per phase", parseInteger, DEFAULT_MAX_REVISIONS)
+    .option("--dry-run", "Write everything to a temp directory instead of --target-path", false)
+    .option("--no-source-scan", "Skip the informational source pre-scan")
+    .option("--no-adversarial-review", "Skip the LLM reviewer; deterministic scanners only")
+    .option("--no-extract", "Skip the in-source extract phase; assume --source is already a generic package and only run the sync to essentials")
+    .option("--no-fast-copy", "Always let the primary agent author the sync, even when the source scan is completely clean")
+    .option("--list-models", "Print the model catalog for the current API key and exit", false)
+    .addHelpText(
+      "after",
+      "\nRead-only commands:\n"
+        + "  essentials-sync scan <path>...\n"
+        + "      Run the deterministic scanners; exits 1 on critical findings.\n"
+        + "  essentials-sync status --source-repo <a> --target-repo <b>\n"
+        + "      Compare every ess-* item in two repos.\n",
+    );
+}
 
 async function main(cmd: Command): Promise<void> {
   const opts = cmd.opts();
@@ -289,24 +314,6 @@ async function handleListModels(apiKey: string): Promise<void> {
       1,
       `Could not list models: ${error instanceof Error ? error.message : String(error)}`,
     );
-  }
-}
-
-async function loadJargonOverrides(sourceAbs: string): Promise<string[]> {
-  const { promises: fs } = await import("node:fs");
-  const path = await import("node:path");
-  const configPath = path.join(sourceAbs, ".essentials-sync-jargon.json");
-  try {
-    const raw = await fs.readFile(configPath, "utf8");
-    return parseJargonOverrides(JSON.parse(raw) as unknown).terms;
-  } catch (error) {
-    if (error instanceof Error && "code" in error && (error as { code?: string }).code === "ENOENT") {
-      return [];
-    }
-    console.warn(
-      chalk.yellow(`[jargon] could not read jargon overrides: ${(error as Error).message}`),
-    );
-    return [];
   }
 }
 

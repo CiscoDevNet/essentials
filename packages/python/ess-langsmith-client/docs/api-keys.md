@@ -34,11 +34,24 @@ The table shows description, short key, age in days, expiry (with an `EXPIRED` m
 Create a new service API key.
 
 ```bash
-uv run langsmith-client keys create "my-service-key" --format json
+# Create a key after confirming at the prompt
+uv run langsmith-client keys create "my-service-key"
+
+# Show the key that would be created, then stop
+uv run langsmith-client keys create "my-service-key" --dry-run
+
+# Create without a prompt and print JSON, for scripts
+uv run langsmith-client keys create "my-service-key" --format json --yes
 ```
 
 - Argument: `DESCRIPTION` — the human-readable name shown in the LangSmith UI.
 - The **full key value is displayed once, at creation time only.** Copy it immediately.
+
+| Option | Description |
+| --- | --- |
+| `--format` | `table` (default) or `json`. |
+| `--dry-run` | Show the key that would be created, then exit without creating it. Wins over `--yes`. |
+| `--yes`, `-y` | Skip the confirmation prompt. Required with `--format json` or when there is no terminal to prompt on. |
 
 ## `keys delete`
 
@@ -47,6 +60,9 @@ Delete one or more keys by exact description.
 ```bash
 # Delete several keys
 uv run langsmith-client keys delete "key-1" "key-2" "key-3"
+
+# List what would be deleted, then stop
+uv run langsmith-client keys delete "key-1" --dry-run
 
 # Skip the confirmation prompt
 uv run langsmith-client keys delete "key-1" --yes
@@ -58,7 +74,8 @@ uv run langsmith-client keys delete "duplicated-name" --all
 | Option | Description |
 | --- | --- |
 | `--all` | Delete every key matching a description, even when one description matches multiple keys. |
-| `--yes` | Skip the confirmation prompt. |
+| `--dry-run` | Show the keys that would be deleted, then exit without deleting. Wins over `--yes`. |
+| `--yes`, `-y` | Skip the confirmation prompt. Required when there is no terminal to prompt on. |
 
 ### Duplicate safeguard
 

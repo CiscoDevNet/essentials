@@ -1,4 +1,4 @@
-# ruff: noqa: S106, PLR2004 -- test credentials are not real secrets; magic numbers expected
+# ruff: noqa: S106, PLR2004, B110 -- test credentials are not real secrets; magic numbers expected; server may close before response is read
 """Tests for the OAuth 2.0 Authorization Code Flow."""
 
 from __future__ import annotations

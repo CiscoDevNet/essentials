@@ -38,7 +38,7 @@ When `--no-extract` is set and the source pre-scan comes back with **zero** find
 
 This exists because a clean source gives the primary agent nothing useful to do, and an agent asked to generalize an already-generic tree will paraphrase working prose and drop valid cross-references instead. On a 16-file skill directory the fast path finished in 27s with zero content drift, against 11min and 187 rewritten lines for the agent path.
 
-The copy honors `.gitignore` and skips the same cache and build directories the scanners skip. That is a safety property, not an optimization: the scanners never read gitignored paths, so copying them would ship content nothing vouched for (`.env`, local credentials). Anything copied that the text scanners could not read -- binaries, files over the 5 MB cap -- is listed explicitly at the end of the run. Files that exist only in the target (`LICENSE`, `NOTICE`) are left untouched, so re-syncing never clobbers them.
+The copy and the scanners read one file list. Inside a git work tree it is `git ls-files --cached --others --exclude-standard`, so every ignore rule git applies counts, including `.gitignore` files in parent directories up to the repo root. Outside a work tree it falls back to the package's own `.gitignore` files. Cache and build directories and `tmp-*` notes are always skipped. That shared list is a safety property, not an optimization: the scanners never read ignored paths, so copying them would ship content nothing vouched for (`.env`, local credentials). Anything copied that the text scanners could not read -- binaries, files over the 5 MB cap -- is listed explicitly at the end of the run. Files that exist only in the target (`LICENSE`, `NOTICE`) are left untouched, so re-syncing never clobbers them.
 
 Pass `--no-fast-copy` to force the agent path regardless.
 
@@ -138,6 +138,19 @@ Exceptions live in `.essentials-sync-jargon.json` at the repo root. `allow.paths
 
 The exception list applies to the hooks only; `essentials-sync` runs still scan synced packages against the full wordlist.
 
+### Guarding `ess-*` items in another repo
+
+Repos that keep `ess-*` items to sync here can run the same deterministic scanners on every commit with the `ess-scan` hook from this repo's `.pre-commit-hooks.yaml`:
+
+```yaml
+- repo: https://github.com/CiscoDevNet/essentials
+  rev: <tag or sha>
+  hooks:
+    - id: ess-scan
+```
+
+It runs `essentials-sync scan` on each changed item and fails on critical findings. pre-commit installs it from this repo's root `package.json`, which carries only the scanners' dependencies, and needs Node.js 22 or later.
+
 ## Usage
 
 ```
@@ -161,6 +174,18 @@ essentials-sync [options]
 | `--no-adversarial-review` | no | Skip the LLM reviewer; run deterministic scanners only. |
 | `--list-models` | no | Print the available model IDs for your `CURSOR_API_KEY` and exit. |
 
+### Read-only commands
+
+These need no `CURSOR_API_KEY`, never prompt, and have no `--dry-run`, because they change nothing.
+
+```
+essentials-sync scan [--no-trufflehog] [--no-secretlint] <path>...
+essentials-sync status --source-repo <path> --target-repo <path>
+```
+
+- **`scan <path>...`** runs the deterministic scanners (trufflehog, secretlint, jargon, PII) and exits `1` on any critical finding, else `0`. A path inside an `ess-*` item scans the whole item; any other path is scanned as given. Jargon terms from `.essentials-sync-jargon.json` at the repo root and in each scanned directory are added to the wordlist, and jargon findings are critical. Each finding prints as file, line, scanner, and rule; secret findings never print the matched value.
+- **`status`** lists every `ess-*` item in either repo as `identical`, `differs` (with the files that changed or exist on one side only), `only in source`, or `only in target`. An item is a directory named `ess-*`, or a file named `ess-*` inside a directory named `ess` (`instructions/ess/`). Files are compared by content and executable bit from the same list the copy uses; each item's `LICENSE` is skipped, and dot-directories (`.agents/`, `.cursor/`) are ignored as installed copies. Always exits `0`.
+
 The `opus` sentinel resolves to the highest-version Opus model on your Cursor account; `codex` to the highest-version Codex; etc. Fallback chains kick in if a family is unavailable (primary: `opus` -> any `claude` -> `auto`; reviewer: `codex` -> any `gpt` -> any non-primary -> `auto`). The resolver prefers the canonical version of each family (e.g. `gpt-5.3-codex` over `gpt-5.3-codex-spark`) and always logs the pair it chose so you can see what actually ran.
 
 ### Scan coverage
@@ -182,7 +207,7 @@ Files whose basename starts with `tmp-` or `tmp.` are skipped by the determinist
 npm test
 ```
 
-Tests use [Vitest](https://vitest.dev) and cover the jargon and PII scanners against the `clean-package` and `dirty-package` fixtures under `tests/fixtures/`, the extract-plan name/path derivation logic, the verbatim copy (including that it refuses to copy gitignored files and preserves executable bits), and the fast-path eligibility gate.
+Tests use [Vitest](https://vitest.dev) and cover the jargon and PII scanners against the `clean-package` and `dirty-package` fixtures under `tests/fixtures/`, the extract-plan name/path derivation logic, the shared file list (including ignore rules from the repo root), the verbatim copy (including that it refuses to copy gitignored files and preserves executable bits), the fast-path eligibility gate, and the `scan` and `status` commands.
 
 ## License
 

@@ -1,11 +1,11 @@
 """CLI entry point for ess-passwords.
 
-Every command here is read-only: it reads the wordlist, prints a password,
-and writes nothing anywhere. `.cursor/rules/cli-write-safety.mdc` therefore
-forbids `--dry-run` and a confirmation prompt -- there is no state to
-preview and nothing to consent to. Do not add them: generating a password
-is not the same as rotating one, and a decorative `--dry-run` teaches
-operators to distrust the real ones.
+Commands that write state need `--dry-run`, a confirmation prompt by default,
+and `--yes`. Read-only commands get neither: there is nothing to preview or
+confirm. Every command here only reads the wordlist and prints a password, so
+none of them take those flags. Do not add them: generating a password is not
+the same as rotating one, and a decorative `--dry-run` teaches operators to
+distrust the real ones.
 """
 
 from __future__ import annotations

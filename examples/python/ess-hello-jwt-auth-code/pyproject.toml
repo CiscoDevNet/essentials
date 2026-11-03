@@ -3,8 +3,8 @@ name = "ess-hello-jwt-auth-code"
 version = "0.1.0"
 description = "Obtain a JWT access token from any OpenID Connect provider via the OAuth 2.0 Authorization Code Flow with PKCE"
 readme = "README.md"
+license = "Apache-2.0"
 requires-python = ">=3.12,<3.13"
-license = { text = "Apache-2.0" }
 keywords = ["oauth2", "oidc", "jwt", "pkce", "authorization-code"]
 dependencies = [
     "httpx>=0.28.0",
@@ -18,7 +18,7 @@ ess-hello-jwt-auth-code = "ess_hello_jwt_auth_code.main:main"
 dev = ["ruff>=0.14.2", "pytest>=8.0.0"]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]

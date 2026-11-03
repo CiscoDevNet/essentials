@@ -3,6 +3,7 @@ name = "ess-messages"
 version = "0.1.0"
 description = "Unified inbox -- aggregates email and Webex messages into Activity Streams 2.0"
 readme = "README.md"
+license = "Apache-2.0"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "activitystreams2>=0.5.0",
@@ -16,7 +17,7 @@ dependencies = [
 ess-messages = "ess_messages.__main__:main"
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [tool.uv.sources]

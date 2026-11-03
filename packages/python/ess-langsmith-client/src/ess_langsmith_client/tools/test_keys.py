@@ -201,3 +201,149 @@ class TestDelete:
         result = self._run(monkeypatch, ["unique-key", "--yes"], deleted_ids)
         assert result.exit_code == 0
         assert deleted_ids == ["id-3"]
+
+    def test_dry_run_deletes_nothing(self, monkeypatch):
+        deleted_ids: list[str] = []
+        result = self._run(monkeypatch, ["unique-key", "--dry-run"], deleted_ids)
+        assert result.exit_code == 0
+        assert "unique-key" in result.output
+        assert "nothing changed" in result.output
+        assert deleted_ids == []
+
+    def test_dry_run_wins_over_yes(self, monkeypatch):
+        deleted_ids: list[str] = []
+        result = self._run(
+            monkeypatch, ["dup-key", "--all", "--dry-run", "--yes"], deleted_ids
+        )
+        assert result.exit_code == 0
+        assert deleted_ids == []
+
+    def test_yes_skips_the_prompt(self, monkeypatch):
+        monkeypatch.setattr(keys, "_is_interactive", lambda: True)
+        deleted_ids: list[str] = []
+        result = self._run(monkeypatch, ["unique-key", "--yes"], deleted_ids)
+        assert result.exit_code == 0
+        assert "Delete 1 key(s)?" not in result.output
+        assert deleted_ids == ["id-3"]
+
+    def test_prompt_goes_to_stderr(self, monkeypatch):
+        monkeypatch.setattr(keys, "_is_interactive", lambda: True)
+        monkeypatch.setattr(
+            keys.APIKeyClient, "list_keys", lambda self: _keys_with_duplicate()
+        )
+        deleted_ids: list[str] = []
+        monkeypatch.setattr(
+            keys.APIKeyClient,
+            "delete_key",
+            lambda self, key_id: deleted_ids.append(key_id),
+        )
+
+        result = CliRunner().invoke(
+            cli, ["delete", "--api-key", "test-key", "unique-key"], input="y\n"
+        )
+
+        assert result.exit_code == 0
+        assert "Delete 1 key(s)?" in result.stderr
+        assert "Delete 1 key(s)?" not in result.stdout
+        assert deleted_ids == ["id-3"]
+
+    def test_declining_the_prompt_deletes_nothing(self, monkeypatch):
+        monkeypatch.setattr(keys, "_is_interactive", lambda: True)
+        deleted_ids: list[str] = []
+        monkeypatch.setattr(
+            keys.APIKeyClient, "list_keys", lambda self: _keys_with_duplicate()
+        )
+        monkeypatch.setattr(
+            keys.APIKeyClient,
+            "delete_key",
+            lambda self, key_id: deleted_ids.append(key_id),
+        )
+
+        result = CliRunner().invoke(
+            cli, ["delete", "--api-key", "test-key", "unique-key"], input="n\n"
+        )
+
+        assert result.exit_code != 0
+        assert deleted_ids == []
+
+    def test_non_interactive_without_yes_refuses(self, monkeypatch):
+        deleted_ids: list[str] = []
+        result = self._run(monkeypatch, ["unique-key"], deleted_ids)
+        assert result.exit_code != 0
+        assert "--yes" in result.output
+        assert deleted_ids == []
+
+
+class TestCreate:
+    def _run(self, monkeypatch, args, created, user_input=None):
+        def _record_create(self, description):
+            created.append(description)
+            return {"id": "id-new", "description": description, "key": "fake-value"}
+
+        monkeypatch.setattr(keys.APIKeyClient, "create_key", _record_create)
+        return CliRunner().invoke(
+            cli,
+            ["create", "--api-key", "test-key", "new-key", *args],
+            input=user_input,
+        )
+
+    def test_dry_run_creates_nothing(self, monkeypatch):
+        created: list[str] = []
+        result = self._run(
+            monkeypatch, ["--dry-run", "--workspace-id", "ws-1"], created
+        )
+        assert result.exit_code == 0
+        assert "would create key 'new-key' in workspace ws-1" in result.output
+        assert created == []
+
+    def test_dry_run_wins_over_yes(self, monkeypatch):
+        created: list[str] = []
+        result = self._run(monkeypatch, ["--dry-run", "--yes"], created)
+        assert result.exit_code == 0
+        assert created == []
+
+    def test_dry_run_json_needs_no_yes(self, monkeypatch):
+        created: list[str] = []
+        result = self._run(monkeypatch, ["--dry-run", "--format", "json"], created)
+        assert result.exit_code == 0
+        assert json.loads(result.output) == {"dry_run": True, "description": "new-key"}
+        assert created == []
+
+    def test_yes_skips_the_prompt(self, monkeypatch):
+        monkeypatch.setattr(keys, "_is_interactive", lambda: True)
+        created: list[str] = []
+        result = self._run(monkeypatch, ["--yes"], created)
+        assert result.exit_code == 0
+        assert "Create key" not in result.output
+        assert created == ["new-key"]
+
+    def test_prompt_goes_to_stderr(self, monkeypatch):
+        monkeypatch.setattr(keys, "_is_interactive", lambda: True)
+        created: list[str] = []
+        result = self._run(monkeypatch, [], created, user_input="y\n")
+        assert result.exit_code == 0
+        assert "Create key 'new-key'?" in result.stderr
+        assert "Create key 'new-key'?" not in result.stdout
+        assert created == ["new-key"]
+
+    def test_declining_the_prompt_creates_nothing(self, monkeypatch):
+        monkeypatch.setattr(keys, "_is_interactive", lambda: True)
+        created: list[str] = []
+        result = self._run(monkeypatch, [], created, user_input="n\n")
+        assert result.exit_code != 0
+        assert created == []
+
+    def test_non_interactive_without_yes_refuses(self, monkeypatch):
+        created: list[str] = []
+        result = self._run(monkeypatch, [], created)
+        assert result.exit_code != 0
+        assert "pass --yes to create" in result.output
+        assert created == []
+
+    def test_json_without_yes_refuses(self, monkeypatch):
+        monkeypatch.setattr(keys, "_is_interactive", lambda: True)
+        created: list[str] = []
+        result = self._run(monkeypatch, ["--format", "json"], created)
+        assert result.exit_code != 0
+        assert "--format json requires --yes" in result.output
+        assert created == []

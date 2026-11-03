@@ -10,12 +10,15 @@ USAGE:
     langsmith-client keys list --expired
     langsmith-client keys list --older-than 90
     langsmith-client keys create "LangSmith Deployment: my-app"
+    langsmith-client keys create "LangSmith Deployment: my-app" --dry-run
     langsmith-client keys delete "my-old-key" "another-old-key"
     langsmith-client keys delete "duplicated-name" --all
+    langsmith-client keys delete "my-old-key" --dry-run
 """
 
 import json
 import os
+import sys
 from datetime import datetime, timezone
 from http import HTTPStatus
 from typing import Any
@@ -218,6 +221,28 @@ def _format_duplicate_error(duplicates: dict[str, list[dict[str, Any]]]) -> str:
     return "\n".join(error_lines)
 
 
+def _is_interactive() -> bool:
+    return sys.stdin.isatty()
+
+
+def _confirm_or_abort(
+    question: str, *, action: str, skip: bool, as_json: bool = False
+) -> None:
+    """Require explicit consent before writing keys."""
+    if skip:
+        return
+    # JSON output is for scripts, and without a terminal there is no one to
+    # answer the prompt, so make the caller opt in rather than reading an
+    # empty stdin as "no".
+    if as_json:
+        raise click.UsageError(
+            f"--format json requires --yes, which confirms the {action}."
+        )
+    if not _is_interactive():
+        raise click.UsageError(f"Not running interactively; pass --yes to {action}.")
+    click.confirm(question, abort=True, err=True)
+
+
 def _common_options(func):
     func = click.option(
         "--api-key",
@@ -295,25 +320,64 @@ def list_keys(
     default="table",
     help="Output format (default: table)",
 )
-def create(
+@click.option(
+    "--dry-run",
+    is_flag=True,
+    default=False,
+    help="Show the key that would be created without creating it.",
+)
+@click.option(
+    "--yes", "-y", is_flag=True, default=False, help="Skip the confirmation prompt."
+)
+def create(  # noqa: PLR0913 -- Click maps one parameter per option
     api_key: str | None,
     workspace_id: str | None,
     description: str,
     output_format: str,
+    dry_run: bool,
+    yes: bool,
 ):
     """Create a new service API key.
 
     The full key value is shown only once -- copy it immediately.
 
+    The command asks for confirmation before creating the key. Pass --yes to
+    skip the prompt, which is required with --format json or when not running
+    in a terminal. Pass --dry-run to show the key and stop; it wins over --yes.
+
     \b
     Examples:
         langsmith-client keys create "LangSmith Deployment: hello-world-graph"
-        langsmith-client keys create "my-service-key" --format json
+        langsmith-client keys create "my-service-key" --dry-run
+        langsmith-client keys create "my-service-key" --format json --yes
     """
     try:
         client = APIKeyClient(api_key, workspace_id)
+    except ValueError as e:
+        raise click.ClickException(str(e)) from e
+
+    target = f"'{description}'"
+    if client.headers.get("X-Tenant-Id"):
+        target += f" in workspace {client.headers['X-Tenant-Id']}"
+
+    if dry_run:
+        if output_format == "json":
+            plan = {"dry_run": True, "description": description}
+            click.echo(json.dumps(plan, indent=2))
+        else:
+            click.echo(f"Dry run: would create key {target}; nothing changed.")
+        return
+
+    _confirm_or_abort(
+        f"Create key {target}?",
+        action="create",
+        skip=yes,
+        as_json=output_format == "json",
+    )
+
+    try:
         result = client.create_key(description)
-    except (ValueError, RuntimeError) as e:
+    except RuntimeError as e:
         raise click.ClickException(str(e)) from e
 
     if output_format == "json":
@@ -349,12 +413,21 @@ def create(
         "matches more than one key (default: error on duplicates)."
     ),
 )
-@click.option("--yes", is_flag=True, help="Skip confirmation prompt")
-def delete(
+@click.option(
+    "--dry-run",
+    is_flag=True,
+    default=False,
+    help="Show the keys that would be deleted without deleting them.",
+)
+@click.option(
+    "--yes", "-y", is_flag=True, default=False, help="Skip the confirmation prompt."
+)
+def delete(  # noqa: PLR0913 -- Click maps one parameter per option
     api_key: str | None,
     workspace_id: str | None,
     descriptions: tuple[str, ...],
     delete_all: bool,
+    dry_run: bool,
     yes: bool,
 ):
     """Delete API keys by description (name).
@@ -366,11 +439,16 @@ def delete(
     refuses to delete and exits with an error. Pass --all to explicitly
     delete every matching key.
 
+    The command lists the keys it will delete and asks for confirmation.
+    Pass --yes to skip the prompt, which is required when not running in a
+    terminal. Pass --dry-run to list the keys and stop; it wins over --yes.
+
     \b
     Examples:
         langsmith-client keys delete "my-old-key"
         langsmith-client keys delete "key-1" "key-2" "key-3"
         langsmith-client keys delete "key-1" --yes
+        langsmith-client keys delete "key-1" --dry-run
         langsmith-client keys delete "duplicated-name" --all
     """
     try:
@@ -399,8 +477,11 @@ def delete(
         )
     click.echo()
 
-    if not yes:
-        click.confirm("Delete these keys?", abort=True)
+    if dry_run:
+        click.echo(f"Dry run: {len(targets)} key(s) would be deleted; nothing changed.")
+        return
+
+    _confirm_or_abort(f"Delete {len(targets)} key(s)?", action="delete", skip=yes)
 
     deleted = 0
     failed = 0

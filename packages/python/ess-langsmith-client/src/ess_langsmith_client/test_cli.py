@@ -32,7 +32,7 @@ def _deployment(name, custom_url):
 
 class TestResolveLiveDeploymentRecord:
     def test_returns_live_deployment(self, monkeypatch):
-        resource = _deployment("hello-agent-dev", "https://a.example/lgp/x")
+        resource = _deployment("hello-agent-dev", "https://app.example.com/lgp/x")
         _stub_resources(monkeypatch, [resource])
         client = ControlPlaneClient(**_CREDS)
         live = resolve_live_deployment_record(client, service="hello-agent", env="dev")
@@ -51,12 +51,12 @@ class TestResolveLiveDeploymentRecord:
 
 class TestResolveDeploymentBaseUrl:
     def test_returns_custom_url_for_canonical_name(self, monkeypatch):
-        url = "https://a.example/lgp/hello-agent-dev-abc"
+        url = "https://app.example.com/lgp/hello-agent-dev-abc"
         _stub_resources(monkeypatch, [_deployment("hello-agent-dev", url)])
         assert resolve_deployment_base_url("hello-agent", env="dev", **_CREDS) == url
 
     def test_explicit_deployment_overrides_service(self, monkeypatch):
-        url = "https://a.example/lgp/hello-agent-prod-dev-xyz"
+        url = "https://app.example.com/lgp/hello-agent-prod-dev-xyz"
         _stub_resources(monkeypatch, [_deployment("hello-agent-prod-dev", url)])
         resolved = resolve_deployment_base_url(
             "hello-agent", deployment="hello-agent-prod-dev", **_CREDS
