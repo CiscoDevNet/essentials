@@ -33,7 +33,7 @@ Stop and report if it fails. It checks Node >= 22, that the CLI resolves, and th
 
 | Argument | Rule |
 | --- | --- |
-| `--source` | Absolute path. In default (extract) mode it must be a `tools/python/<name>/` directory inside the source repo. Ask if the user did not give one. |
+| `--source` | Absolute path. In default (extract) mode it must be a `tools/python/<name>/` directory inside the source repo. With `--no-extract` it may be a directory or a single file, such as `instructions/ess/ess-<name>.instructions.md`. Ask if the user did not give one. |
 | `--target-repo` | Absolute path to the essentials clone. Must be a git working tree. Ask if missing. |
 | `--target-path` | Relative to `--target-repo`. Optional in extract mode (defaults to `packages/python/<package-name>`), **required** with `--no-extract`. |
 

@@ -87,7 +87,7 @@ TARGET PATH (relative to target repo): ${plan.targetPathRel}
 TARGET ABSOLUTE PATH: ${plan.targetAbs}
 
 TASK:
-1. Read every file in the SOURCE directory. You have full read access to it.
+1. Read every file under SOURCE. When SOURCE is a single file, that file is the whole item. You have full read access to it.
 2. Write the generalized equivalent into TARGET ABSOLUTE PATH.
    - In COPY mode, the target path does not exist yet. Create it.
    - In SYNC mode, the target path already exists; reconcile by updating files that have meaningfully diverged. Do not blindly overwrite the target.

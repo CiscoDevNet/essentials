@@ -24,12 +24,14 @@ export async function planSync({
   const targetAbs = path.join(targetRepoAbs, targetPathRel);
 
   if (assertSourceExists) {
-    await assertDirectoryExists(sourceAbs, "--source");
+    await assertFileOrDirectoryExists(sourceAbs, "--source");
   }
   await assertDirectoryExists(targetRepoAbs, "--target-repo");
   await assertGitWorkingTree(targetRepoAbs);
 
-  const mode: SyncMode = (await directoryExists(targetAbs)) ? "SYNC" : "COPY";
+  // A missing target is a first copy. An existing directory or file (a single
+  // instructions/ess/ess-*.instructions.md item) is a re-sync.
+  const mode: SyncMode = (await pathExists(targetAbs)) ? "SYNC" : "COPY";
 
   return {
     mode,
@@ -84,6 +86,22 @@ async function assertDirectoryExists(absPath: string, label: string): Promise<vo
   }
 }
 
+// --no-extract sources are either a package directory or one instruction file.
+// Extract mode never reaches this check: the extracted package does not exist yet.
+async function assertFileOrDirectoryExists(absPath: string, label: string): Promise<void> {
+  try {
+    const stat = await fs.stat(absPath);
+    if (!stat.isDirectory() && !stat.isFile()) {
+      throw new Error(`${label} is not a file or directory: ${absPath}`);
+    }
+  } catch (error) {
+    if (isNotFoundError(error)) {
+      throw new Error(`${label} does not exist: ${absPath}`);
+    }
+    throw error;
+  }
+}
+
 async function assertGitWorkingTree(repoPath: string): Promise<void> {
   const gitDir = path.join(repoPath, ".git");
   if (!(await directoryExists(gitDir)) && !(await fileExists(gitDir))) {
@@ -105,6 +123,16 @@ async function fileExists(p: string): Promise<boolean> {
   try {
     const stat = await fs.stat(p);
     return stat.isFile();
+  } catch (error) {
+    if (isNotFoundError(error)) return false;
+    throw error;
+  }
+}
+
+async function pathExists(p: string): Promise<boolean> {
+  try {
+    await fs.stat(p);
+    return true;
   } catch (error) {
     if (isNotFoundError(error)) return false;
     throw error;
