@@ -60,17 +60,22 @@ describe("pii scanner", () => {
     "dean@registrar.example.edu",
     "Alice.Smith@Example.COM",
     "Contact bob@example.com.",
+    "bob@corp.example",
+    "test@example.invalid",
+    "ci@runner.test",
+    "Ops@Host.INVALID",
   ])("allows %s", async (line) => {
     expect(await emailFindings(line)).toBe(0);
   });
 
   it.each([
-    "bob@corp.example",
-    "x@example.invalid",
     "x@host.com",
     "x@example.com.evil.org",
     "x@notexample.com",
     "x@example.io",
+    "x@test.com",
+    "x@example.invalid.com",
+    "x@invalid.io",
   ])("flags %s", async (line) => {
     expect(await emailFindings(line)).toBe(1);
   });

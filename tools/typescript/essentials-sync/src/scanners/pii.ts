@@ -16,14 +16,16 @@ interface PiiPattern {
 const PII_PATTERNS: readonly PiiPattern[] = [
   {
     // Allows the four domains IANA reserves for documentation (example.com,
-    // .net, .org, .edu) and any subdomain of them (bob@corp.example.com), in
-    // any case. The domain must end there, so a lookalike such as
-    // x@example.com.evil.org is still flagged. Other reserved names (.example,
-    // .invalid, .test) and registrable ones (example.io) are flagged on
-    // purpose: placeholders stick to the four.
+    // .net, .org, .edu) and any subdomain of them (bob@corp.example.com), plus
+    // any name under the reserved TLDs .example, .invalid, and .test, in any
+    // case. The reserved name must end the address, so a lookalike such as
+    // x@example.com.evil.org or x@test.com is still flagged, as is a
+    // registrable name such as example.io.
     name: "email",
-    regex: /\b[A-Za-z0-9._%+-]+@(?!(?:[A-Za-z0-9-]+\.)*example\.(?:com|org|net|edu)(?!\.?[A-Za-z0-9-]))[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/gi,
-    message: "Email address that is not on example.com, example.net, example.org, or example.edu.",
+    regex: /\b[A-Za-z0-9._%+-]+@(?!(?:[A-Za-z0-9-]+\.)*(?:example\.(?:com|org|net|edu)|example|invalid|test)(?!\.?[A-Za-z0-9-]))[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/gi,
+    message:
+      "Email address that is not on example.com, example.net, example.org, or example.edu,"
+      + " or under the .example, .invalid, or .test TLDs.",
   },
   {
     name: "phone",
