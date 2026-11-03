@@ -2,11 +2,12 @@
 name = "langsmith-network"
 version = "0.1.0"
 description = "LangSmith Cloud NAT gateway IP addresses for firewall rules"
+license = "Apache-2.0"
 requires-python = ">=3.12,<3.13"
 dependencies = []
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
