@@ -7,6 +7,7 @@ members = [
     "azure-ai",
     "core-github",
     "ess-auth",
+    "ess-aws-bedrock",
     "ess-browser",
     "ess-dirs",
     "ess-hello-jwt-auth-code",
@@ -539,6 +540,23 @@ requires-dist = [
     { name = "pyjwt", extras = ["crypto"], marker = "extra == 'jwks'", specifier = ">=2.0.0" },
 ]
 provides-extras = ["jwks"]
+
+[[package]]
+name = "ess-aws-bedrock"
+version = "0.1.0"
+source = { editable = "packages/python/ess-aws-bedrock" }
+dependencies = [
+    { name = "pulumi" },
+    { name = "pulumi-aws" },
+    { name = "pulumi-utils" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "pulumi", specifier = ">=3.202.0,<4.0.0" },
+    { name = "pulumi-aws", specifier = ">=6.0.0" },
+    { name = "pulumi-utils", editable = "tools/python/pulumi-utils" },
+]
 
 [[package]]
 name = "ess-browser"

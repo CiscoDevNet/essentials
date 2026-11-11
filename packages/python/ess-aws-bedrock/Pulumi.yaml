@@ -1,0 +1,4 @@
+name: ess-aws-bedrock
+description: AWS Bedrock Anthropic model access infrastructure
+runtime: python
+main: src/ess_aws_bedrock

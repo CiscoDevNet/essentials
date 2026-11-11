@@ -23,6 +23,7 @@ members = [
     "tools/python/langsmith-hosting",
     "tools/python/pulumi-utils",
     "packages/python/ess-auth",
+    "packages/python/ess-aws-bedrock",
     "packages/python/ess-browser",
     "packages/python/ess-dirs",
     "packages/python/ess-langsmith-client",
