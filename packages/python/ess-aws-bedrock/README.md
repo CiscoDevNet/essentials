@@ -41,6 +41,7 @@ aws sts get-caller-identity --profile <profile>
 
 ```bash
 cd packages/python/ess-aws-bedrock
+cp Pulumi.example.yaml Pulumi.dev.yaml   # then replace YOUR_TEAM and your-aws-profile
 uv run pulumi login file://.
 uv run pulumi stack init dev
 ```

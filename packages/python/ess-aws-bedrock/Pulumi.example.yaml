@@ -1,0 +1,13 @@
+# Copy to Pulumi.<stack>.yaml (for example Pulumi.dev.yaml), then replace
+# YOUR_TEAM and your-aws-profile. See the README for every config key.
+config:
+  aws:profile: your-aws-profile
+  aws:region: us-east-1
+  ess-aws-bedrock:teamName: YOUR_TEAM
+  ess-aws-bedrock:environment: development
+  # Optional (defaults shown):
+  # ess-aws-bedrock:modelPatterns:
+  #   - anthropic.*
+  # ess-aws-bedrock:createAccessKey: "true"
+  # ess-aws-bedrock:createBedrockApiKey: "false"
+  # ess-aws-bedrock:bedrockApiKeyAgeDays: "180"
