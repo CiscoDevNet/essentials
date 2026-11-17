@@ -81,6 +81,12 @@ describe("findJargonTerms", () => {
   it("lets allowed text through, so a public name can stay", () => {
     assert.deepEqual(findJargonTerms("github.com/CodenameDevNet/essentials", config, ["CodenameDevNet"]), []);
   });
+
+  it("matches allowed text in exact case only", () => {
+    const sso = loadJargonConfig(["codename-sso"]);
+    assert.deepEqual(findJargonTerms("Sign in with CODENAME-SSO.", sso, ["CODENAME-SSO"]), []);
+    assert.deepEqual(findJargonTerms("Run codename-sso login.", sso, ["CODENAME-SSO"]).map((p) => p.term), ["codename-sso"]);
+  });
 });
 
 describe("readMessageLines", () => {

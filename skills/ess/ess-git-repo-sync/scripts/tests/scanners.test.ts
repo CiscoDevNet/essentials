@@ -43,6 +43,11 @@ describe("jargon scanner", () => {
     ["return parseWidgetco(body)", "widgetco"],
     ["widgetco2 = 1", "widgetco"],
     ["ACME-INTERNAL_HOST=", "acme-internal"],
+    ["ACME_INTERNAL_HOST=", "acme-internal"],
+    ["Ask Acme Internal.", "acme-internal"],
+    ["new AcmeInternalClient()", "acme-internal"],
+    ["import acmeinternal", "acme-internal"],
+    ["Built by the Agentic-Ops group.", "agentic ops"],
   ];
   const config = loadJargonConfig([...terms, "widgetco", "agentic ops"]);
   for (const [line, term] of matches) {
@@ -55,9 +60,9 @@ describe("jargon scanner", () => {
     assert.deepEqual(findJargonTerms("Widgetcoin and corp.example.org", config), []);
   });
 
-  const longerWords = ["Widgetcos", "WIDGETCOIN", "superwidgetco", "acme_internal"];
+  const longerWords = ["Widgetcos", "WIDGETCOIN", "superwidgetco", "acme internals", "acme.internal"];
   for (const line of longerWords) {
-    it(`does not flag a longer word or another separator: ${line}`, () => {
+    it(`does not flag a longer word: ${line}`, () => {
       assert.deepEqual(findJargonTerms(line, config), []);
     });
   }

@@ -21,8 +21,15 @@ const anyCase = (text: string): string =>
     })
     .join("");
 
-const identifierWord = (word: string): RegExp =>
-  new RegExp(`${WORD_START}${anyCase(word)}${WORD_END}`);
+// Words of a term are joined by any one separator or none, so `acme-internal`
+// also matches `acme_internal`, `Acme Internal`, and `AcmeInternal`.
+const TERM_SEPARATORS = /[\s_-]+/;
+const ANY_SEPARATOR = "[-_\\s]?";
+
+const identifierWord = (term: string): RegExp => {
+  const words = term.split(TERM_SEPARATORS).filter(Boolean).map(anyCase);
+  return new RegExp(`${WORD_START}${words.join(ANY_SEPARATOR)}${WORD_END}`);
+};
 
 const hostnameSuffix = (suffix: string): RegExp =>
   new RegExp(`[a-z0-9-]+\\.${suffix.replace(/\./g, "\\.")}`, "i");
@@ -109,11 +116,13 @@ export function isAllowedPath(relativePath: string, allowPaths: readonly string[
   return allowPaths.some((glob) => globToRegExp(glob).test(normalized));
 }
 
+// Allowed text matches in exact case only: allowing a public product name such
+// as `ACME-SSO` must not also allow the internal `acme-sso` tool.
 export function maskAllowedText(line: string, allowText: readonly string[]): string {
   let masked = line;
   for (const text of allowText) {
     if (text) {
-      masked = masked.replace(new RegExp(escapeRegExp(text), "gi"), " ");
+      masked = masked.replace(new RegExp(escapeRegExp(text), "g"), " ");
     }
   }
   return masked;

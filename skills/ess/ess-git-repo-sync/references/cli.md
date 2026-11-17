@@ -167,8 +167,10 @@ is a flat array, or an object:
 Entries that start with `*.` match hostnames with that suffix; everything else is a
 case-insensitive whole-word match that also finds the word inside identifiers: the
 term `acme` matches `acme_auth`, `ACME_URL`, `AcmeClient`, and `getAcme`, but not
-`Acmeville`. Separators inside a term match only themselves, so list `acme-internal`
-and `acme_internal` separately if both occur. Put per-organization employee-ID patterns here
+`Acmeville`. The words of a term match with any separator between them, or none:
+`acme-internal` also matches `acme_internal`, `Acme Internal`, `ACME_INTERNAL`, and
+`AcmeInternal`, so list each term once. To let one public spelling through, add it
+to `allow.text`. Put per-organization employee-ID patterns here
 too: the PII scanner only flags emails, phone numbers, and SSNs, and skips lock
 files such as `package-lock.json` and `uv.lock`, whose registry metadata carries
 upstream maintainers' addresses.

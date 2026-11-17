@@ -65,7 +65,7 @@ interface WordlistInputs {
 // scanner enforces the same list after every agent turn.
 function formatForbiddenTerms(jargonTerms: readonly string[], jargonAllowText: readonly string[]): string {
   const lines = jargonTerms.map((term) => `  - ${term}`).join("\n");
-  const forbidden = `FORBIDDEN TERMS (company-specific; none may appear in any file you write, in any letter case, as a whole word or as a word inside an identifier such as camelCase or snake_case; an entry starting with '*.' forbids every hostname under that domain):
+  const forbidden = `FORBIDDEN TERMS (company-specific; none may appear in any file you write, in any letter case, as a whole word or as a word inside an identifier such as camelCase or snake_case; a term of several words is forbidden with any separator or none between them, so 'acme-internal' also forbids 'acme_internal', 'Acme Internal', and 'AcmeInternal'; an entry starting with '*.' forbids every hostname under that domain):
 ${lines}`;
   if (jargonAllowText.length === 0) return forbidden;
   const allowed = jargonAllowText.map((text) => `  - ${text}`).join("\n");

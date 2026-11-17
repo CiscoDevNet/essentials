@@ -51,8 +51,8 @@ The terms and their exceptions live in `jargon.json` at the repo root (pass
 `--jargon-file <name>` for another name). With no terms, the check exits 1. The
 jargon file itself is never flagged. `allow.paths` are repo-relative globs (`*`,
 `**`, `?`) whose added lines are never flagged; `allow.text` entries are literal
-strings removed from a line before matching, so a forbidden term elsewhere on the
-same line is still caught:
+strings, in exact case, removed from a line before matching, so a forbidden term
+elsewhere on the same line is still caught:
 
 ```json
 {
