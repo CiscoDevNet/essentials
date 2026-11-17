@@ -5,7 +5,7 @@ import { afterEach, describe, it } from "node:test";
 import { copyTreeVerbatim } from "../src/copy.ts";
 import { listPublishableFiles } from "../src/file-set.ts";
 import { scanPii } from "../src/scanners/pii.ts";
-import { git, makeRepo, makeTempDir, removeTempDirs, writeTree } from "./temp-repos.ts";
+import { flaggedEmail, git, makeRepo, makeTempDir, removeTempDirs, writeTree } from "./temp-repos.ts";
 
 afterEach(removeTempDirs);
 
@@ -16,7 +16,7 @@ describe("listPublishableFiles", () => {
     const repo = await makeRepo("file-set", {
       ".gitignore": ".env\n",
       "pkg/README.md": "# Package\n",
-      "pkg/.env": "OWNER=jdoe@corp.internal.net\n",
+      "pkg/.env": `OWNER=${flaggedEmail()}\n`,
     });
 
     assert.deepEqual(await listPublishableFiles(path.join(repo, "pkg")), ["README.md"]);
@@ -61,7 +61,7 @@ describe("listPublishableFiles", () => {
     const repo = await makeRepo("file-set", {
       ".gitignore": ".env\n",
       "pkg/README.md": "# Package\n",
-      "pkg/.env": "OWNER=jdoe@corp.internal.net\n",
+      "pkg/.env": `OWNER=${flaggedEmail()}\n`,
     });
     const pkg = path.join(repo, "pkg");
     const target = await makeRepo("file-set-target");

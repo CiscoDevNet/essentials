@@ -1,3 +1,4 @@
+import path from "node:path";
 import type { Finding, Severity } from "../types.ts";
 import { scanTextFilesByLine } from "./text-files.ts";
 
@@ -17,8 +18,8 @@ const PII_PATTERNS: readonly PiiPattern[] = [
     // Allows the four domains IANA reserves for documentation (example.com,
     // .net, .org, .edu) and any subdomain of them (bob@corp.example.com), plus
     // any name under the reserved TLDs .example, .invalid, and .test, in any
-    // case. The reserved name must end the address, so a lookalike such as
-    // x@example.com.evil.org or x@test.com is still flagged, as is a
+    // case. The reserved name must end the address, so a lookalike domain such
+    // as example.com.evil.org or test.com is still flagged, as is a
     // registrable name such as example.io.
     name: "email",
     regex: /\b[A-Za-z0-9._%+-]+@(?!(?:[A-Za-z0-9-]+\.)*(?:example\.(?:com|org|net|edu)|example|invalid|test)(?!\.?[A-Za-z0-9-]))[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/gi,
@@ -37,6 +38,20 @@ const PII_PATTERNS: readonly PiiPattern[] = [
     message: "Possible US Social Security Number.",
   },
 ];
+
+// Lock files are generated from registry metadata, which carries upstream
+// maintainers' public addresses (npm deprecation notices, for one). The jargon
+// and secret scanners still read them, so a private registry host is caught.
+const LOCK_FILE_NAMES: ReadonlySet<string> = new Set([
+  "Cargo.lock",
+  "Gemfile.lock",
+  "npm-shrinkwrap.json",
+  "package-lock.json",
+  "pnpm-lock.yaml",
+  "poetry.lock",
+  "uv.lock",
+  "yarn.lock",
+]);
 
 export interface PiiScanOptions {
   severity: Severity;
@@ -64,6 +79,9 @@ export async function scanPii(
       message: pattern.message,
       term: pattern.name,
     }),
-    options.skipRootFiles,
+    {
+      skipRootFiles: options.skipRootFiles,
+      skipFile: (filePath) => LOCK_FILE_NAMES.has(path.basename(filePath)),
+    },
   );
 }

@@ -1,7 +1,7 @@
 - id: ess-scan
   name: ess-scan (secrets, jargon, PII in ess-* items)
   description: >-
-    Runs the essentials-sync deterministic scanners on each changed ess-* item
+    Runs the ess-git-repo-sync deterministic scanners on each changed ess-* item
     and fails on critical findings. The jargon terms come from jargon.json at
     the repo root (rename it with args: [--jargon-file, <name>]); with no
     terms the hook fails. Needs Node.js 24 or later and npm on PATH;
@@ -9,7 +9,7 @@
   # A script, not `language: node`: pre-commit would install this repo into
   # node_modules, where Node refuses to strip TypeScript types. The entry needs
   # no install; secretlint comes from npx.
-  entry: skills/ess/essentials-sync/scripts/src/ess-scan.ts
+  entry: skills/ess/ess-git-repo-sync/scripts/src/ess-scan.ts
   language: script
   files: '(^|/)ess-[^/]+/|(^|/)ess/ess-[^/]+$'
   require_serial: true

@@ -1,5 +1,5 @@
 {
-  "name": "essentials-sync-sdk",
+  "name": "ess-git-repo-sync-sdk",
   "version": "0.0.0",
   "private": true,
   "description": "Pins the Cursor SDK that the sync command installs into the user cache.",

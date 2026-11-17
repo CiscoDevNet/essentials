@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { UsageError } from "../src/args.ts";
 import { confirmWrite } from "../src/confirm.ts";
 import { loadEnvFiles } from "../src/env.ts";
+import { PROGRAM_NAME } from "../src/program.ts";
 import { buildSyncPlan, parseSyncArgs, stageDryRunPlan } from "../src/sync-command.ts";
 import { git, makeRepo, makeTempDir, removeTempDirs, writeTree } from "./temp-repos.ts";
 
@@ -285,7 +286,7 @@ describe("loadEnvFiles", () => {
   it("reads the .env in the XDG config directory, without overriding the environment", async () => {
     const config = await makeTempDir("env-config");
     const cwd = await makeTempDir("env-cwd");
-    await writeTree(path.join(config, "essentials-sync"), {
+    await writeTree(path.join(config, PROGRAM_NAME), {
       ".env": "SYNC_TEST_FROM_FILE=file\nSYNC_TEST_PRESET=file\n",
     });
     const saved = process.env.XDG_CONFIG_HOME;
@@ -294,7 +295,7 @@ describe("loadEnvFiles", () => {
     try {
       const loaded = loadEnvFiles(cwd);
 
-      assert.deepEqual(loaded, [path.join(config, "essentials-sync", ".env")]);
+      assert.deepEqual(loaded, [path.join(config, PROGRAM_NAME, ".env")]);
       assert.equal(process.env.SYNC_TEST_FROM_FILE, "file");
       assert.equal(process.env.SYNC_TEST_PRESET, "environment");
     } finally {

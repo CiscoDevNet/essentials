@@ -1,7 +1,7 @@
 import os from "node:os";
 import path from "node:path";
 
-export const PROGRAM_NAME = "essentials-sync";
+export const PROGRAM_NAME = "ess-git-repo-sync";
 
 export const MIN_NODE_MAJOR = 24;
 

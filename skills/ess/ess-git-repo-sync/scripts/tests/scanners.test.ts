@@ -8,7 +8,7 @@ import { runScanners } from "../src/scanners/index.ts";
 import { scanJargon } from "../src/scanners/jargon.ts";
 import { scanPii } from "../src/scanners/pii.ts";
 import { scanWithSecretlint } from "../src/scanners/secretlint.ts";
-import { makeFixtureRepo, makeRepo, removeTempDirs } from "./temp-repos.ts";
+import { flaggedEmail, makeFixtureRepo, makeRepo, removeTempDirs } from "./temp-repos.ts";
 
 afterEach(removeTempDirs);
 
@@ -89,9 +89,13 @@ describe("pii scanner", () => {
     assert.deepEqual(findings, []);
   });
 
-  it("flags non-example email addresses on a dirty fixture", async () => {
-    const findings = await scanPii(await makeFixtureRepo("dirty-package"), { severity: "critical" });
-    assert.ok(findings.some((f) => f.term === "email"));
+  it("skips lock files, which carry upstream maintainers' addresses", async () => {
+    const notice = `"deprecated": "Contact ${flaggedEmail("maintainer")}"\n`;
+    const root = await makeRepo("pii", { "package-lock.json": notice, "uv.lock": notice, "notes.md": notice });
+
+    const findings = await scanPii(root, { severity: "critical" });
+
+    assert.deepEqual(findings.map((f) => path.basename(f.file)), ["notes.md"]);
   });
 
   const allowed = [
@@ -114,14 +118,14 @@ describe("pii scanner", () => {
   }
 
   const flagged = [
-    "x@host.com",
-    "x@example.com.evil.org",
-    "x@notexample.com",
-    "x@example.io",
-    "x@test.com",
-    "x@example.invalid.com",
-    "x@invalid.io",
-  ];
+    "host.com",
+    "example.com.evil.org",
+    "notexample.com",
+    "example.io",
+    "test.com",
+    "example.invalid.com",
+    "invalid.io",
+  ].map((domain) => ["x", domain].join("@"));
   for (const line of flagged) {
     it(`flags ${line}`, async () => {
       assert.equal(await emailFindings(line), 1);

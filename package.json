@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test 'skills/ess/essentials-sync/scripts/tests/**/*.test.ts'",
-    "typecheck": "tsc --project skills/ess/essentials-sync/scripts"
+    "test": "node --test 'skills/ess/ess-git-repo-sync/scripts/tests/**/*.test.ts'",
+    "typecheck": "tsc --project skills/ess/ess-git-repo-sync/scripts"
   },
   "devDependencies": {
     "@cursor/sdk": "1.0.13",

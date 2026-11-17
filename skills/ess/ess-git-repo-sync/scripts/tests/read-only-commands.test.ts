@@ -5,7 +5,7 @@ import { afterEach, describe, it } from "node:test";
 import { findEssItemRoot, repoOwnedItemFiles } from "../src/ess-items.ts";
 import { formatScanFinding, resolveScanRoots, runScanCommand } from "../src/scan-command.ts";
 import { compareEssItems, runStatusCommand } from "../src/status-command.ts";
-import { makeRepo, makeTempDir, removeTempDirs } from "./temp-repos.ts";
+import { flaggedEmail, makeRepo, makeTempDir, removeTempDirs } from "./temp-repos.ts";
 
 afterEach(removeTempDirs);
 
@@ -15,7 +15,8 @@ describe("findEssItemRoot", () => {
     ["skills/ess/ess-git-tidy/SKILL.md", "skills/ess/ess-git-tidy"],
     ["instructions/ess/ess-okf-docs.instructions.md", "instructions/ess/ess-okf-docs.instructions.md"],
     [".agents/skills/ess-git-tidy/SKILL.md", null],
-    ["skills/ess/essentials-sync/scripts/src/ess-scan.ts", null],
+    ["skills/ess/ess-git-repo-sync/scripts/src/ess-scan.ts", "skills/ess/ess-git-repo-sync"],
+    ["tools/typescript/repo-sync/src/ess-scan.ts", null],
     ["plans/ess-verbatim-sync.md", null],
     ["tools/python/langsmith-onboarding/README.md", null],
   ];
@@ -55,7 +56,7 @@ describe("scan", () => {
     const repo = await makeRepo("read-only", {
       "jargon.json": JSON.stringify(["widgetco"]),
       "packages/python/ess-clean/README.md": "Contact bob@corp.example.com\n",
-      "packages/python/ess-dirty/README.md": "Contact bob@corp.internal.net\n",
+      "packages/python/ess-dirty/README.md": `Contact ${flaggedEmail("bob")}\n`,
     });
 
     assert.equal(await runScanCommand(["packages/python/ess-clean", ...skipSecretScanners], repo), 0);

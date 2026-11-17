@@ -23,14 +23,14 @@ Create one at [cursor.com/dashboard](https://cursor.com/dashboard), under
 settings**, **Service Accounts** (Enterprise plans).
 
 The CLI reads `CURSOR_API_KEY` from, in order, the environment, `./.env` in the
-current directory, and `${XDG_CONFIG_HOME:-~/.config}/essentials-sync/.env`. A
+current directory, and `${XDG_CONFIG_HOME:-~/.config}/ess-git-repo-sync/.env`. A
 variable already in the environment always wins. Keep the key in the config
 directory, not in a repo:
 
 ```bash
-mkdir -p ~/.config/essentials-sync
-printf 'CURSOR_API_KEY=%s\n' "<key>" > ~/.config/essentials-sync/.env
-chmod 600 ~/.config/essentials-sync/.env
+mkdir -p ~/.config/ess-git-repo-sync
+printf 'CURSOR_API_KEY=%s\n' "<key>" > ~/.config/ess-git-repo-sync/.env
+chmod 600 ~/.config/ess-git-repo-sync/.env
 ```
 
 The same files may set `CURSOR_MODEL` and `CURSOR_REVIEW_MODEL`, the defaults for

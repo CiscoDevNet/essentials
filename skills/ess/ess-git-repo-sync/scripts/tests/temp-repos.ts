@@ -8,6 +8,12 @@ export type FileTree = Record<string, string>;
 
 export const FIXTURES_DIRECTORY = fileURLToPath(new URL("./fixtures/", import.meta.url));
 
+// An address the pii scanner flags. Built at runtime, because this skill is
+// itself an ess-* item and its tests must pass the repo's own ess-scan hook.
+export function flaggedEmail(localPart = "jdoe"): string {
+  return [localPart, "corp.internal.net"].join("@");
+}
+
 const tempRoots: string[] = [];
 
 export async function makeTempDir(prefix: string): Promise<string> {

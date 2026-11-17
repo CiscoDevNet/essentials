@@ -37,6 +37,11 @@ export async function* walkTextFiles(
   }
 }
 
+export interface LineScanOptions {
+  skipRootFiles?: ReadonlySet<string>;
+  skipFile?: (filePath: string) => boolean;
+}
+
 // Runs a set of line-oriented patterns over every text file under rootPath.
 // `test` decides whether a pattern matches a given line; `toFinding` builds the
 // Finding for a match. This centralizes the read/split/loop that both the pii
@@ -46,10 +51,11 @@ export async function scanTextFilesByLine<P>(
   patterns: readonly P[],
   test: (pattern: P, line: string) => boolean,
   toFinding: (pattern: P, filePath: string, lineNumber: number) => Finding,
-  skipRootFiles?: ReadonlySet<string>,
+  options: LineScanOptions = {},
 ): Promise<Finding[]> {
   const findings: Finding[] = [];
-  for await (const filePath of walkTextFiles(rootPath, skipRootFiles)) {
+  for await (const filePath of walkTextFiles(rootPath, options.skipRootFiles)) {
+    if (options.skipFile?.(filePath)) continue;
     const content = await fs.readFile(filePath, "utf8");
     const lines = content.split(/\r?\n/);
     for (let i = 0; i < lines.length; i += 1) {

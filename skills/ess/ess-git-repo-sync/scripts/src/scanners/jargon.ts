@@ -26,6 +26,6 @@ export async function scanJargon(
       message: pattern.message,
       term: pattern.term,
     }),
-    options.skipRootFiles,
+    { skipRootFiles: options.skipRootFiles },
   );
 }

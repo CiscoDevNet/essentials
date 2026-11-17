@@ -13,14 +13,14 @@ skill installers copy it verbatim, generated files included.
 ## The SDK cache
 
 The first `sync` or `models` copies `scripts/sdk/package.json` and its lockfile to
-`${XDG_CACHE_HOME:-~/.cache}/essentials-sync/sdk-<hash>/` and runs
+`${XDG_CACHE_HOME:-~/.cache}/ess-git-repo-sync/sdk-<hash>/` and runs
 `npm ci --omit=dev` there. The hash covers both files, so a version bump installs
 fresh beside the old one. The install happens in a temp directory that is renamed
 into place, so an interrupted install never looks complete. `preflight` prints the
 directory.
 
 To reinstall, delete the directory and run `models`. To free space, delete
-`${XDG_CACHE_HOME:-~/.cache}/essentials-sync/`.
+`${XDG_CACHE_HOME:-~/.cache}/ess-git-repo-sync/`.
 
 ## Install failures
 

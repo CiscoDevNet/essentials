@@ -166,7 +166,9 @@ is a flat array, or an object:
 
 Entries that start with `*.` match hostnames with that suffix; everything else is a
 case-insensitive whole-word match. Put per-organization employee-ID patterns here
-too: the PII scanner only flags emails, phone numbers, and SSNs. `allow` is read
+too: the PII scanner only flags emails, phone numbers, and SSNs, and skips lock
+files such as `package-lock.json` and `uv.lock`, whose registry metadata carries
+upstream maintainers' addresses. `allow` is read
 only by the git hooks ([hooks.md](hooks.md)).
 
 Where each command looks, merging the terms it finds:

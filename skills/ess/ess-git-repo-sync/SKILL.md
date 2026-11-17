@@ -1,10 +1,10 @@
 ---
-name: essentials-sync
+name: ess-git-repo-sync
 description: >-
   Extract a jargon-free ess-* shared package out of a team- or account-specific
   tool in a private repo and sync it into a public target repo (by default, the
   current one), with deterministic scanners and an adversarial LLM reviewer in
-  between. Use when the user runs /essentials-sync, asks to open-source a
+  between. Use when the user runs /ess-git-repo-sync, asks to open-source a
   package, extract an ess-* package, move or sync a tool from a private repo
   into this one, or scrub a package of company jargon before publishing.
 license: Apache-2.0
@@ -18,7 +18,7 @@ metadata:
   version: "2.0"
 ---
 
-# Essentials Sync
+# Git Repo Sync
 
 Sync needs the Cursor SDK and a Cursor API key; see
 [references/cursor-sdk.md](references/cursor-sdk.md). `scan` and `status` need
