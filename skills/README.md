@@ -51,7 +51,7 @@ npx skills add CiscoDevNet/essentials --skill '*' --full-depth
 | [`ess/ess-shell-flags-literal`](ess/ess-shell-flags-literal/) | Write command-line flags out literally instead of packing them into one shell variable. |
 | [`ess/ess-django-docs`](ess/ess-django-docs/) | Answer Django questions from current documentation through the Context7 MCP. |
 | [`ess/ess-postgres-docs`](ess/ess-postgres-docs/) | Answer PostgreSQL and `psql` questions from current documentation through the Context7 MCP. |
-| [`ess/essentials-sync`](ess/essentials-sync/) | Extract a jargon-free `ess-*` package out of a private tool and sync it to the open-source essentials repo. |
+| [`ess/essentials-sync`](ess/essentials-sync/) | Extract a jargon-free `ess-*` package out of a private tool and sync it to the open-source essentials repo. Sync requires the Cursor SDK (installed on first use) and a Cursor API key. |
 
 ## Notes
 
