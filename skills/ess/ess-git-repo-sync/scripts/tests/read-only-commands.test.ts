@@ -63,6 +63,18 @@ describe("scan", () => {
     assert.equal(await runScanCommand(["packages/python/ess-dirty/README.md", ...skipSecretScanners], repo), 1);
   });
 
+  it("honors allowed text from the jargon file", async (t) => {
+    t.mock.method(console, "log", () => {});
+    const repo = await makeRepo("read-only", {
+      "jargon.json": JSON.stringify({ terms: ["widgetco"], allow: { text: ["WidgetCoDevNet"] } }),
+      "skills/ess/ess-allowed/SKILL.md": "Install from github.com/WidgetCoDevNet/tools.\n",
+      "skills/ess/ess-flagged/SKILL.md": "Install the WidgetCo CLI.\n",
+    });
+
+    assert.equal(await runScanCommand(["skills/ess/ess-allowed", ...skipSecretScanners], repo), 0);
+    assert.equal(await runScanCommand(["skills/ess/ess-flagged", ...skipSecretScanners], repo), 1);
+  });
+
   it("loads jargon terms from the repo root", async (t) => {
     t.mock.method(console, "log", () => {});
     const repo = await makeRepo("read-only", {

@@ -72,9 +72,14 @@ describe("findJargonTerms", () => {
     assert.deepEqual(findJargonTerms("see https://docs.corp.example", config, ["docs.corp.example"]), []);
   });
 
-  it("matches whole words only, so a longer name that starts with a term passes", () => {
-    assert.deepEqual(findJargonTerms("github.com/CodenameDevNet/essentials", config), []);
+  it("matches a term inside an identifier but not inside a longer word", () => {
+    assert.deepEqual(findJargonTerms("github.com/CodenameDevNet/essentials", config).map((p) => p.term), ["codename"]);
     assert.deepEqual(findJargonTerms("the codename-auth tool", config).map((p) => p.term), ["codename"]);
+    assert.deepEqual(findJargonTerms("the codenamed tool", config), []);
+  });
+
+  it("lets allowed text through, so a public name can stay", () => {
+    assert.deepEqual(findJargonTerms("github.com/CodenameDevNet/essentials", config, ["CodenameDevNet"]), []);
   });
 });
 

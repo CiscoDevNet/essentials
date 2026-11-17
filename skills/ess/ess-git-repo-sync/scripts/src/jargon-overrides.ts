@@ -4,12 +4,16 @@ import { parseJargonOverrides } from "./jargon-list.ts";
 
 export interface LoadedJargon {
   terms: string[];
+  // `allow.text` from every file read: literal strings, such as a public org
+  // name, that are blanked out of a line before the terms are matched.
+  allowText: string[];
   // Every path the file was looked for at, read or not, for error messages.
   searchedPaths: string[];
   readPaths: string[];
 }
 
-// Reads <location>/<fileName> at each location and merges the terms. A
+// Reads <location>/<fileName> at each location and merges the terms and the
+// allowed text. A
 // location that is a file (a single-file item) reads the file beside it;
 // null and repeated locations are skipped. A missing file contributes
 // nothing. A file that exists but cannot be parsed throws: a broken wordlist
@@ -26,6 +30,7 @@ export async function loadJargonTerms(
   }
 
   const terms = new Set<string>();
+  const allowText = new Set<string>();
   const searchedPaths: string[] = [];
   const readPaths: string[] = [];
   for (const directory of directories) {
@@ -45,11 +50,15 @@ export async function loadJargonTerms(
       throw new Error(`${configPath} is not valid JSON: ${(error as Error).message}`);
     }
     readPaths.push(configPath);
-    for (const term of parseJargonOverrides(parsed).terms) {
+    const overrides = parseJargonOverrides(parsed);
+    for (const term of overrides.terms) {
       if (term.trim()) terms.add(term.trim());
     }
+    for (const text of overrides.allow.text) {
+      if (text) allowText.add(text);
+    }
   }
-  return { terms: [...terms], searchedPaths, readPaths };
+  return { terms: [...terms], allowText: [...allowText], searchedPaths, readPaths };
 }
 
 // Scans fail closed: with no wordlist, a clean jargon scan proves nothing.

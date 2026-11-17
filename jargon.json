@@ -16,5 +16,8 @@
     "runon",
     "npi",
     "aws-sso"
-  ]
+  ],
+  "allow": {
+    "text": ["CiscoDevNet"]
+  }
 }

@@ -36,6 +36,13 @@ describe("jargon scanner", () => {
     ["Call api.corp.example first.", "*.corp.example"],
     ["Ask the WidgetCo help desk.", "widgetco"],
     ["Built by the agentic ops group.", "agentic ops"],
+    ["client = WidgetCoClient()", "widgetco"],
+    ["def get_widgetco_user():", "widgetco"],
+    ["WIDGETCO_AUTH_URL=", "widgetco"],
+    ["new WIDGETCOClient()", "widgetco"],
+    ["return parseWidgetco(body)", "widgetco"],
+    ["widgetco2 = 1", "widgetco"],
+    ["ACME-INTERNAL_HOST=", "acme-internal"],
   ];
   const config = loadJargonConfig([...terms, "widgetco", "agentic ops"]);
   for (const [line, term] of matches) {
@@ -48,9 +55,26 @@ describe("jargon scanner", () => {
     assert.deepEqual(findJargonTerms("Widgetcoin and corp.example.org", config), []);
   });
 
+  const longerWords = ["Widgetcos", "WIDGETCOIN", "superwidgetco", "acme_internal"];
+  for (const line of longerWords) {
+    it(`does not flag a longer word or another separator: ${line}`, () => {
+      assert.deepEqual(findJargonTerms(line, config), []);
+    });
+  }
+
   it("builds no patterns from an empty or blank wordlist", () => {
     assert.deepEqual(loadJargonConfig([]).patterns, []);
     assert.deepEqual(loadJargonConfig(["", "  "]).patterns, []);
+  });
+
+  it("blanks allowed text before matching, so the rest of the line is still checked", async () => {
+    const root = await makeRepo("jargon-allow", {
+      "README.md": "Clone github.com/WidgetCoDevNet/tools.\nAsk WidgetCoDevNet or WidgetCo support.\n",
+    });
+
+    const findings = await scanJargon(root, { severity: "critical", terms: ["widgetco"], allowText: ["WidgetCoDevNet"] });
+
+    assert.deepEqual(findings.map((f) => f.line), [2]);
   });
 
   it("respects custom severity", async () => {

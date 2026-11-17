@@ -225,17 +225,23 @@ export async function stageDryRunPlan(options: SyncOptions, real: SyncPlan): Pro
   ).plan;
 }
 
-// Terms from the jargon file at the source repo root, the source item (the
-// original tool in extract mode), and the target repo root. They apply to
-// every scan of the run and are injected into the agent prompts.
-async function loadSyncJargon(plan: SyncPlan, jargonFile: string): Promise<string[]> {
+interface SyncJargon {
+  terms: string[];
+  allowText: string[];
+}
+
+// Terms and allowed text from the jargon file at the source repo root, the
+// source item (the original tool in extract mode), and the target repo root.
+// They apply to every scan of the run and are injected into the agent prompts.
+async function loadSyncJargon(plan: SyncPlan, jargonFile: string): Promise<SyncJargon> {
   const loaded = await loadJargonTerms(
     [plan.sourceRepoRoot, plan.wrapperPkgAbs ?? plan.sourceAbs, plan.targetRepoAbs],
     jargonFile,
   );
   const terms = requireJargonTerms(loaded, jargonFile);
-  console.log(style.dim(`[jargon] ${terms.length} term(s) from ${loaded.readPaths.join(", ")}`));
-  return terms;
+  const allowed = loaded.allowText.length > 0 ? `, ${loaded.allowText.length} allowed text(s)` : "";
+  console.log(style.dim(`[jargon] ${terms.length} term(s)${allowed} from ${loaded.readPaths.join(", ")}`));
+  return { terms, allowText: loaded.allowText };
 }
 
 export async function runSyncCommand(
@@ -271,7 +277,7 @@ export async function runSyncCommand(
     );
   }
 
-  const jargonTerms = await loadSyncJargon(realPlan, options.jargonFile);
+  const { terms: jargonTerms, allowText: jargonAllowText } = await loadSyncJargon(realPlan, options.jargonFile);
 
   let sourceScan: ScanReport | null = null;
   if (options.sourceScan) {
@@ -283,6 +289,7 @@ export async function runSyncCommand(
       rootPath: sourceScanRoot,
       jargonSeverity: "warning",
       jargonTerms,
+      jargonAllowText,
       jargonFile: options.jargonFile,
     });
     console.log(
@@ -330,7 +337,7 @@ export async function runSyncCommand(
   }
 
   const plan = outcome === "dry-run" ? await stageDryRunPlan(options, realPlan) : realPlan;
-  return runSession({ apiKey, models, plan, sourceScan, jargonTerms, options });
+  return runSession({ apiKey, models, plan, sourceScan, jargonTerms, jargonAllowText, options });
 }
 
 interface RunSessionInputs {
@@ -339,6 +346,7 @@ interface RunSessionInputs {
   plan: SyncPlan;
   sourceScan: ScanReport | null;
   jargonTerms: string[];
+  jargonAllowText: string[];
   options: SyncOptions;
 }
 
@@ -348,6 +356,7 @@ async function runSession({
   plan,
   sourceScan,
   jargonTerms,
+  jargonAllowText,
   options,
 }: RunSessionInputs): Promise<number> {
   try {
@@ -360,6 +369,7 @@ async function runSession({
       maxRevisions: options.maxRevisions,
       adversarialReview: options.adversarialReview,
       jargonTerms,
+      jargonAllowText,
       jargonFile: options.jargonFile,
       fastCopy: options.fastCopy,
     });

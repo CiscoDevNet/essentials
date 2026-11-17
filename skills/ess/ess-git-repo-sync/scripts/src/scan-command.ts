@@ -68,6 +68,7 @@ export async function runScanCommand(argv: string[], cwd = process.cwd()): Promi
       rootPath: root,
       jargonSeverity: "critical",
       jargonTerms: requireJargonTerms(loaded, jargonFile),
+      jargonAllowText: loaded.allowText,
       jargonFile,
       skipTrufflehog: !values.trufflehog,
       skipSecretlint: !values.secretlint,

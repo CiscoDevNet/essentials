@@ -9,6 +9,7 @@ export interface RunScannersOptions {
   rootPath: string;
   jargonSeverity: Severity;
   jargonTerms: readonly string[];
+  jargonAllowText?: readonly string[];
   // The wordlist file at rootPath is skipped: it lists the very terms the
   // jargon scanner looks for, and it is never published.
   jargonFile?: string;
@@ -20,6 +21,7 @@ export async function runScanners({
   rootPath,
   jargonSeverity,
   jargonTerms,
+  jargonAllowText = [],
   jargonFile = DEFAULT_JARGON_FILE,
   skipTrufflehog,
   skipSecretlint,
@@ -44,7 +46,12 @@ export async function runScanners({
       }),
     );
   }
-  tasks.push(scanJargon(rootPath, { severity: jargonSeverity, terms: jargonTerms, skipRootFiles }));
+  tasks.push(scanJargon(rootPath, {
+    severity: jargonSeverity,
+    terms: jargonTerms,
+    allowText: jargonAllowText,
+    skipRootFiles,
+  }));
   tasks.push(scanPii(rootPath, { severity: "critical", skipRootFiles }));
 
   const results = await Promise.all(tasks);

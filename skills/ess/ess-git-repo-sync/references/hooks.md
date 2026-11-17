@@ -64,5 +64,6 @@ same line is still caught:
 }
 ```
 
-The allow lists apply to the hooks only; `sync` and `scan` check against the full
-wordlist.
+`allow.text` also applies to `sync` and `scan`, and is listed for the agent and the
+reviewer, so a public name that contains a term can stay. `allow.paths` applies to
+the hooks only.

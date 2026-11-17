@@ -57,15 +57,22 @@ When you are uncertain whether a term is internal or generic, treat it as intern
 
 interface WordlistInputs {
   jargonTerms: readonly string[];
+  jargonAllowText: readonly string[];
   jargonFile: string;
 }
 
 // The merged wordlist from the repos' jargon files. The deterministic jargon
 // scanner enforces the same list after every agent turn.
-function formatForbiddenTerms(jargonTerms: readonly string[]): string {
+function formatForbiddenTerms(jargonTerms: readonly string[], jargonAllowText: readonly string[]): string {
   const lines = jargonTerms.map((term) => `  - ${term}`).join("\n");
-  return `FORBIDDEN TERMS (company-specific; none may appear in any file you write, in any letter case, as a whole word; an entry starting with '*.' forbids every hostname under that domain):
+  const forbidden = `FORBIDDEN TERMS (company-specific; none may appear in any file you write, in any letter case, as a whole word or as a word inside an identifier such as camelCase or snake_case; an entry starting with '*.' forbids every hostname under that domain):
 ${lines}`;
+  if (jargonAllowText.length === 0) return forbidden;
+  const allowed = jargonAllowText.map((text) => `  - ${text}`).join("\n");
+  return `${forbidden}
+
+ALLOWED TEXT (public names that contain a forbidden term; each may stay exactly as written, in this exact case, and is not a finding):
+${allowed}`;
 }
 
 export interface PhaseAInputs extends WordlistInputs {
@@ -80,6 +87,7 @@ export function buildSyncInitialPrompt({
   sourceScan,
   jargonHeavy,
   jargonTerms,
+  jargonAllowText,
   jargonFile,
 }: PhaseAInputs): string {
   const mode = plan.mode;
@@ -111,7 +119,7 @@ TASK:
 4. Never copy or create '${jargonFile}' (the company wordlist) or 'LICENSE' at the root of the target path; both belong to the repo, not the item.
 5. ${generalizationNote}
 
-${formatForbiddenTerms(jargonTerms)}
+${formatForbiddenTerms(jargonTerms, jargonAllowText)}
 
 SOURCE SCAN SUMMARY (informational only, never a blocker on the source side):
 ${sourceScanSection}
@@ -161,6 +169,7 @@ export function buildExtractInitialPrompt({
   plan,
   sourceScan,
   jargonTerms,
+  jargonAllowText,
   jargonFile,
 }: ExtractInitialInputs): string {
   if (
@@ -203,7 +212,7 @@ TASK:
 
 SCAN COVERAGE: Only the EXTRACTED PACKAGE will be scanned. The wrapper is excluded from the scan, so company-specific defaults belong there.
 
-${formatForbiddenTerms(jargonTerms)}
+${formatForbiddenTerms(jargonTerms, jargonAllowText)}
 
 SOURCE SCAN SUMMARY (informational only):
 ${sourceScanSection}
@@ -251,6 +260,7 @@ The HARD RULES from your system prompt still apply. Once you have addressed ever
 export interface ReviewerPromptInputs {
   plan: SyncPlan;
   jargonTerms: readonly string[];
+  jargonAllowText: readonly string[];
   // The path the reviewer should treat as the package to inspect. Defaults to
   // plan.targetAbs but during Phase A we point it at the extracted package.
   reviewRootAbs?: string;
@@ -259,6 +269,7 @@ export interface ReviewerPromptInputs {
 export function buildReviewerPrompt({
   plan,
   jargonTerms,
+  jargonAllowText,
   reviewRootAbs,
 }: ReviewerPromptInputs): string {
   const root = reviewRootAbs ?? plan.targetAbs;
@@ -280,7 +291,7 @@ DO NOT flag the following -- they are public, open-source conventions, not inter
   - Public third-party product names that the package legitimately wraps. For example, 'outlook' / 'microsoft graph' in 'ess-outlook' (Microsoft's public Outlook + Graph API), 'webex' in 'ess-webex' (the public Webex API at 'webexapis.com'), 'servicenow' in 'ess-service-now-incident'. These describe what the package integrates with. Customer-specific tenant URLs ('<tenant>.webex.com', '<company>.service-now.com') and company-internal infrastructure (hosts and names on the FORBIDDEN TERMS list, internal codenames) ARE still problems and should be flagged.
   - Public third-party documentation and developer-portal URLs that point readers at upstream docs (e.g. 'https://developer.webex.com/...', 'https://learn.microsoft.com/...', 'https://docs.servicenow.com/...', 'https://graph.microsoft.com', 'https://login.microsoftonline.com'). These are vendor-public, intentionally clickable, and useful to open-source readers -- treat them like any other public dependency URL.
 
-${formatForbiddenTerms(jargonTerms)}
+${formatForbiddenTerms(jargonTerms, jargonAllowText)}
 
 Output ONLY a single JSON object, with no surrounding prose, no markdown code fences, and no commentary. Schema:
 

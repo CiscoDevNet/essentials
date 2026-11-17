@@ -4,8 +4,25 @@ export interface JargonPattern {
   message: string;
 }
 
-const wordBoundary = (word: string): RegExp =>
-  new RegExp(`\\b${word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i");
+// Where a word can start or end: not between two letters, except at a
+// camelCase hump (`aB`) or where an acronym meets a word (`ABc`). So `acme`
+// matches in `acme_auth`, `AcmeClient`, `getAcme`, and `ACMEClient`, but not in
+// `Acmeville`. Case is matched per letter rather than with the `i` flag, which
+// would blur the humps.
+const WORD_START = "(?:(?<![A-Za-z])|(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z]))";
+const WORD_END = "(?:(?![A-Za-z])|(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z]))";
+
+const anyCase = (text: string): string =>
+  [...text]
+    .map((char) => {
+      const lower = char.toLowerCase();
+      const upper = char.toUpperCase();
+      return lower === upper ? escapeRegExp(char) : `[${lower}${upper}]`;
+    })
+    .join("");
+
+const identifierWord = (word: string): RegExp =>
+  new RegExp(`${WORD_START}${anyCase(word)}${WORD_END}`);
 
 const hostnameSuffix = (suffix: string): RegExp =>
   new RegExp(`[a-z0-9-]+\\.${suffix.replace(/\./g, "\\.")}`, "i");
@@ -113,7 +130,7 @@ export function findJargonTerms(
 
 // Builds the patterns for a wordlist. A term starting with `*.` matches any
 // hostname under that suffix; any other term matches as a whole word, in any
-// case. Blank terms are dropped.
+// case, including a word inside an identifier. Blank terms are dropped.
 export function loadJargonConfig(terms: readonly string[]): JargonConfig {
   const patterns: JargonPattern[] = [];
   for (const raw of terms) {
@@ -128,7 +145,7 @@ export function loadJargonConfig(terms: readonly string[]): JargonConfig {
     } else {
       patterns.push({
         term: trimmed,
-        regex: wordBoundary(trimmed),
+        regex: identifierWord(trimmed),
         message: `Contains jargon term '${trimmed}'.`,
       });
     }

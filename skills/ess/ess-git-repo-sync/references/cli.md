@@ -165,11 +165,19 @@ is a flat array, or an object:
 ```
 
 Entries that start with `*.` match hostnames with that suffix; everything else is a
-case-insensitive whole-word match. Put per-organization employee-ID patterns here
+case-insensitive whole-word match that also finds the word inside identifiers: the
+term `acme` matches `acme_auth`, `ACME_URL`, `AcmeClient`, and `getAcme`, but not
+`Acmeville`. Separators inside a term match only themselves, so list `acme-internal`
+and `acme_internal` separately if both occur. Put per-organization employee-ID patterns here
 too: the PII scanner only flags emails, phone numbers, and SSNs, and skips lock
 files such as `package-lock.json` and `uv.lock`, whose registry metadata carries
-upstream maintainers' addresses. `allow` is read
-only by the git hooks ([hooks.md](hooks.md)).
+upstream maintainers' addresses.
+
+`allow.text` entries are literal strings, in exact case, blanked out of a line
+before matching: list a public name that contains a term, such as an org name in
+a repo URL, and a term elsewhere on the line is still caught. Every command
+honors them, and `sync` lists them for the agent and the reviewer. `allow.paths`
+is read only by the git hooks ([hooks.md](hooks.md)).
 
 Where each command looks, merging the terms it finds:
 
