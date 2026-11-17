@@ -24,8 +24,11 @@ export async function isUnscannableTextFile(filePath: string): Promise<boolean> 
 
 // Yields absolute paths of the publishable text files under rootPath: the
 // shared file set minus symlinks, binary extensions, and oversized files.
-export async function* walkTextFiles(rootPath: string): AsyncGenerator<string> {
-  for (const relPath of await listPublishableFiles(rootPath)) {
+export async function* walkTextFiles(
+  rootPath: string,
+  skipRootFiles?: ReadonlySet<string>,
+): AsyncGenerator<string> {
+  for (const relPath of await listPublishableFiles(rootPath, skipRootFiles)) {
     const filePath = path.join(rootPath, relPath);
     const stat = await fs.lstat(filePath);
     if (!stat.isFile()) continue;
@@ -43,9 +46,10 @@ export async function scanTextFilesByLine<P>(
   patterns: readonly P[],
   test: (pattern: P, line: string) => boolean,
   toFinding: (pattern: P, filePath: string, lineNumber: number) => Finding,
+  skipRootFiles?: ReadonlySet<string>,
 ): Promise<Finding[]> {
   const findings: Finding[] = [];
-  for await (const filePath of walkTextFiles(rootPath)) {
+  for await (const filePath of walkTextFiles(rootPath, skipRootFiles)) {
     const content = await fs.readFile(filePath, "utf8");
     const lines = content.split(/\r?\n/);
     for (let i = 0; i < lines.length; i += 1) {

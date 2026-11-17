@@ -1,7 +1,7 @@
-"""Pretends to talk to an internal Cisco service. Fixture only."""
+"""Pretends to talk to an Acme-Internal service. Fixture only."""
 
-INTERNAL_HOST = "auth.cisco.com"
-CONTACT_EMAIL = "internal-team@cisco.com"
+INTERNAL_HOST = "auth.corp.example"
+CONTACT_EMAIL = "internal-team@acme-internal.com"
 
 
 def build_url(path: str) -> str:

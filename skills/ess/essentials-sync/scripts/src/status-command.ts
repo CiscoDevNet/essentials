@@ -2,10 +2,12 @@ import { createHash } from "node:crypto";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
-import { rethrowAsUsageError, UsageError } from "./args.ts";
-import { findEssItemRoot, REPO_OWNED_ITEM_FILES } from "./ess-items.ts";
+import { JARGON_FILE_OPTION, parseJargonFileName, rethrowAsUsageError, UsageError } from "./args.ts";
+import { findEssItemRoot, repoOwnedItemFiles } from "./ess-items.ts";
 import { listPublishableFiles } from "./file-set.ts";
+import { DEFAULT_JARGON_FILE } from "./jargon-list.ts";
 import { PROGRAM_NAME } from "./program.ts";
+import { assertDifferentRepos, resolveTargetRepo } from "./repos.ts";
 import { style } from "./style.ts";
 
 export type ItemState = "identical" | "differs" | "only in source" | "only in target";
@@ -17,20 +19,23 @@ export interface ItemStatus {
   files: Array<{ path: string; state: FileState }>;
 }
 
-export const STATUS_HELP = `Usage: ${PROGRAM_NAME} status --source-repo <path> --target-repo <path>
+export const STATUS_HELP = `Usage: ${PROGRAM_NAME} status --source-repo <path> [--target-repo <path>]
 
 Report whether each ess-* item is identical in two repos. Compares the
 publishable files (git ls-files, not ignored) by content and executable bit,
-skipping each item's LICENSE. Read-only: never prompts, needs no API key.
+skipping each item's LICENSE and jargon file. Read-only: never prompts, needs
+no API key.
 
 Options:
-  --source-repo <path>  Root of the first repo
-  --target-repo <path>  Root of the second repo
+  --source-repo <path>  Root of the repo the items come from
+  --target-repo <path>  Root of the repo they sync into (default: the git root
+                        of the current directory)
+  --jargon-file <name>  Name of the jargon file to skip (default: ${DEFAULT_JARGON_FILE})
   -h, --help            Show this help`;
 
 // `status`: compares every ess-* item in two repos, file by file. Read-only,
 // so it never prompts and has no --dry-run. Returns the process exit code.
-export async function runStatusCommand(argv: string[]): Promise<number> {
+export async function runStatusCommand(argv: string[], cwd = process.cwd()): Promise<number> {
   let parsed;
   try {
     parsed = parseArgs({
@@ -38,6 +43,7 @@ export async function runStatusCommand(argv: string[]): Promise<number> {
       options: {
         "source-repo": { type: "string" },
         "target-repo": { type: "string" },
+        "jargon-file": JARGON_FILE_OPTION,
         help: { type: "boolean", short: "h" },
       },
     });
@@ -50,11 +56,13 @@ export async function runStatusCommand(argv: string[]): Promise<number> {
     return 0;
   }
   const sourceRepo = values["source-repo"];
-  const targetRepo = values["target-repo"];
   if (!sourceRepo) throw new UsageError("status needs --source-repo.");
-  if (!targetRepo) throw new UsageError("status needs --target-repo.");
+  const jargonFile = parseJargonFileName(values["jargon-file"]);
+  const sourceRepoAbs = path.resolve(cwd, sourceRepo);
+  const targetRepoAbs = await resolveTargetRepo(values["target-repo"], cwd);
+  await assertDifferentRepos(sourceRepoAbs, targetRepoAbs);
 
-  const statuses = await compareEssItems(path.resolve(sourceRepo), path.resolve(targetRepo));
+  const statuses = await compareEssItems(sourceRepoAbs, targetRepoAbs, repoOwnedItemFiles(jargonFile));
   for (const status of statuses) {
     console.log(formatItemStatus(status));
   }
@@ -63,8 +71,15 @@ export async function runStatusCommand(argv: string[]): Promise<number> {
   return 0;
 }
 
-export async function compareEssItems(sourceRepo: string, targetRepo: string): Promise<ItemStatus[]> {
-  const [source, target] = await Promise.all([indexEssItems(sourceRepo), indexEssItems(targetRepo)]);
+export async function compareEssItems(
+  sourceRepo: string,
+  targetRepo: string,
+  repoOwnedFiles: ReadonlySet<string> = repoOwnedItemFiles(),
+): Promise<ItemStatus[]> {
+  const [source, target] = await Promise.all([
+    indexEssItems(sourceRepo, repoOwnedFiles),
+    indexEssItems(targetRepo, repoOwnedFiles),
+  ]);
   const items = [...new Set([...source.keys(), ...target.keys()])].sort();
   return items.map((item) => compareItem(item, source.get(item), target.get(item)));
 }
@@ -90,13 +105,16 @@ function compareItem(
 
 // Maps each ess-* item in the repo to its files (relative to the item; "" for
 // an item that is a single file) and a fingerprint of each file.
-async function indexEssItems(repoRoot: string): Promise<Map<string, Map<string, string>>> {
+async function indexEssItems(
+  repoRoot: string,
+  repoOwnedFiles: ReadonlySet<string>,
+): Promise<Map<string, Map<string, string>>> {
   const items = new Map<string, Map<string, string>>();
   for (const relPath of await listPublishableFiles(repoRoot)) {
     const item = findEssItemRoot(relPath);
     if (!item) continue;
     const inner = relPath === item ? "" : relPath.slice(item.length + 1);
-    if (REPO_OWNED_ITEM_FILES.has(inner)) continue;
+    if (repoOwnedFiles.has(inner)) continue;
 
     let files = items.get(item);
     if (!files) {

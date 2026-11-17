@@ -13,6 +13,7 @@ const FOUND_RESULTS_EXIT_CODE = 183;
 
 export interface TrufflehogOptions {
   binary?: string;
+  skipRootFiles?: ReadonlySet<string>;
 }
 
 interface TrufflehogJsonLine {
@@ -36,7 +37,9 @@ export async function scanWithTrufflehog(
   const binary = options.binary ?? "trufflehog";
   // Scan the publishable files rather than the directory: a directory scan
   // reads gitignored files (.env, .venv) that never ship.
-  const files = (await listPublishableFiles(rootPath)).map((relPath) => path.join(rootPath, relPath));
+  const files = (await listPublishableFiles(rootPath, options.skipRootFiles)).map((relPath) =>
+    path.join(rootPath, relPath),
+  );
 
   const findings: Finding[] = [];
   for (let start = 0; start < files.length; start += FILES_PER_INVOCATION) {

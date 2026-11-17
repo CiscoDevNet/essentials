@@ -45,8 +45,20 @@ repos:
         always_run: true
         stages: [pre-push]
 
-  # Forbidden jargon in commit messages and added lines. The wordlist lives in
-  # the essentials-sync skill; exceptions live in .essentials-sync-jargon.json.
+  # The ess-scan hook this repo publishes (.pre-commit-hooks.yaml), run on its
+  # own ess-* items.
+  - repo: local
+    hooks:
+      - id: ess-scan
+        name: ess-scan (secrets, jargon, PII in ess-* items)
+        entry: skills/ess/essentials-sync/scripts/src/ess-scan.ts
+        language: script
+        files: '(^|/)ess-[^/]+/|(^|/)ess/ess-[^/]+$'
+        require_serial: true
+        stages: [pre-push]
+
+  # Forbidden jargon in commit messages and added lines. The wordlist and its
+  # exceptions live in jargon.json at the repo root.
   # The pre-push hook rescans every unpublished commit, so it also catches
   # commits made without hooks (git commit-tree, --no-verify).
   - repo: local

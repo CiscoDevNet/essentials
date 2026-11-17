@@ -3,15 +3,17 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import { afterEach, describe, it } from "node:test";
 import { copyTreeVerbatim } from "../src/copy.ts";
+import { repoOwnedItemFiles } from "../src/ess-items.ts";
 import { makeRepo, makeTempDir, removeTempDirs, writeTree } from "./temp-repos.ts";
 
 afterEach(removeTempDirs);
 
 describe("copyTreeVerbatim", () => {
-  it("leaves the item's own LICENSE to each repo", async () => {
+  it("leaves the item's own LICENSE and jargon file to each repo", async () => {
     const source = await makeRepo("copy-source", {
       "SKILL.md": "# Skill\n",
       LICENSE: "source license\n",
+      "jargon.json": '["acme-internal"]\n',
       "vendor/LICENSE": "vendored license\n",
     });
     const target = await makeRepo("copy-target", { LICENSE: "target license\n" });
@@ -20,6 +22,20 @@ describe("copyTreeVerbatim", () => {
 
     assert.deepEqual(result.filesCopied.sort(), ["SKILL.md", "vendor/LICENSE"]);
     assert.equal(await fs.readFile(path.join(target, "LICENSE"), "utf8"), "target license\n");
+    await assert.rejects(fs.stat(path.join(target, "jargon.json")));
+  });
+
+  it("skips a jargon file with a custom name", async () => {
+    const source = await makeRepo("copy-source", {
+      "SKILL.md": "# Skill\n",
+      "company-jargon.json": '["acme-internal"]\n',
+      "jargon.json": "an ordinary file under this name\n",
+    });
+    const target = await makeRepo("copy-target");
+
+    const result = await copyTreeVerbatim(source, target, repoOwnedItemFiles("company-jargon.json"));
+
+    assert.deepEqual(result.filesCopied.sort(), ["SKILL.md", "jargon.json"]);
   });
 
   it("copies files byte-for-byte", async () => {

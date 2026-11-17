@@ -6,6 +6,7 @@ export interface RunReviewerInputs {
   apiKey: string;
   reviewModel: string;
   plan: SyncPlan;
+  jargonTerms: readonly string[];
   // Path the reviewer should inspect. Defaults to plan.targetAbs (sync phase);
   // during the extract phase callers pass the extracted package path so the
   // reviewer audits the new shared library rather than the sync target.
@@ -31,12 +32,13 @@ export async function runReviewer({
   apiKey,
   reviewModel,
   plan,
+  jargonTerms,
   reviewRootAbs,
   cwd,
 }: RunReviewerInputs): Promise<Finding[]> {
   const effectiveReviewRoot = reviewRootAbs ?? plan.targetAbs;
   const effectiveCwd = cwd ?? plan.targetRepoAbs;
-  const prompt = buildReviewerPrompt({ plan, reviewRootAbs: effectiveReviewRoot });
+  const prompt = buildReviewerPrompt({ plan, jargonTerms, reviewRootAbs: effectiveReviewRoot });
   const { Agent } = await loadCursorSdk();
   const result = await Agent.prompt(prompt, {
     apiKey,

@@ -39,9 +39,11 @@ export interface SyncPlan {
   targetPathRel: string;
   targetAbs: string;
   phaseAEnabled: boolean;
+  // The repo the item comes from. Set on every plan buildSyncPlan returns;
+  // the extract phase also writes here.
+  sourceRepoRoot?: string;
   extractedPkgAbs?: string;
   wrapperPkgAbs?: string;
-  sourceRepoRoot?: string;
   originalToolName?: string;
   packageName?: string;
   importableName?: string;

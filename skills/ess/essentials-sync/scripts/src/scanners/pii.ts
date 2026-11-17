@@ -8,9 +8,8 @@ interface PiiPattern {
 }
 
 // Only patterns that flag real, well-defined PII signals belong here. Anything
-// that looks like a "company employee ID" is org-specific and should be added
-// via the jargon override file (`.essentials-sync-jargon.json`) rather than
-// hardcoded here -- the previous `\b[A-Z]{3,5}\d{4,8}\b` rule false-positived
+// that looks like a "company employee ID" is org-specific and belongs in the
+// repo's jargon file (`jargon.json`) rather than hardcoded here -- the previous `\b[A-Z]{3,5}\d{4,8}\b` rule false-positived
 // on every ServiceNow ticket number (`INC00000001`) and ruff rule code
 // (`PLR0913`) in the wild.
 const PII_PATTERNS: readonly PiiPattern[] = [
@@ -41,6 +40,7 @@ const PII_PATTERNS: readonly PiiPattern[] = [
 
 export interface PiiScanOptions {
   severity: Severity;
+  skipRootFiles?: ReadonlySet<string>;
 }
 
 export async function scanPii(
@@ -64,5 +64,6 @@ export async function scanPii(
       message: pattern.message,
       term: pattern.name,
     }),
+    options.skipRootFiles,
   );
 }

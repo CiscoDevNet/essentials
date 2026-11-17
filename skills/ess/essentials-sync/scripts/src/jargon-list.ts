@@ -10,30 +10,15 @@ const wordBoundary = (word: string): RegExp =>
 const hostnameSuffix = (suffix: string): RegExp =>
   new RegExp(`[a-z0-9-]+\\.${suffix.replace(/\./g, "\\.")}`, "i");
 
-export const COMPANY_MESSAGE = "References company systems.";
+// The wordlist lives in the repos, not here: each repo lists its company's
+// terms in a file with this name at its root (or at an item's root).
+export const DEFAULT_JARGON_FILE = "jargon.json";
 
-const COMPANY_TERMS = [
-  "cisco",
-  "myid",
-  "cec",
-  "honeycomb",
-  "ceto",
-  "sales-ai",
-  "sales_ai",
-  "agentic-ops-hub",
-  "agentic ops hub",
-  "aoh",
-  "edag",
-  "sspo",
-  "runon",
-  "npi",
-  "aws-sso",
-] as const;
-
-export const DEFAULT_JARGON_PATTERNS: readonly JargonPattern[] = [
-  { term: "*.cisco.com", regex: hostnameSuffix("cisco.com"), message: COMPANY_MESSAGE },
-  ...COMPANY_TERMS.map((term) => ({ term, regex: wordBoundary(term), message: COMPANY_MESSAGE })),
-];
+// The jargon file is looked up by name at several locations, so the name may
+// not contain a directory.
+export function isJargonFileName(name: string): boolean {
+  return name !== "" && name !== "." && name !== ".." && !/[\\/]/.test(name);
+}
 
 export interface JargonConfig {
   patterns: JargonPattern[];
@@ -48,7 +33,7 @@ export interface JargonAllowList {
   text: string[];
 }
 
-// Parsed `.essentials-sync-jargon.json`. Accepts a flat array of terms or
+// A parsed jargon file. Accepts a flat array of terms or
 // `{ "terms": [...], "allow": { "paths": [...], "text": [...] } }`.
 export interface JargonOverrides {
   terms: string[];
@@ -126,24 +111,27 @@ export function findJargonTerms(
   return config.patterns.filter((pattern) => pattern.regex.test(masked));
 }
 
-export function loadJargonConfig(extraTerms: string[] = []): JargonConfig {
-  const extras: JargonPattern[] = extraTerms.map((raw) => {
+// Builds the patterns for a wordlist. A term starting with `*.` matches any
+// hostname under that suffix; any other term matches as a whole word, in any
+// case. Blank terms are dropped.
+export function loadJargonConfig(terms: readonly string[]): JargonConfig {
+  const patterns: JargonPattern[] = [];
+  for (const raw of terms) {
     const trimmed = raw.trim();
+    if (!trimmed) continue;
     if (trimmed.startsWith("*.")) {
-      const suffix = trimmed.slice(2);
-      return {
+      patterns.push({
         term: trimmed,
-        regex: hostnameSuffix(suffix),
+        regex: hostnameSuffix(trimmed.slice(2)),
         message: `Contains hostname matching ${trimmed}.`,
-      };
+      });
+    } else {
+      patterns.push({
+        term: trimmed,
+        regex: wordBoundary(trimmed),
+        message: `Contains jargon term '${trimmed}'.`,
+      });
     }
-    return {
-      term: trimmed,
-      regex: wordBoundary(trimmed),
-      message: `Contains custom jargon term '${trimmed}'.`,
-    };
-  });
-  return {
-    patterns: [...DEFAULT_JARGON_PATTERNS, ...extras],
-  };
+  }
+  return { patterns };
 }

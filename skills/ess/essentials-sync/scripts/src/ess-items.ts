@@ -1,9 +1,13 @@
 import { run } from "./exec.ts";
+import { DEFAULT_JARGON_FILE } from "./jargon-list.ts";
 
 // Files at an item's root that belong to the repo holding the item, not to
-// the item: the open-source copy carries the license text, a source repo may
-// not. Sync never copies them and status never compares them.
-export const REPO_OWNED_ITEM_FILES: ReadonlySet<string> = new Set(["LICENSE"]);
+// the item. The target carries its own license text, which a source repo may
+// not, and an item-level jargon file lists company terms that must never be
+// published. Sync never copies them and status never compares them.
+export function repoOwnedItemFiles(jargonFile = DEFAULT_JARGON_FILE): ReadonlySet<string> {
+  return new Set(["LICENSE", jargonFile]);
+}
 
 // The ess-* item that contains repoRelPath (a repo-relative, "/"-separated
 // path). An item is either a directory named ess-* (packages/python/ess-auth)

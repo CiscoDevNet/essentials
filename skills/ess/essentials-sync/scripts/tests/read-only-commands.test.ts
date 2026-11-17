@@ -2,10 +2,10 @@ import assert from "node:assert/strict";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { afterEach, describe, it } from "node:test";
-import { findEssItemRoot } from "../src/ess-items.ts";
+import { findEssItemRoot, repoOwnedItemFiles } from "../src/ess-items.ts";
 import { formatScanFinding, resolveScanRoots, runScanCommand } from "../src/scan-command.ts";
-import { compareEssItems } from "../src/status-command.ts";
-import { makeRepo, removeTempDirs } from "./temp-repos.ts";
+import { compareEssItems, runStatusCommand } from "../src/status-command.ts";
+import { makeRepo, makeTempDir, removeTempDirs } from "./temp-repos.ts";
 
 afterEach(removeTempDirs);
 
@@ -53,6 +53,7 @@ describe("scan", () => {
   it("exits 1 on critical findings and 0 when clean", async (t) => {
     t.mock.method(console, "log", () => {});
     const repo = await makeRepo("read-only", {
+      "jargon.json": JSON.stringify(["widgetco"]),
       "packages/python/ess-clean/README.md": "Contact bob@corp.example.com\n",
       "packages/python/ess-dirty/README.md": "Contact bob@corp.internal.net\n",
     });
@@ -61,19 +62,69 @@ describe("scan", () => {
     assert.equal(await runScanCommand(["packages/python/ess-dirty/README.md", ...skipSecretScanners], repo), 1);
   });
 
-  it("loads extra jargon terms from the repo root", async (t) => {
+  it("loads jargon terms from the repo root", async (t) => {
     t.mock.method(console, "log", () => {});
     const repo = await makeRepo("read-only", {
-      ".essentials-sync-jargon.json": JSON.stringify({ terms: ["widgetco"] }),
+      "jargon.json": JSON.stringify({ terms: ["widgetco"] }),
       "skills/ess/ess-demo/SKILL.md": "Ask the WidgetCo help desk.\n",
     });
 
     assert.equal(await runScanCommand(["skills/ess/ess-demo/SKILL.md", ...skipSecretScanners], repo), 1);
   });
 
-  it("rejects unknown options and a missing path", async () => {
+  it("loads an item's jargon file and never flags the file itself", async (t) => {
+    t.mock.method(console, "log", () => {});
+    const repo = await makeRepo("read-only", {
+      "skills/ess/ess-clean/jargon.json": JSON.stringify(["widgetco"]),
+      "skills/ess/ess-clean/SKILL.md": "# Clean\n",
+      "skills/ess/ess-dirty/jargon.json": JSON.stringify(["widgetco"]),
+      "skills/ess/ess-dirty/SKILL.md": "Ask the WidgetCo help desk.\n",
+    });
+
+    assert.equal(await runScanCommand(["skills/ess/ess-clean", ...skipSecretScanners], repo), 0);
+    assert.equal(await runScanCommand(["skills/ess/ess-dirty", ...skipSecretScanners], repo), 1);
+  });
+
+  it("fails closed when no jargon file lists any terms", async () => {
+    const repo = await makeRepo("read-only", {
+      "jargon.json": JSON.stringify({ terms: [] }),
+      "skills/ess/ess-demo/SKILL.md": "# Demo\n",
+    });
+
+    await assert.rejects(
+      runScanCommand(["skills/ess/ess-demo", ...skipSecretScanners], repo),
+      /No jargon terms found\. Looked for jargon\.json at: .*jargon\.json/,
+    );
+  });
+
+  it("reads the jargon file named by --jargon-file", async (t) => {
+    t.mock.method(console, "log", () => {});
+    const repo = await makeRepo("read-only", {
+      "company-jargon.json": JSON.stringify(["widgetco"]),
+      "skills/ess/ess-demo/SKILL.md": "Ask the WidgetCo help desk.\n",
+    });
+    const args = ["skills/ess/ess-demo", ...skipSecretScanners];
+
+    assert.equal(await runScanCommand(["--jargon-file", "company-jargon.json", ...args], repo), 1);
+    await assert.rejects(runScanCommand(args, repo), /Looked for jargon\.json/);
+  });
+
+  it("rejects a malformed jargon file instead of scanning without it", async () => {
+    const repo = await makeRepo("read-only", {
+      "jargon.json": "[\"widgetco\",",
+      "skills/ess/ess-demo/SKILL.md": "# Demo\n",
+    });
+
+    await assert.rejects(
+      runScanCommand(["skills/ess/ess-demo", ...skipSecretScanners], repo),
+      /jargon\.json is not valid JSON/,
+    );
+  });
+
+  it("rejects unknown options, a missing path, and a --jargon-file path", async () => {
     await assert.rejects(runScanCommand(["--nope", "x"]), /Unknown option '--nope'/);
     await assert.rejects(runScanCommand([]), /at least one path/);
+    await assert.rejects(runScanCommand(["--jargon-file", "config/jargon.json", "x"]), /file name, not a path/);
   });
 
   it("prints only the rule for secret findings", () => {
@@ -140,5 +191,54 @@ describe("status", () => {
     const [status] = await compareEssItems(source, target);
 
     assert.equal(status?.state, "differs");
+  });
+
+  it("never compares an item's jargon file, under any name", async () => {
+    const source = await makeRepo("status-source", {
+      "skills/ess/ess-x/SKILL.md": "same\n",
+      "skills/ess/ess-x/jargon.json": '["acme-internal"]\n',
+      "skills/ess/ess-y/SKILL.md": "same\n",
+      "skills/ess/ess-y/company-jargon.json": '["acme-internal"]\n',
+    });
+    const target = await makeRepo("status-target", {
+      "skills/ess/ess-x/SKILL.md": "same\n",
+      "skills/ess/ess-y/SKILL.md": "same\n",
+    });
+
+    const statuses = await compareEssItems(source, target, repoOwnedItemFiles("company-jargon.json"));
+
+    assert.deepEqual(statuses.map((status) => status.state), ["differs", "identical"]);
+    assert.deepEqual(statuses[0]?.files, [{ path: "jargon.json", state: "only in source" }]);
+    assert.deepEqual(
+      (await compareEssItems(source, target)).map((status) => status.state),
+      ["identical", "differs"],
+    );
+  });
+
+  it("defaults the target to the current repo", async (t) => {
+    const lines: string[] = [];
+    t.mock.method(console, "log", (line: string) => lines.push(line));
+    const source = await makeRepo("status-source", { "skills/ess/ess-x/SKILL.md": "same\n" });
+    const target = await makeRepo("status-target", { "skills/ess/ess-x/SKILL.md": "same\n" });
+
+    assert.equal(await runStatusCommand(["--source-repo", source], path.join(target, "skills")), 0);
+    assert.match(lines.join("\n"), /identical\s+skills\/ess\/ess-x/);
+  });
+
+  it("refuses to compare a repo with itself", async () => {
+    const repo = await makeRepo("status-same", { "skills/ess/ess-x/SKILL.md": "same\n" });
+
+    await assert.rejects(runStatusCommand(["--source-repo", repo], repo), /same repo/);
+    await assert.rejects(
+      runStatusCommand(["--source-repo", path.join(repo, "skills", ".."), "--target-repo", repo], repo),
+      /same repo/,
+    );
+  });
+
+  it("needs --target-repo outside a git repo", async () => {
+    const source = await makeRepo("status-source");
+    const outside = await makeTempDir("status-outside");
+
+    await assert.rejects(runStatusCommand(["--source-repo", source], outside), /no default target/);
   });
 });

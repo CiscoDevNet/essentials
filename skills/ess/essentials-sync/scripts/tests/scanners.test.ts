@@ -3,12 +3,8 @@ import { generateKeyPairSync } from "node:crypto";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { afterEach, describe, it } from "node:test";
-import {
-  COMPANY_MESSAGE,
-  DEFAULT_JARGON_PATTERNS,
-  findJargonTerms,
-  loadJargonConfig,
-} from "../src/jargon-list.ts";
+import { findJargonTerms, loadJargonConfig } from "../src/jargon-list.ts";
+import { runScanners } from "../src/scanners/index.ts";
 import { scanJargon } from "../src/scanners/jargon.ts";
 import { scanPii } from "../src/scanners/pii.ts";
 import { scanWithSecretlint } from "../src/scanners/secretlint.ts";
@@ -16,33 +12,74 @@ import { makeFixtureRepo, makeRepo, removeTempDirs } from "./temp-repos.ts";
 
 afterEach(removeTempDirs);
 
+const terms = ["acme-internal", "*.corp.example"];
+
 describe("jargon scanner", () => {
   it("returns no findings on a clean fixture", async () => {
-    const findings = await scanJargon(await makeFixtureRepo("clean-package"), { severity: "critical" });
+    const findings = await scanJargon(await makeFixtureRepo("clean-package"), { severity: "critical", terms });
     assert.deepEqual(findings, []);
   });
 
-  it("flags company terms and hostnames on a dirty fixture", async () => {
-    const findings = await scanJargon(await makeFixtureRepo("dirty-package"), { severity: "critical" });
-    assert.ok(findings.some((f) => f.type === "jargon"));
-    assert.ok(findings.some((f) => f.type === "internal-url"));
+  it("flags configured terms and hostnames on a dirty fixture", async () => {
+    const findings = await scanJargon(await makeFixtureRepo("dirty-package"), { severity: "critical", terms });
+    assert.ok(findings.some((f) => f.term === "acme-internal" && f.type === "jargon"));
+    assert.ok(findings.some((f) => f.term === "*.corp.example" && f.type === "internal-url"));
   });
 
-  it("flags every default term in a sentence without an override file", () => {
-    const config = loadJargonConfig();
-    for (const { term } of DEFAULT_JARGON_PATTERNS) {
-      const word = term.startsWith("*.") ? `api.${term.slice(2)}` : term.toUpperCase();
-      assert.ok(findJargonTerms(`Ask the ${word} team.`, config).some((p) => p.term === term), term);
-    }
+  it("flags nothing without terms", async () => {
+    const findings = await scanJargon(await makeFixtureRepo("dirty-package"), { severity: "critical", terms: [] });
+    assert.deepEqual(findings, []);
   });
 
-  it("gives every default pattern the same generic message", () => {
-    assert.deepEqual(new Set(DEFAULT_JARGON_PATTERNS.map((p) => p.message)), new Set([COMPANY_MESSAGE]));
+  const matches: Array<[string, string]> = [
+    ["Owned by the ACME-INTERNAL team.", "acme-internal"],
+    ["Call api.corp.example first.", "*.corp.example"],
+    ["Ask the WidgetCo help desk.", "widgetco"],
+    ["Built by the agentic ops group.", "agentic ops"],
+  ];
+  const config = loadJargonConfig([...terms, "widgetco", "agentic ops"]);
+  for (const [line, term] of matches) {
+    it(`flags '${term}' in: ${line}`, () => {
+      assert.deepEqual(findJargonTerms(line, config).map((p) => p.term), [term]);
+    });
+  }
+
+  it("matches whole words only", () => {
+    assert.deepEqual(findJargonTerms("Widgetcoin and corp.example.org", config), []);
+  });
+
+  it("builds no patterns from an empty or blank wordlist", () => {
+    assert.deepEqual(loadJargonConfig([]).patterns, []);
+    assert.deepEqual(loadJargonConfig(["", "  "]).patterns, []);
   });
 
   it("respects custom severity", async () => {
-    const findings = await scanJargon(await makeFixtureRepo("dirty-package"), { severity: "warning" });
+    const findings = await scanJargon(await makeFixtureRepo("dirty-package"), { severity: "warning", terms });
+    assert.ok(findings.length > 0);
     assert.ok(findings.every((f) => f.severity === "warning"));
+  });
+
+  it("skips the jargon file at the scanned root, under any name", async () => {
+    const root = await makeRepo("scanners", {
+      "jargon.json": JSON.stringify(terms),
+      "company-jargon.json": JSON.stringify(terms),
+      "docs/jargon.json": JSON.stringify(terms),
+      "README.md": "# Clean\n",
+    });
+    const scan = (jargonFile?: string) =>
+      runScanners({
+        rootPath: root,
+        jargonSeverity: "critical",
+        jargonTerms: terms,
+        jargonFile,
+        skipTrufflehog: true,
+        skipSecretlint: true,
+      });
+    const flaggedFiles = async (jargonFile?: string) =>
+      [...new Set((await scan(jargonFile)).findings.map((f) => path.relative(root, f.file)))].sort();
+
+    assert.deepEqual(await flaggedFiles(), ["company-jargon.json", "docs/jargon.json"]);
+    assert.deepEqual(await flaggedFiles("company-jargon.json"), ["docs/jargon.json", "jargon.json"]);
   });
 });
 

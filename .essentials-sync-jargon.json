@@ -1,9 +1,0 @@
-{
-  "allow": {
-    "paths": [
-      "skills/ess/essentials-sync/scripts/src/jargon-list.ts",
-      "skills/ess/essentials-sync/scripts/tests/fixtures/dirty-package/**",
-      "skills/ess/essentials-sync/scripts/tests/scanners.test.ts"
-    ]
-  }
-}

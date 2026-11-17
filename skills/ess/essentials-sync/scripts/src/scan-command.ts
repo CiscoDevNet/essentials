@@ -1,10 +1,11 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
-import { rethrowAsUsageError, UsageError } from "./args.ts";
+import { JARGON_FILE_OPTION, parseJargonFileName, rethrowAsUsageError, UsageError } from "./args.ts";
 import { runScanners } from "./scanners/index.ts";
 import { findEssItemRoot, findGitRoot } from "./ess-items.ts";
-import { loadJargonOverrides } from "./jargon-overrides.ts";
+import { DEFAULT_JARGON_FILE } from "./jargon-list.ts";
+import { loadJargonTerms, requireJargonTerms } from "./jargon-overrides.ts";
 import { PROGRAM_NAME } from "./program.ts";
 import { style } from "./style.ts";
 import type { Finding } from "./types.ts";
@@ -12,13 +13,16 @@ import type { Finding } from "./types.ts";
 export const SCAN_HELP = `Usage: ${PROGRAM_NAME} scan [options] <path>...
 
 Scan files or directories with the deterministic scanners (secrets, jargon,
-PII). A path inside an ess-* item scans the whole item. Exits 1 on critical
-findings. Read-only: never prompts, needs no API key.
+PII). A path inside an ess-* item scans the whole item. The jargon terms come
+from the jargon file at the git root and at each scanned directory; with no
+terms at all, scan exits 1. Exits 1 on critical findings. Read-only: never
+prompts, needs no API key.
 
 Options:
-  --no-trufflehog  Skip the trufflehog secret scanner
-  --no-secretlint  Skip the secretlint secret scanner
-  -h, --help       Show this help`;
+  --jargon-file <name>  Name of the jargon file (default: ${DEFAULT_JARGON_FILE})
+  --no-trufflehog       Skip the trufflehog secret scanner
+  --no-secretlint       Skip the secretlint secret scanner
+  -h, --help            Show this help`;
 
 // `scan <path>...`: runs the deterministic scanners and exits 1 on any
 // critical finding. Read-only, so it never prompts and has no --dry-run.
@@ -31,6 +35,7 @@ export async function runScanCommand(argv: string[], cwd = process.cwd()): Promi
       allowPositionals: true,
       allowNegative: true,
       options: {
+        "jargon-file": JARGON_FILE_OPTION,
         trufflehog: { type: "boolean", default: true },
         secretlint: { type: "boolean", default: true },
         help: { type: "boolean", short: "h" },
@@ -47,6 +52,7 @@ export async function runScanCommand(argv: string[], cwd = process.cwd()): Promi
   if (positionals.length === 0) {
     throw new UsageError("scan needs at least one path.");
   }
+  const jargonFile = parseJargonFileName(values["jargon-file"]);
 
   const gitRoot = await findGitRoot(cwd);
   const roots = await resolveScanRoots(positionals, cwd, gitRoot);
@@ -57,10 +63,12 @@ export async function runScanCommand(argv: string[], cwd = process.cwd()): Promi
 
   const findings: Finding[] = [];
   for (const root of roots) {
+    const loaded = await loadJargonTerms([gitRoot, root], jargonFile);
     const report = await runScanners({
       rootPath: root,
       jargonSeverity: "critical",
-      extraJargonTerms: await loadExtraTerms(root, gitRoot),
+      jargonTerms: requireJargonTerms(loaded, jargonFile),
+      jargonFile,
       skipTrufflehog: !values.trufflehog,
       skipSecretlint: !values.secretlint,
     });
@@ -105,17 +113,6 @@ export function formatScanFinding(finding: Finding, cwd: string): string {
   const rule = finding.term ?? finding.type;
   const detail = finding.type === "secret" ? "" : ` - ${finding.message}`;
   return `${location} [${finding.severity}] ${finding.source} ${rule}${detail}`;
-}
-
-async function loadExtraTerms(root: string, gitRoot: string | null): Promise<string[]> {
-  const directories = new Set<string>();
-  if (gitRoot) directories.add(gitRoot);
-  if ((await fs.lstat(root)).isDirectory()) directories.add(root);
-  const terms = new Set<string>();
-  for (const directory of directories) {
-    for (const term of await loadJargonOverrides(directory)) terms.add(term);
-  }
-  return [...terms];
 }
 
 function toRepoRelative(gitRoot: string, abs: string): string {

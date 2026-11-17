@@ -2,7 +2,9 @@
   name: ess-scan (secrets, jargon, PII in ess-* items)
   description: >-
     Runs the essentials-sync deterministic scanners on each changed ess-* item
-    and fails on critical findings. Needs Node.js 24 or later and npm on PATH;
+    and fails on critical findings. The jargon terms come from jargon.json at
+    the repo root (rename it with args: [--jargon-file, <name>]); with no
+    terms the hook fails. Needs Node.js 24 or later and npm on PATH;
     trufflehog is used when installed.
   # A script, not `language: node`: pre-commit would install this repo into
   # node_modules, where Node refuses to strip TypeScript types. The entry needs

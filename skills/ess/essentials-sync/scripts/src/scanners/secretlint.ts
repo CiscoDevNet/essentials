@@ -30,6 +30,7 @@ interface SecretlintJsonResult {
 
 export interface SecretlintScanOptions {
   configPath?: string;
+  skipRootFiles?: ReadonlySet<string>;
 }
 
 export async function scanWithSecretlint(
@@ -42,7 +43,7 @@ export async function scanWithSecretlint(
   // outside its cwd, so it runs in the scanned directory on relative paths.
   const isFile = !(await fs.lstat(rootPath)).isDirectory();
   const cwd = isFile ? path.dirname(rootPath) : rootPath;
-  const files = (await listPublishableFiles(rootPath)).map((relPath) =>
+  const files = (await listPublishableFiles(rootPath, options.skipRootFiles)).map((relPath) =>
     isFile ? path.basename(rootPath) : relPath,
   );
 

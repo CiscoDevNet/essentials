@@ -1,13 +1,21 @@
 import path from "node:path";
 import { parseArgs } from "node:util";
 import { runSyncSession } from "./agent.ts";
-import { parseNonNegativeInteger, rethrowAsUsageError, UsageError } from "./args.ts";
+import {
+  JARGON_FILE_OPTION,
+  parseJargonFileName,
+  parseNonNegativeInteger,
+  rethrowAsUsageError,
+  UsageError,
+} from "./args.ts";
 import { confirmWrite } from "./confirm.ts";
 import { createStagingRepo, seedStagingRepo, stageExtractSource } from "./dry-run.ts";
 import { planExtract } from "./extract-plan.ts";
-import { loadJargonOverrides } from "./jargon-overrides.ts";
+import { DEFAULT_JARGON_FILE } from "./jargon-list.ts";
+import { loadJargonTerms, requireJargonTerms } from "./jargon-overrides.ts";
 import { parseModelSpec, resolveModels } from "./model-resolver.ts";
 import { PROGRAM_NAME } from "./program.ts";
+import { assertDifferentRepos, mirrorPath, resolveSourceRepo, resolveTargetRepo } from "./repos.ts";
 import { formatFindings, runScanners } from "./scanners/index.ts";
 import { loadCursorSdk } from "./sdk.ts";
 import { style } from "./style.ts";
@@ -18,23 +26,31 @@ const DEFAULT_PRIMARY = "opus";
 const DEFAULT_REVIEW = "codex";
 const DEFAULT_MAX_REVISIONS = 3;
 
-export const SYNC_HELP = `Usage: ${PROGRAM_NAME} sync --source <path> --target-repo <path> [options]
+export const SYNC_HELP = `Usage: ${PROGRAM_NAME} sync --source <path> [options]
 
 Extract a jargon-free ess-* package out of a tool in the source repo, then
-sync it into the target repo. Both phases run by default; pass --no-extract
-for a source that is already generic. Writes to the source repo (extract) and
-the target repo (sync), so it asks for confirmation first.
+sync it into the target repo, which is the current repo unless --target-repo
+names another. Both phases run by default; pass --no-extract for a source that
+is already generic. Writes to the source repo (extract) and the target repo
+(sync), so it asks for confirmation first.
+
+The jargon terms come from the jargon file at the source repo root, the
+source item, and the target repo root, merged. With no terms at all, sync
+exits 1.
 
 Options:
   -s, --source <path>       The item to sync. Extract mode: a tools/python/<name>
-                            directory. With --no-extract: a directory or one file
-  -r, --target-repo <path>  Root of the target repo (a git work tree)
-  -t, --target-path <path>  Where the item lands, relative to --target-repo
-                            (default in extract mode: packages/python/<package-name>;
-                            required with --no-extract)
+                            directory in a uv workspace. With --no-extract: a
+                            directory or one file
+  -r, --target-repo <path>  Root of the target repo (default: the git root of
+                            the current directory)
+  -t, --target-path <path>  Where the item lands, relative to the target repo
+                            (default: where the synced item sits in the source
+                            repo; in extract mode, packages/python/<package-name>)
   --source-repo <path>      Source repo root (default: the git root of --source)
   --package-name <name>     Name of the extracted ess-* package
                             (default: ess-<basename of --source>)
+  --jargon-file <name>      Name of the jargon file (default: ${DEFAULT_JARGON_FILE})
   -m, --model <spec>        Primary model: an id, a family (opus, codex, claude,
                             gpt, gemini, composer), or auto (default: ${DEFAULT_PRIMARY})
   --review-model <spec>     Adversarial reviewer model, same forms (default: ${DEFAULT_REVIEW})
@@ -59,10 +75,11 @@ Exit codes: 0 clean, 1 could not start, 2 critical findings remain after
 
 export interface SyncOptions {
   source: string;
-  targetRepo: string;
+  targetRepo?: string;
   targetPath?: string;
   sourceRepo?: string;
   packageName?: string;
+  jargonFile: string;
   model: string;
   reviewModel: string;
   maxRevisions: number;
@@ -92,6 +109,7 @@ export function parseSyncArgs(argv: string[]): SyncOptions | null {
         "target-path": { type: "string", short: "t" },
         "source-repo": { type: "string" },
         "package-name": { type: "string" },
+        "jargon-file": JARGON_FILE_OPTION,
         model: { type: "string", short: "m" },
         "review-model": { type: "string" },
         "max-revisions": { type: "string" },
@@ -111,19 +129,15 @@ export function parseSyncArgs(argv: string[]): SyncOptions | null {
   if (values.help) return null;
 
   const source = values.source;
-  const targetRepo = values["target-repo"];
   if (!source) throw new UsageError("sync needs --source.");
-  if (!targetRepo) throw new UsageError("sync needs --target-repo.");
-  if (!values.extract && !values["target-path"]) {
-    throw new UsageError("--target-path is required with --no-extract.");
-  }
 
   return {
     source,
-    targetRepo,
+    targetRepo: values["target-repo"],
     targetPath: values["target-path"],
     sourceRepo: values["source-repo"],
     packageName: values["package-name"],
+    jargonFile: parseJargonFileName(values["jargon-file"]),
     model: values.model ?? process.env.CURSOR_MODEL ?? DEFAULT_PRIMARY,
     reviewModel: values["review-model"] ?? process.env.CURSOR_REVIEW_MODEL ?? DEFAULT_REVIEW,
     maxRevisions: values["max-revisions"] === undefined
@@ -160,19 +174,25 @@ export async function buildSyncPlan(options: SyncOptions, locations: PlanLocatio
         packageName: options.packageName,
       })
     : null;
-  const targetPath = options.targetPath ?? extractHalf?.names.defaultTargetPathRel;
+  const sourceAbs = path.resolve(locations.source);
+  const sourceRepoRoot = extractHalf?.sourceRepoRoot
+    ?? (await resolveSourceRepo(sourceAbs, locations.sourceRepo));
+  const targetPath = options.targetPath
+    ?? extractHalf?.names.defaultTargetPathRel
+    ?? (await mirrorPath(sourceRepoRoot, sourceAbs));
   if (!targetPath) {
-    throw new UsageError("--target-path is required with --no-extract.");
+    throw new UsageError("--source is the root of its repo, so there is no path to mirror; pass --target-path.");
   }
   const syncHalf = await planSync({
-    source: extractHalf ? extractHalf.extractedPkgAbs : locations.source,
+    source: extractHalf ? extractHalf.extractedPkgAbs : sourceAbs,
     targetRepo: locations.targetRepo,
     targetPath,
     // Phase A creates the extracted package, so it need not exist yet.
     assertSourceExists: !extractHalf,
   });
+  await assertDifferentRepos(sourceRepoRoot, syncHalf.targetRepoAbs);
   return {
-    plan: composeFullPlan({ syncHalf, extractHalf }),
+    plan: { ...composeFullPlan({ syncHalf, extractHalf }), sourceRepoRoot },
     alreadyExtracted: extractHalf?.alreadyExtracted ?? false,
   };
 }
@@ -183,9 +203,16 @@ export async function stageDryRunPlan(options: SyncOptions, real: SyncPlan): Pro
   const targetRepo = await createStagingRepo("target");
   await seedStagingRepo(real.targetRepoAbs, targetRepo, [real.targetPathRel]);
   console.log(style.dim(`[dry-run] target staged at ${targetRepo}`));
+  const stagedOptions = { ...options, targetPath: real.targetPathRel };
 
   if (!real.phaseAEnabled || !real.sourceRepoRoot || !real.wrapperPkgAbs || !real.extractedPkgAbs) {
-    return (await buildSyncPlan(options, { source: real.sourceAbs, targetRepo })).plan;
+    return (
+      await buildSyncPlan(stagedOptions, {
+        source: real.sourceAbs,
+        sourceRepo: real.sourceRepoRoot,
+        targetRepo,
+      })
+    ).plan;
   }
 
   const sourceRepoRoot = real.sourceRepoRoot;
@@ -194,8 +221,21 @@ export async function stageDryRunPlan(options: SyncOptions, real: SyncPlan): Pro
   const sourceRepo = await stageExtractSource(sourceRepoRoot, [toolRel, extractedRel]);
   console.log(style.dim(`[dry-run] source staged at ${sourceRepo}`));
   return (
-    await buildSyncPlan(options, { source: path.join(sourceRepo, toolRel), sourceRepo, targetRepo })
+    await buildSyncPlan(stagedOptions, { source: path.join(sourceRepo, toolRel), sourceRepo, targetRepo })
   ).plan;
+}
+
+// Terms from the jargon file at the source repo root, the source item (the
+// original tool in extract mode), and the target repo root. They apply to
+// every scan of the run and are injected into the agent prompts.
+async function loadSyncJargon(plan: SyncPlan, jargonFile: string): Promise<string[]> {
+  const loaded = await loadJargonTerms(
+    [plan.sourceRepoRoot, plan.wrapperPkgAbs ?? plan.sourceAbs, plan.targetRepoAbs],
+    jargonFile,
+  );
+  const terms = requireJargonTerms(loaded, jargonFile);
+  console.log(style.dim(`[jargon] ${terms.length} term(s) from ${loaded.readPaths.join(", ")}`));
+  return terms;
 }
 
 export async function runSyncCommand(
@@ -219,7 +259,7 @@ export async function runSyncCommand(
   const { plan: realPlan, alreadyExtracted } = await buildSyncPlan(options, {
     source: options.source,
     sourceRepo: options.sourceRepo,
-    targetRepo: options.targetRepo,
+    targetRepo: await resolveTargetRepo(options.targetRepo),
   });
   logPlan(realPlan, alreadyExtracted);
 
@@ -231,14 +271,7 @@ export async function runSyncCommand(
     );
   }
 
-  // Jargon overrides live next to the original source (the wrapper, or the
-  // item itself). They apply to scans of both the extracted package and the
-  // synced target.
-  const jargonAnchor = realPlan.wrapperPkgAbs ?? realPlan.sourceAbs;
-  const extraJargonTerms = await loadJargonOverrides(jargonAnchor);
-  if (extraJargonTerms.length > 0) {
-    console.log(style.dim(`[jargon] loaded ${extraJargonTerms.length} extra term(s)`));
-  }
+  const jargonTerms = await loadSyncJargon(realPlan, options.jargonFile);
 
   let sourceScan: ScanReport | null = null;
   if (options.sourceScan) {
@@ -249,7 +282,8 @@ export async function runSyncCommand(
     sourceScan = await runScanners({
       rootPath: sourceScanRoot,
       jargonSeverity: "warning",
-      extraJargonTerms,
+      jargonTerms,
+      jargonFile: options.jargonFile,
     });
     console.log(
       style.dim(`[source-scan] ${sourceScan.findings.length} finding(s) in ${sourceScan.durationMs} ms`),
@@ -296,7 +330,7 @@ export async function runSyncCommand(
   }
 
   const plan = outcome === "dry-run" ? await stageDryRunPlan(options, realPlan) : realPlan;
-  return runSession({ apiKey, models, plan, sourceScan, extraJargonTerms, options });
+  return runSession({ apiKey, models, plan, sourceScan, jargonTerms, options });
 }
 
 interface RunSessionInputs {
@@ -304,7 +338,7 @@ interface RunSessionInputs {
   models: ResolvedModels;
   plan: SyncPlan;
   sourceScan: ScanReport | null;
-  extraJargonTerms: string[];
+  jargonTerms: string[];
   options: SyncOptions;
 }
 
@@ -313,7 +347,7 @@ async function runSession({
   models,
   plan,
   sourceScan,
-  extraJargonTerms,
+  jargonTerms,
   options,
 }: RunSessionInputs): Promise<number> {
   try {
@@ -325,7 +359,8 @@ async function runSession({
       sourceScan,
       maxRevisions: options.maxRevisions,
       adversarialReview: options.adversarialReview,
-      extraJargonTerms,
+      jargonTerms,
+      jargonFile: options.jargonFile,
       fastCopy: options.fastCopy,
     });
 
@@ -377,6 +412,7 @@ async function runSession({
 }
 
 function logPlan(plan: SyncPlan, alreadyExtracted: boolean): void {
+  console.log(style.cyan(`[plan] source repo=${plan.sourceRepoRoot} target repo=${plan.targetRepoAbs}`));
   if (plan.phaseAEnabled) {
     console.log(
       style.cyan(

@@ -36,6 +36,8 @@ function inputs(overrides: Partial<RunSyncSessionInputs> = {}): RunSyncSessionIn
     sourceScan: scan([]),
     maxRevisions: 3,
     adversarialReview: true,
+    jargonTerms: ["codename"],
+    jargonFile: "jargon.json",
     fastCopy: true,
     ...overrides,
   };

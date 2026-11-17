@@ -11,6 +11,7 @@ import {
 import { runScanners, hasCriticalFindings, formatFindings } from "./scanners/index.ts";
 import { runReviewer } from "./reviewer.ts";
 import { copyTreeVerbatim } from "./copy.ts";
+import { repoOwnedItemFiles } from "./ess-items.ts";
 import { loadCursorSdk } from "./sdk.ts";
 import { style } from "./style.ts";
 
@@ -24,7 +25,8 @@ export interface RunSyncSessionInputs {
   sourceScan: ScanReport | null;
   maxRevisions: number;
   adversarialReview: boolean;
-  extraJargonTerms?: string[];
+  jargonTerms: string[];
+  jargonFile: string;
   fastCopy: boolean;
 }
 
@@ -67,7 +69,7 @@ interface PhaseResult {
 }
 
 async function runExtractPhase(inputs: RunSyncSessionInputs): Promise<PhaseResult> {
-  const { apiKey, primaryModel, reviewModel, plan, sourceScan, maxRevisions, adversarialReview, extraJargonTerms } = inputs;
+  const { apiKey, primaryModel, reviewModel, plan, sourceScan, maxRevisions, adversarialReview, jargonTerms, jargonFile } = inputs;
   if (!plan.extractedPkgAbs || !plan.sourceRepoRoot) {
     throw new Error("runExtractPhase called without extract metadata on the plan.");
   }
@@ -78,7 +80,7 @@ async function runExtractPhase(inputs: RunSyncSessionInputs): Promise<PhaseResul
     local: { cwd: plan.sourceRepoRoot, settingSources: [] },
   });
   try {
-    const initialPrompt = `${EXTRACT_SYSTEM_PROMPT}\n\n---\n\n${buildExtractInitialPrompt({ plan, sourceScan })}`;
+    const initialPrompt = `${EXTRACT_SYSTEM_PROMPT}\n\n---\n\n${buildExtractInitialPrompt({ plan, sourceScan, jargonTerms, jargonFile })}`;
     return await scanAndReviseLoop({
       agent,
       apiKey,
@@ -97,7 +99,8 @@ async function runExtractPhase(inputs: RunSyncSessionInputs): Promise<PhaseResul
         }),
       maxRevisions,
       adversarialReview,
-      extraJargonTerms,
+      jargonTerms,
+      jargonFile,
       logPrefix: "[extract]",
     });
   } finally {
@@ -113,9 +116,9 @@ async function runExtractPhase(inputs: RunSyncSessionInputs): Promise<PhaseResul
 async function tryFastCopyPhase(
   inputs: RunSyncSessionInputs,
 ): Promise<PhaseResult | null> {
-  const { apiKey, reviewModel, plan, adversarialReview, extraJargonTerms } = inputs;
+  const { apiKey, reviewModel, plan, adversarialReview, jargonTerms, jargonFile } = inputs;
 
-  const copied = await copyTreeVerbatim(plan.sourceAbs, plan.targetAbs);
+  const copied = await copyTreeVerbatim(plan.sourceAbs, plan.targetAbs, repoOwnedItemFiles(jargonFile));
   console.log(
     style.green(
       `[fast-copy] copied ${copied.filesCopied.length} file(s) verbatim `
@@ -145,7 +148,8 @@ async function tryFastCopyPhase(
   const deterministic = await runScanners({
     rootPath: plan.targetAbs,
     jargonSeverity: "critical",
-    extraJargonTerms,
+    jargonTerms,
+    jargonFile,
   });
   logScanReport("fast-copy deterministic", deterministic);
   if (deterministic.findings.some((finding) => finding.severity === "critical")) {
@@ -164,6 +168,7 @@ async function tryFastCopyPhase(
       apiKey,
       reviewModel,
       plan,
+      jargonTerms,
       reviewRootAbs: plan.targetAbs,
       cwd: plan.targetRepoAbs,
     });
@@ -194,7 +199,7 @@ export function canFastCopy(inputs: RunSyncSessionInputs): boolean {
 }
 
 async function runSyncPhase(inputs: RunSyncSessionInputs): Promise<PhaseResult> {
-  const { apiKey, primaryModel, reviewModel, plan, sourceScan, maxRevisions, adversarialReview, extraJargonTerms } = inputs;
+  const { apiKey, primaryModel, reviewModel, plan, sourceScan, maxRevisions, adversarialReview, jargonTerms, jargonFile } = inputs;
 
   if (canFastCopy(inputs)) {
     const fastResult = await tryFastCopyPhase(inputs);
@@ -218,7 +223,7 @@ async function runSyncPhase(inputs: RunSyncSessionInputs): Promise<PhaseResult> 
     const jargonHeavy = sourceScan
       ? sourceScan.findings.filter((finding) => finding.source === "jargon").length > 8
       : false;
-    const initialPrompt = `${SYNC_SYSTEM_PROMPT}\n\n---\n\n${buildSyncInitialPrompt({ plan, sourceScan, jargonHeavy })}`;
+    const initialPrompt = `${SYNC_SYSTEM_PROMPT}\n\n---\n\n${buildSyncInitialPrompt({ plan, sourceScan, jargonHeavy, jargonTerms, jargonFile })}`;
     return await scanAndReviseLoop({
       agent,
       apiKey,
@@ -237,7 +242,8 @@ async function runSyncPhase(inputs: RunSyncSessionInputs): Promise<PhaseResult> 
         }),
       maxRevisions,
       adversarialReview,
-      extraJargonTerms,
+      jargonTerms,
+      jargonFile,
       logPrefix: "[primary]",
     });
   } finally {
@@ -257,7 +263,8 @@ interface ScanAndReviseInputs {
   buildRevisionPrompt: (findings: Finding[], iteration: number) => string;
   maxRevisions: number;
   adversarialReview: boolean;
-  extraJargonTerms?: string[];
+  jargonTerms: string[];
+  jargonFile: string;
   logPrefix: string;
 }
 
@@ -273,7 +280,8 @@ async function scanAndReviseLoop({
   buildRevisionPrompt,
   maxRevisions,
   adversarialReview,
-  extraJargonTerms,
+  jargonTerms,
+  jargonFile,
   logPrefix,
 }: ScanAndReviseInputs): Promise<PhaseResult> {
   let lastRunId: string | undefined;
@@ -302,7 +310,8 @@ async function scanAndReviseLoop({
     const deterministic = await runScanners({
       rootPath: scanRootAbs,
       jargonSeverity: "critical",
-      extraJargonTerms,
+      jargonTerms,
+      jargonFile,
     });
     logScanReport(`${logPrefix.replace(/\[|\]/g, "")} deterministic`, deterministic);
 
@@ -316,6 +325,7 @@ async function scanAndReviseLoop({
         apiKey,
         reviewModel,
         plan,
+        jargonTerms,
         reviewRootAbs,
         cwd: reviewerCwd,
       });

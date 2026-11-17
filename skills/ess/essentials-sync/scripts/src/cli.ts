@@ -12,8 +12,10 @@ import { runSyncCommand } from "./sync-command.ts";
 
 const HELP = `Usage: ${PROGRAM_NAME} <command> [options]
 
-Sync an item from a source repo into a target repo, with deterministic
-scanners (secrets, jargon, PII) and an adversarial LLM reviewer in between.
+Sync an item from a source repo into a target repo (by default, the current
+one), with deterministic scanners (secrets, jargon, PII) and an adversarial
+LLM reviewer in between. The jargon terms come from a jargon.json file in the
+repos.
 
 Commands:
   preflight  Check the tools and credentials sync needs

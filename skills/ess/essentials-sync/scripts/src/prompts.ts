@@ -1,29 +1,30 @@
+import { PROGRAM_NAME } from "./program.ts";
 import type { Finding, ScanReport, SyncPlan } from "./types.ts";
 
-// === Sync system prompt (Phase B: write into the open-source target repo) ===
-export const SYNC_SYSTEM_PROMPT = `You are the essentials-sync primary agent. Your job is to move a package from a private, company-owned repository into the public open-source essentials repository, generalizing all company-specific content along the way.
+// === Sync system prompt (Phase B: write into the target repo) ===
+export const SYNC_SYSTEM_PROMPT = `You are the ${PROGRAM_NAME} primary agent. Your job is to move a package from a private, company-owned repository into a public target repository, generalizing all company-specific content along the way.
 
 HARD RULES that must hold for every file you write into the target:
 1. No secrets of any kind (API keys, tokens, passwords, certificates, private keys).
 2. No personally identifiable information (employee names, employee IDs, emails, phone numbers).
-3. No internal hostnames or URLs (anything under company-owned infra domains like cisco.com, customer-specific tenants like '<tenant>.webex.com', or similar non-public hosts).
-4. No company-internal identifiers or jargon left verbatim. Examples: 'cisco', 'myid', 'cec', internal product codenames, internal org names. These must be either removed or generalized. Public third-party product names that the package legitimately wraps (e.g. 'outlook', 'webex', 'servicenow') are NOT jargon and may appear -- they describe what the package is.
+3. No internal hostnames or URLs (anything under company-owned infrastructure domains, customer-specific tenants like '<tenant>.webex.com', or similar non-public hosts).
+4. No company-internal identifiers or jargon left verbatim: every term on the FORBIDDEN TERMS list in the task, plus internal product codenames and internal org names the list misses. These must be either removed or generalized. Public third-party product names that the package legitimately wraps (e.g. 'outlook', 'webex', 'servicenow') are NOT jargon and may appear -- they describe what the package is.
 5. Public third-party documentation and developer-portal URLs that the source uses to point readers at upstream docs (e.g. 'https://developer.webex.com/...', 'https://learn.microsoft.com/...', 'https://docs.servicenow.com/...') MUST be kept verbatim as clickable links. Do not paraphrase them into prose like "the Webex developer portal" -- the URL itself is the useful artifact for an open-source reader.
 
 NAMING CONVENTION:
-- When you create or rename a package destined for the essentials repo, the package name must begin with the prefix 'ess-'. For example, an internal package 'cisco-auth' should become 'ess-auth'.
-- The target layout is 'packages/python/ess-*' for Python and 'packages/javascript/ess-*' for JavaScript/TypeScript.
+- The 'ess-' prefix marks items meant for publication. When you create or rename a package destined for the target repo, its name must begin with 'ess-'. For example, an internal package 'acme-auth' should become 'ess-auth'.
+- Write the item at the target path given in the task; do not move it elsewhere.
 
 STRUCTURE PRESERVATION:
 - Preserve pyproject.toml and package.json structure. Update only the fields that carry company-specific data (name, authors, urls, keywords, descriptions).
 - Preserve or add an Apache 2.0 license header to newly created source files. Do not strip pre-existing license headers unless they reference the company name verbatim.
-- Preserve directory structure unless the source layout violates the essentials convention; if it does, reorganize and note the changes.
+- Preserve the directory structure of the source item.
 
 When you are uncertain whether a term is internal or generic, treat it as internal and generalize it.
 `;
 
 // === Extract system prompt (Phase A: refactor in place inside the source repo) ===
-export const EXTRACT_SYSTEM_PROMPT = `You are the essentials-sync primary agent operating in EXTRACT mode. Your job is to refactor a team- or account-specific tool inside a private uv-workspace repository into two sibling packages:
+export const EXTRACT_SYSTEM_PROMPT = `You are the ${PROGRAM_NAME} primary agent operating in EXTRACT mode. Your job is to refactor a team- or account-specific tool inside a private uv-workspace repository into two sibling packages:
 
 1. A jargon-free shared library at 'packages/python/ess-<name>/' containing all the reusable logic, parameterized so it has NO hard-coded company-specific defaults.
 2. A thin wrapper at 'tools/python/<name>/' (the original tool's location, rewritten in place) that imports the shared library and supplies the company-specific defaults.
@@ -36,8 +37,8 @@ Replicate that shape.
 
 HARD RULES for the EXTRACTED package (the new 'packages/python/ess-<name>/'):
 1. No secrets, no PII.
-2. No internal hostnames, URLs, or account IDs (e.g. customer-specific '<tenant>.webex.com' subdomains, '*.cisco.com' infra hosts).
-3. No company-internal identifiers or jargon left verbatim ('cisco', 'myid', 'cec', internal product codenames, internal org names). Public third-party product names that the package wraps (e.g. 'outlook', 'webex', 'servicenow') are NOT jargon -- keep them when they describe what the package is.
+2. No internal hostnames, URLs, or account IDs (e.g. customer-specific '<tenant>.webex.com' subdomains, company infrastructure hosts).
+3. No company-internal identifiers or jargon left verbatim: every term on the FORBIDDEN TERMS list in the task, plus internal product codenames and internal org names the list misses. Public third-party product names that the package wraps (e.g. 'outlook', 'webex', 'servicenow') are NOT jargon -- keep them when they describe what the package is.
 4. Public third-party documentation and developer-portal URLs (e.g. 'https://developer.webex.com/...', 'https://learn.microsoft.com/...', 'https://docs.servicenow.com/...') must be kept verbatim as clickable links. Do not paraphrase them into prose -- the URL itself is the useful artifact for an open-source reader.
 5. No company-specific defaults baked into function signatures, CLI flags, or constants. Defaults that used to be hard-coded must become required parameters, env-var-driven, or removed entirely.
 6. Every file written under 'packages/python/ess-<name>/' will be scanned. Any leftover company data here is a failure.
@@ -54,7 +55,20 @@ NAMING:
 When you are uncertain whether a term is internal or generic, treat it as internal and generalize it.
 `;
 
-export interface PhaseAInputs {
+interface WordlistInputs {
+  jargonTerms: readonly string[];
+  jargonFile: string;
+}
+
+// The merged wordlist from the repos' jargon files. The deterministic jargon
+// scanner enforces the same list after every agent turn.
+function formatForbiddenTerms(jargonTerms: readonly string[]): string {
+  const lines = jargonTerms.map((term) => `  - ${term}`).join("\n");
+  return `FORBIDDEN TERMS (company-specific; none may appear in any file you write, in any letter case, as a whole word; an entry starting with '*.' forbids every hostname under that domain):
+${lines}`;
+}
+
+export interface PhaseAInputs extends WordlistInputs {
   plan: SyncPlan;
   sourceScan: ScanReport | null;
   jargonHeavy: boolean;
@@ -65,6 +79,8 @@ export function buildSyncInitialPrompt({
   plan,
   sourceScan,
   jargonHeavy,
+  jargonTerms,
+  jargonFile,
 }: PhaseAInputs): string {
   const mode = plan.mode;
   const sourceScanSection = sourceScan
@@ -92,7 +108,10 @@ TASK:
    - In COPY mode, the target path does not exist yet. Create it.
    - In SYNC mode, the target path already exists; reconcile by updating files that have meaningfully diverged. Do not blindly overwrite the target.
 3. Apply the HARD RULES from your system prompt to every file you write. The target tree will be scanned after you finish; any leftover company data is a failure.
-4. ${generalizationNote}
+4. Never copy or create '${jargonFile}' (the company wordlist) or 'LICENSE' at the root of the target path; both belong to the repo, not the item.
+5. ${generalizationNote}
+
+${formatForbiddenTerms(jargonTerms)}
 
 SOURCE SCAN SUMMARY (informational only, never a blocker on the source side):
 ${sourceScanSection}
@@ -133,7 +152,7 @@ The HARD RULES from your system prompt still apply. Once you have addressed ever
 `;
 }
 
-export interface ExtractInitialInputs {
+export interface ExtractInitialInputs extends WordlistInputs {
   plan: SyncPlan;
   sourceScan: ScanReport | null;
 }
@@ -141,6 +160,8 @@ export interface ExtractInitialInputs {
 export function buildExtractInitialPrompt({
   plan,
   sourceScan,
+  jargonTerms,
+  jargonFile,
 }: ExtractInitialInputs): string {
   if (
     !plan.extractedPkgAbs
@@ -178,8 +199,11 @@ TASK:
    - The wrapper is allowed to contain company-specific defaults (hostnames, AWS profiles, internal SSO domains, etc.). That is its purpose.
 4. Update the root pyproject.toml at ${plan.sourceRepoRoot}/pyproject.toml to add '${plan.packageName}' to '[tool.uv.workspace] members' if it is not already listed. Do not modify any other workspace entries.
 5. Do NOT delete anything outside ORIGINAL TOOL and EXTRACTED PACKAGE PATH. Do NOT modify other tools or packages.
+6. Do NOT copy '${jargonFile}' (the company wordlist) into the EXTRACTED PACKAGE. If ORIGINAL TOOL has one, leave it with the wrapper.
 
 SCAN COVERAGE: Only the EXTRACTED PACKAGE will be scanned. The wrapper is excluded from the scan, so company-specific defaults belong there.
+
+${formatForbiddenTerms(jargonTerms)}
 
 SOURCE SCAN SUMMARY (informational only):
 ${sourceScanSection}
@@ -210,7 +234,7 @@ export function buildExtractRevisionPrompt({
 
   return `REVISION REQUIRED for the EXTRACTED package (iteration ${iteration} of ${maxRevisions}).
 
-The extracted package at ${plan.extractedPkgAbs} was scanned by deterministic scanners and an adversarial reviewer. The findings below must be resolved before Phase B (sync to essentials) can run:
+The extracted package at ${plan.extractedPkgAbs} was scanned by deterministic scanners and an adversarial reviewer. The findings below must be resolved before Phase B (sync to the target repo) can run:
 
 ${formatted}
 
@@ -226,6 +250,7 @@ The HARD RULES from your system prompt still apply. Once you have addressed ever
 
 export interface ReviewerPromptInputs {
   plan: SyncPlan;
+  jargonTerms: readonly string[];
   // The path the reviewer should treat as the package to inspect. Defaults to
   // plan.targetAbs but during Phase A we point it at the extracted package.
   reviewRootAbs?: string;
@@ -233,6 +258,7 @@ export interface ReviewerPromptInputs {
 
 export function buildReviewerPrompt({
   plan,
+  jargonTerms,
   reviewRootAbs,
 }: ReviewerPromptInputs): string {
   const root = reviewRootAbs ?? plan.targetAbs;
@@ -241,6 +267,7 @@ export function buildReviewerPrompt({
 Read every file under that path EXCEPT files whose basename starts with 'tmp-' or 'tmp.' -- those are working notes for the human reviewer, gitignored, and never committed. Skip them entirely; do not flag anything in them.
 
 For everything else, flag anything that would embarrass the team or leak company information if released. Be paranoid. Pay particular attention to:
+  - Any term on the FORBIDDEN TERMS list below, in any letter case.
   - Internal hostnames, URLs, account IDs, project codenames.
   - Personally identifiable information (employee names, IDs, emails, phone numbers).
   - Subtle references in docstrings, comments, naming, error messages, or example data that imply an internal audience.
@@ -248,10 +275,12 @@ For everything else, flag anything that would embarrass the team or leak company
   - Anything that looks like a secret (API key, token, password, certificate).
 
 DO NOT flag the following -- they are public, open-source conventions, not internal jargon:
-  - Package names that start with the 'ess-' prefix (e.g. 'ess-browser', 'ess-auth', 'ess-service-now-incident'). 'ess' is short for 'essentials', the public open-source repo this package belongs to. References to other 'ess-*' packages as dependencies, workspace siblings, or import targets ('from ess_browser import ...', '[tool.uv.sources] ess-browser = { workspace = true }') are expected and correct.
+  - Package names that start with the 'ess-' prefix (e.g. 'ess-browser', 'ess-auth', 'ess-service-now-incident'). The 'ess-' prefix marks items meant for publication. References to other 'ess-*' packages as dependencies, workspace siblings, or import targets ('from ess_browser import ...', '[tool.uv.sources] ess-browser = { workspace = true }') are expected and correct.
   - Generic uv/Python workspace conventions ('[tool.uv.workspace]', 'uv sync --all-packages', the 'packages/python/' and 'tools/python/' directory layout). These are upstream uv patterns, not company-specific.
-  - Public third-party product names that the package legitimately wraps. For example, 'outlook' / 'microsoft graph' in 'ess-outlook' (Microsoft's public Outlook + Graph API), 'webex' in 'ess-webex' (Cisco's public Webex API at 'webexapis.com'), 'servicenow' in 'ess-service-now-incident'. These describe what the package integrates with. Customer-specific tenant URLs ('<tenant>.webex.com', '<company>.service-now.com') and Cisco-internal infrastructure ('*.cisco.com', 'cec', 'myid', internal codenames) ARE still problems and should be flagged.
+  - Public third-party product names that the package legitimately wraps. For example, 'outlook' / 'microsoft graph' in 'ess-outlook' (Microsoft's public Outlook + Graph API), 'webex' in 'ess-webex' (the public Webex API at 'webexapis.com'), 'servicenow' in 'ess-service-now-incident'. These describe what the package integrates with. Customer-specific tenant URLs ('<tenant>.webex.com', '<company>.service-now.com') and company-internal infrastructure (hosts and names on the FORBIDDEN TERMS list, internal codenames) ARE still problems and should be flagged.
   - Public third-party documentation and developer-portal URLs that point readers at upstream docs (e.g. 'https://developer.webex.com/...', 'https://learn.microsoft.com/...', 'https://docs.servicenow.com/...', 'https://graph.microsoft.com', 'https://login.microsoftonline.com'). These are vendor-public, intentionally clickable, and useful to open-source readers -- treat them like any other public dependency URL.
+
+${formatForbiddenTerms(jargonTerms)}
 
 Output ONLY a single JSON object, with no surrounding prose, no markdown code fences, and no commentary. Schema:
 

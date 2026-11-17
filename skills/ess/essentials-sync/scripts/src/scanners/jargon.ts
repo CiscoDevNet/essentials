@@ -4,14 +4,15 @@ import { scanTextFilesByLine } from "./text-files.ts";
 
 export interface JargonScanOptions {
   severity: Severity;
-  extraTerms?: string[];
+  terms: readonly string[];
+  skipRootFiles?: ReadonlySet<string>;
 }
 
 export async function scanJargon(
   rootPath: string,
   options: JargonScanOptions,
 ): Promise<Finding[]> {
-  const config = loadJargonConfig(options.extraTerms);
+  const config = loadJargonConfig(options.terms);
   return scanTextFilesByLine(
     rootPath,
     config.patterns,
@@ -25,5 +26,6 @@ export async function scanJargon(
       message: pattern.message,
       term: pattern.term,
     }),
+    options.skipRootFiles,
   );
 }

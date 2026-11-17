@@ -1,9 +1,12 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { afterEach, describe, it } from "node:test";
+import { fileURLToPath } from "node:url";
 import {
   listUnpublishedCommits,
+  loadRepoOverrides,
   parseAddedLines,
   readMessageLines,
   scanCommits,
@@ -16,6 +19,8 @@ import {
   parseJargonOverrides,
 } from "../src/jargon-list.ts";
 import { git, makeRepo, removeTempDirs } from "./temp-repos.ts";
+
+const JARGON_CHECK = fileURLToPath(new URL("../src/jargon-check.ts", import.meta.url));
 
 // Made-up terms, so this file needs no exception in the repo's allow list.
 const config = loadJargonConfig(["codename", "*.corp.example"]);
@@ -120,19 +125,21 @@ describe("parseAddedLines", () => {
   });
 });
 
+function commitTo(repo: string, message: string, files: Record<string, string>): void {
+  for (const [file, content] of Object.entries(files)) {
+    mkdirSync(path.dirname(path.join(repo, file)), { recursive: true });
+    writeFileSync(path.join(repo, file), content);
+  }
+  git(repo, "add", "-A");
+  git(repo, "-c", "user.name=Test", "-c", "user.email=test@example.com", "commit", "-q", "--no-verify", "-m", message);
+}
+
 describe("scanCommits against a real repository", () => {
   afterEach(removeTempDirs);
 
   it("flags messages and added lines, honoring allowed paths and text", async () => {
     const repo = await makeRepo("jargon-check");
-    const commit = (message: string, files: Record<string, string>) => {
-      for (const [file, content] of Object.entries(files)) {
-        mkdirSync(path.dirname(path.join(repo, file)), { recursive: true });
-        writeFileSync(path.join(repo, file), content);
-      }
-      git(repo, "add", "-A");
-      git(repo, "-c", "user.name=Test", "-c", "user.email=test@example.com", "commit", "-q", "--no-verify", "-m", message);
-    };
+    const commit = (message: string, files: Record<string, string>) => commitTo(repo, message, files);
 
     commit("chore: start", { "README.md": "hello\n" });
     commit("chore: align with codename", {
@@ -148,5 +155,51 @@ describe("scanCommits against a real repository", () => {
       "commit SHA message line 1 codename",
       "commit SHA src/client.py:1 *.corp.example",
     ]);
+  });
+});
+
+describe("the jargon-check hook", () => {
+  afterEach(removeTempDirs);
+
+  const runHook = (repo: string, args: string[] = []) =>
+    spawnSync(process.execPath, [JARGON_CHECK, "--to-ref", "HEAD", ...args], { cwd: repo, encoding: "utf8" });
+
+  it("fails closed when the repo lists no terms", async () => {
+    const repo = await makeRepo("jargon-hook");
+    commitTo(repo, "chore: start", { "README.md": "hello\n" });
+
+    const result = runHook(repo);
+
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /No jargon terms found in .*jargon\.json/);
+  });
+
+  it("never flags the wordlist file itself, under any name", async () => {
+    const repo = await makeRepo("jargon-hook");
+    commitTo(repo, "chore: start", {
+      "jargon.json": JSON.stringify(["codename"]),
+      "company-jargon.json": JSON.stringify(["codename"]),
+      "README.md": "hello\n",
+    });
+
+    const flagged = (args?: string[]) =>
+      [...runHook(repo, args).stderr.matchAll(/ (\S+):1: 'codename'/g)].map((match) => match[1]);
+
+    assert.equal(runHook(repo).status, 1);
+    assert.deepEqual(flagged(), ["company-jargon.json"]);
+    assert.deepEqual(flagged(["--jargon-file", "company-jargon.json"]), ["jargon.json"]);
+  });
+
+  it("passes a clean history", async () => {
+    const repo = await makeRepo("jargon-hook");
+    commitTo(repo, "chore: start", { "jargon.json": JSON.stringify(["codename"]), "README.md": "hello\n" });
+
+    const result = runHook(repo);
+
+    assert.equal(result.status, 0, result.stderr);
+  });
+
+  it("adds the wordlist file to the allowed paths", () => {
+    assert.deepEqual(loadRepoOverrides("/nonexistent", "company-jargon.json").allow.paths, ["company-jargon.json"]);
   });
 });

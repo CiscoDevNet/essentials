@@ -1,24 +1,23 @@
 #!/usr/bin/env node
 // Git hook entry point: fails when a commit message, or a line a commit adds,
-// contains a forbidden jargon term. It runs under plain `node` (type stripping)
-// so the hook works without `npm install`: import only node builtins and
-// `./jargon-list.ts` here.
+// contains a forbidden jargon term. The terms come from the jargon file at
+// the repo root; with none, the hook fails rather than pass everything.
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 import {
+  DEFAULT_JARGON_FILE,
   findJargonTerms,
   isAllowedPath,
+  isJargonFileName,
   loadJargonConfig,
   parseJargonOverrides,
   type JargonAllowList,
   type JargonConfig,
   type JargonOverrides,
 } from "./jargon-list.ts";
-
-export const CONFIG_FILENAME = ".essentials-sync-jargon.json";
 
 const SCISSORS_LINE = /^# -+ >8 -+$/;
 const MAX_EXCERPT_LENGTH = 120;
@@ -163,12 +162,14 @@ export function scanCommits(
 const git = (cwd: string, args: string[]): string =>
   execFileSync("git", args, { cwd, encoding: "utf8", maxBuffer: 256 * 1024 * 1024 });
 
-export function loadRepoOverrides(repoRoot: string): JargonOverrides {
-  const configPath = path.join(repoRoot, CONFIG_FILENAME);
-  if (!existsSync(configPath)) {
-    return parseJargonOverrides(null);
-  }
-  return parseJargonOverrides(JSON.parse(readFileSync(configPath, "utf8")) as unknown);
+// The jargon file itself always passes: it is the wordlist, so it lists every
+// term.
+export function loadRepoOverrides(repoRoot: string, jargonFile = DEFAULT_JARGON_FILE): JargonOverrides {
+  const configPath = path.join(repoRoot, jargonFile);
+  const overrides = existsSync(configPath)
+    ? parseJargonOverrides(JSON.parse(readFileSync(configPath, "utf8")) as unknown)
+    : parseJargonOverrides(null);
+  return { ...overrides, allow: { ...overrides.allow, paths: [...overrides.allow.paths, jargonFile] } };
 }
 
 // Commits the push would publish: everything reachable from `toRef` that no
@@ -183,10 +184,10 @@ export function listUnpublishedCommits(repoRoot: string, toRef: string): CommitC
   return parseLog(output);
 }
 
-function formatHits(hits: readonly JargonHit[]): string {
+function formatHits(hits: readonly JargonHit[], jargonFile: string): string {
   const lines = hits.map((hit) => `  ${hit.location}: '${hit.term}' in: ${hit.excerpt}`);
   return [
-    `Forbidden jargon found. Reword it, or add an exception to ${CONFIG_FILENAME}:`,
+    `Forbidden jargon found. Reword it, or add an exception to ${jargonFile}:`,
     ...lines,
   ].join("\n");
 }
@@ -197,11 +198,24 @@ export function main(argv: readonly string[]): number {
     options: {
       "message-file": { type: "string" },
       "to-ref": { type: "string" },
+      "jargon-file": { type: "string", default: DEFAULT_JARGON_FILE },
     },
   });
+  const jargonFile = values["jargon-file"];
+  if (!isJargonFileName(jargonFile)) {
+    console.error(`--jargon-file takes a file name, not a path. Got: ${jargonFile}`);
+    return 1;
+  }
   const repoRoot = git(process.cwd(), ["rev-parse", "--show-toplevel"]).trim();
-  const overrides = loadRepoOverrides(repoRoot);
+  const overrides = loadRepoOverrides(repoRoot, jargonFile);
   const config = loadJargonConfig(overrides.terms);
+  if (config.patterns.length === 0) {
+    console.error(
+      `No jargon terms found in ${path.join(repoRoot, jargonFile)}. List the company's terms `
+        + "there, or name a different file with --jargon-file.",
+    );
+    return 1;
+  }
 
   const messageFile = values["message-file"];
   const hits = messageFile
@@ -221,7 +235,7 @@ export function main(argv: readonly string[]): number {
       );
 
   if (hits.length === 0) return 0;
-  console.error(formatHits(hits));
+  console.error(formatHits(hits, jargonFile));
   return 1;
 }
 

@@ -15,8 +15,16 @@ with the `ess-scan` hook from the essentials repo's `.pre-commit-hooks.yaml`:
     - id: ess-scan
 ```
 
-It runs `scan` on each changed item and fails on critical findings. It needs Node 24
-or later and npm on `PATH`; trufflehog is used when installed.
+It runs `scan` on each changed item and fails on critical findings. The jargon
+terms come from `jargon.json` at the repo root (and at each item); with no terms
+the hook fails. To use another file name, pass it through `args`:
+
+```yaml
+    - id: ess-scan
+      args: [--jargon-file, company-jargon.json]
+```
+
+It needs Node 24 or later and npm on `PATH`; trufflehog is used when installed.
 
 ## Jargon in commit messages and pushes
 
@@ -39,10 +47,12 @@ node "$SKILL_DIR/scripts/src/jargon-check.ts"                 # unpublished comm
 node "$SKILL_DIR/scripts/src/jargon-check.ts" --to-ref <sha>  # a commit and its unpublished ancestors
 ```
 
-Exceptions live in `.essentials-sync-jargon.json` at the repo root. `allow.paths`
-are repo-relative globs (`*`, `**`, `?`) whose added lines are never flagged;
-`allow.text` entries are literal strings removed from a line before matching, so a
-forbidden term elsewhere on the same line is still caught:
+The terms and their exceptions live in `jargon.json` at the repo root (pass
+`--jargon-file <name>` for another name). With no terms, the check exits 1. The
+jargon file itself is never flagged. `allow.paths` are repo-relative globs (`*`,
+`**`, `?`) whose added lines are never flagged; `allow.text` entries are literal
+strings removed from a line before matching, so a forbidden term elsewhere on the
+same line is still caught:
 
 ```json
 {

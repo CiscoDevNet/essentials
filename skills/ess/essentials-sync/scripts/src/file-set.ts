@@ -27,7 +27,13 @@ const WORKING_NOTE_PATTERN = /^tmp[-.]/;
 // rootAbs may also be a single file. The result is then [""] when the file is
 // publishable and [] when it is not, so path.join(rootAbs, entry) still names
 // the file.
-export async function listPublishableFiles(rootAbs: string): Promise<string[]> {
+//
+// skipRootFiles names files directly under rootAbs to leave out, such as an
+// item's repo-owned files (repoOwnedItemFiles).
+export async function listPublishableFiles(
+  rootAbs: string,
+  skipRootFiles: ReadonlySet<string> = new Set(),
+): Promise<string[]> {
   const stat = await fs.lstat(rootAbs);
   if (!stat.isDirectory()) {
     const name = path.basename(rootAbs);
@@ -35,7 +41,9 @@ export async function listPublishableFiles(rootAbs: string): Promise<string[]> {
     return listed.includes(name) && !isSkipped(name) ? [""] : [];
   }
 
-  const kept = (await listWithGit(rootAbs, ".")).filter((relPath) => !isSkipped(relPath));
+  const kept = (await listWithGit(rootAbs, ".")).filter(
+    (relPath) => !isSkipped(relPath) && !skipRootFiles.has(relPath),
+  );
   return [...new Set(kept)].sort();
 }
 

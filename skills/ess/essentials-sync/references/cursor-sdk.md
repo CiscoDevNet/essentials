@@ -53,5 +53,6 @@ it. The first `sync` or `models` installs it into the user cache (see
 
 The agents' model calls go through Cursor's API. Everything the agents read is
 sent to Cursor as part of those calls: the source item, files around it in the
-source repo, and the target repo, private code included. Use this skill only on
-code your organization allows to be sent to Cursor.
+source repo, and the target repo, private code included. The prompts also carry
+the jargon wordlist. Use this skill only on code your organization allows to be
+sent to Cursor.
