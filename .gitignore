@@ -278,8 +278,11 @@ node_modules/
 # Claude
 .claude/settings.json
 
-# Agent-skills install output from `npx skills add ./skills` (source of truth is
-# skills/ess/). The CLI installs to .agents/skills/ and writes a machine-specific
-# lock file.
-.agents/skills/
-skills-lock.json
+# APM dependencies
+apm_modules/
+
+# Skill sources live in skills/. Installed copies in .agents/skills/ are
+# committed. .cursor/skills/ is a legacy per-client path; nothing should write it.
+.cursor/skills/
+# Skills ship reference folders named output/; keep the repo-wide output/ rule off them.
+!.agents/skills/**/output/

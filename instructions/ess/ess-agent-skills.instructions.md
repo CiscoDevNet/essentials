@@ -1,0 +1,157 @@
+---
+description: >-
+  Author portable Agent Skills (SKILL.md) per agentskills.io — spec compliance,
+  self-contained layout, publication repo pattern, and validation. Use when
+  creating, editing, or publishing skills under skills/, .cursor/skills/, or SKILL.md files.
+applyTo: "**/SKILL.md,skills/**"
+---
+
+# Agent Skills — Portability and Authoring
+
+Agent Skills are defined by the open [agentskills.io specification](https://agentskills.io/specification), not by any marketplace or MCP server. **Portability comes from spec-compliant files on disk.** Marketplaces (SkillsMP, Open Agent Skills, awesome-skills lists) are discovery layers on top of Git repos — they do not enforce cross-agent behavior.
+
+## Three layers (know which you are optimizing)
+
+| Layer | What it is | Value |
+| ----- | ---------- | ----- |
+| **Spec** | `SKILL.md` + optional `scripts/`, `references/`, `assets/` | **High** — the only real standard |
+| **Install paths** | `.cursor/skills/`, `~/.claude/skills/`, `.agents/skills/`, written by [APM](https://microsoft.github.io/apm/) | **Medium** — same skill, different drop zones. APM is how this repo installs skills, and the only installer that also installs a skill's dependencies |
+| **Marketplaces** | SkillsMP, openagentskills.dev, curated awesome lists | **Low for compatibility, high for visibility** |
+
+There is no universal skill App Store. Hosts differ on script execution, tool permissions, slash commands, and which frontmatter fields they honor.
+
+## Skill directory layout
+
+```
+skill-name/                 # directory name MUST match frontmatter `name`
+├── SKILL.md                # required: YAML frontmatter + Markdown body
+├── LICENSE                 # required for public publish repos (MIT/Apache)
+├── scripts/                # optional: executable, self-contained
+├── references/             # optional: docs loaded on demand
+├── assets/                 # optional: templates, static files
+└── apm.yml                 # optional: declares skill dependencies; makes this an APM hybrid package
+```
+
+Spec: https://agentskills.io/specification
+Best practices: https://agentskills.io/skill-creation/best-practices
+
+## Frontmatter requirements
+
+**Required:**
+- `name` — lowercase, hyphens only; max 64 chars; **must match parent directory name**
+- `description` — max 1024 chars; state **what** the skill does and **when** to use it (include trigger phrases agents match on)
+
+**Recommended for portable skills:**
+- `compatibility` — OS, tools, network, or agent constraints (e.g. `macOS only. Requires bash and launchctl.`)
+- `license` — short license name or pointer to bundled `LICENSE`
+- `metadata` — use reasonably unique keys (`author`, `version`, `supported_os`)
+
+**Avoid in portable publish copies** (Cursor- or host-specific; OK in a team monorepo fork if documented):
+- `disable-model-invocation` and other non-spec frontmatter fields
+- Slash commands (`/skill-name`) as the **only** entry point — also encode triggers in `description`
+
+## SKILL.md body
+
+- Keep **under 500 lines** (~5000 tokens). Move depth to `references/`.
+- Use **progressive disclosure**: tell the agent *when* to read each reference file, not just "see references/".
+- Bundle **gotchas** inline in `SKILL.md` (environment facts the agent will get wrong without them).
+- Prefer **procedures over declarations**; **defaults over menus** (pick one approach, mention alternatives briefly).
+- For fragile workflows, be prescriptive (exact commands). For flexible tasks, explain *why*.
+- **No secrets** in skill files. No hardcoded API keys, tokens, or user-specific paths.
+
+## Skill dependencies (APM)
+
+The Agent Skills spec has no dependency field. APM adds one: an `apm.yml` next to `SKILL.md` makes the directory a hybrid package, and `apm install` installs the skill together with every skill listed under its `dependencies.apm`. A skill that relies on another skill's instructions declares it there instead of assuming it is installed:
+
+```yaml
+name: my-report
+version: 1.0.0
+dependencies:
+  apm:
+    - path: ../shared-signin
+```
+
+- **Same repo only.** A `path:` dependency may point anywhere inside the declaring skill's repo, usually `../<skill>`. In a local install it resolves against the declaring skill; in a remote install, APM fetches it from the same repo and ref. APM rejects absolute paths, paths that leave the repo, and paths into another repo.
+- **Link to the dependency's installed path.** APM installs every skill as a sibling under `.agents/skills/<name>/`, so `SKILL.md` can link to a declared dependency as `../<dependency>/SKILL.md` (or a file under it), as Microsoft's own APM skills do. APM leaves that link as written. Link only to skills listed in this skill's `apm.yml`, so the target is always installed, and put the skill's name in the link text so an agent can still find it if another installer puts it elsewhere.
+- **Keep dependencies shallow.** Use them for shared procedure, such as sign-in steps or session gotchas. Code that several skills share belongs in a workspace package that each skill's CLI imports, not in a skill.
+- **`ess-*` skills stay publishable.** A team skill may depend on an `ess-*` skill. An `ess-*` skill must not depend on a non-`ess` skill, because `ess-*` skills are published verbatim.
+- **Install with APM.** `npx skills add` and manual copies ignore `apm.yml`, so a dependent skill installed that way arrives without its dependencies. Document `apm install` as the install path for any skill with an `apm.yml`.
+
+## Portability checklist (before considering a skill "done")
+
+1. **Self-contained** — apart from dependencies declared in `apm.yml`, no links or paths outside the skill directory, and none into a parent monorepo (`../../../../docs/...`). Vendor essential docs into `references/`.
+2. **Scripts work from the skill root** — `scripts/` are self-contained or document dependencies clearly; no assumptions about repo layout outside the skill directory.
+3. **Honest scope** — `compatibility` and `description` state platform limits (e.g. macOS-only). Portability ≠ runs everywhere; it means installs cleanly where constraints hold.
+4. **Validate** — `skills-ref validate` passes:
+
+```bash
+uvx --from git+https://github.com/agentskills/agentskills#subdirectory=skills-ref \
+  skills-ref validate path/to/skill-name
+```
+
+5. **File references resolve** — every `references/`, `scripts/`, `assets/` path cited in `SKILL.md` exists relative to the skill root.
+6. **Dependencies declared** — every skill this one tells the agent to follow is listed in its `apm.yml`, and after `make install-skills`, `apm deps why <dependency>` shows the edge.
+
+## Monorepo vs publish repo
+
+A skill lives in one of two kinds of repo:
+
+- **Team monorepo** — sources under `skills/`, installed into `.agents/skills/` with `apm install` (or `make install-skills`). Its skills may include repo-specific paths, Cursor slash commands, and team conventions. That is a **team fork**.
+- **Publish repo** — a public repo that is the source of truth for portable skills. Keep these free of any one team's paths and conventions.
+
+For maximum reach, publish portable skills from a public repo:
+
+```
+yourname/agent-skills/
+├── skills/
+│   └── skill-name/
+│       ├── SKILL.md
+│       ├── LICENSE
+│       ├── references/
+│       └── scripts/
+├── README.md              # install matrix per host (see below)
+└── .github/workflows/
+    └── validate-skills.yml   # skills-ref validate on every PR
+```
+
+Sync monorepo copies from the publish repo on tag, or install with APM: `apm install owner/repo/skills/<name>`, which also installs the skill's declared dependencies. `npx skills add user/repo --skill skill-name` works only for skills with no `apm.yml`, because it does not read dependencies.
+
+## README install matrix (publish repos)
+
+Document every supported install path — this matters more than marketplace listings. List APM first; it is the only path that installs dependencies:
+
+| Agent | Install |
+| ----- | ------- |
+| Any APM target (recommended) | `apm install owner/repo/skills/<name> --target <agent>` |
+| Cursor | `~/.cursor/skills/<name>/` or project `.cursor/skills/<name>/` |
+| Claude Code | `~/.claude/skills/<name>/`, or `npx skills add user/repo` for a skill with no `apm.yml` |
+| Codex | `~/.agents/skills/<name>/` per OpenAI docs |
+
+List **tested agents** honestly. Do not claim cross-platform support without verification.
+
+## Marketplaces and discovery
+
+Use marketplaces **after** the publish repo is clean:
+
+- Submit to one awesome-skills aggregator and/or [openagentskills.dev](https://openagentskills.dev)
+- Tag accurately (`mcp`, `cursor`, `macos`, `secrets`, etc.)
+- Link back to the GitHub repo with a one-line install command
+
+Marketplaces improve **reach**, not **standards**. There is no official agentskills.io MCP server for authoring skills.
+
+## Skills vs MCP
+
+| Layer | Standard | Purpose |
+| ----- | -------- | ------- |
+| **Agent Skills** | agentskills.io | *How* to do a task (instructions, workflows) |
+| **MCP** | modelcontextprotocol.io | *Access* to external systems (APIs, DBs, tools) |
+
+Skills and MCP are complementary. Do not use an MCP server as a substitute for a well-written `SKILL.md`.
+
+## When creating or editing a skill
+
+1. Start from a real workflow (gotchas from actual use, not generic LLM prose).
+2. Follow the layout and frontmatter rules above.
+3. Keep coupling to the host repo minimal; prefer `references/` inside the skill over links to `docs/`. If the skill relies on another skill, declare it in the skill's `apm.yml`.
+4. Run `skills-ref validate` before opening a PR that adds or substantially changes a skill.
+5. If the skill is intended for public sharing, plan a publish-repo extract (vendor docs, strip host-only frontmatter, add `LICENSE` and install matrix).

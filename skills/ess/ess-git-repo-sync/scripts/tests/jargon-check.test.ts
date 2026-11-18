@@ -82,6 +82,14 @@ describe("findJargonTerms", () => {
     assert.deepEqual(findJargonTerms("github.com/CodenameDevNet/essentials", config, ["CodenameDevNet"]), []);
   });
 
+  it("ignores a term spelled by a SHA-256 digest but not one next to it", () => {
+    const hex = loadJargonConfig(["cafe"]);
+    const digest = `sha256:${"0".repeat(30)}cafe${"0".repeat(30)}`;
+    assert.deepEqual(findJargonTerms(`content_hash: ${digest}`, hex), []);
+    assert.deepEqual(findJargonTerms(`${digest} cafe-tools`, hex).map((p) => p.term), ["cafe"]);
+    assert.deepEqual(findJargonTerms(`id: 00cafe00`, hex).map((p) => p.term), ["cafe"]);
+  });
+
   it("matches allowed text in exact case only", () => {
     const sso = loadJargonConfig(["codename-sso"]);
     assert.deepEqual(findJargonTerms("Sign in with CODENAME-SSO.", sso, ["CODENAME-SSO"]), []);

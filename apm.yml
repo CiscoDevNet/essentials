@@ -1,0 +1,55 @@
+name: essentials
+version: 1.0.0
+description: APM project for essentials
+author: Matt Norris
+# Which agent platforms to deploy to.
+# Resolution order: --target flag > this field > auto-detect from filesystem.
+# Accepted values: agent-skills, antigravity, claude, codex, copilot, cursor, gemini, grok-bot, grok-build, hermes, kiro, opencode, vscode, windsurf
+targets:
+  - cursor
+dependencies:
+  apm:
+    - path: ./skills/ess/ess-gh-repo-mirror
+    - path: ./skills/ess/ess-pr-review
+    - path: ./skills/ess/ess-pr-address-comments
+    - path: ./skills/ess/ess-gh-copilot-review
+    - path: ./skills/ess/ess-git-tidy
+    - path: ./skills/ess/ess-git-repo-sync
+    - path: ./skills/ess/ess-summarize-change-log
+    - path: ./skills/ess/ess-mcp-hide-secrets
+    - path: ./skills/ess/ess-env-credentials
+    - path: ./skills/ess/ess-git-commits
+    - path: ./skills/ess/ess-shell-flags-literal
+    - path: ./skills/ess/ess-django-docs
+    - path: ./skills/ess/ess-postgres-docs
+    - path: ./skills/ess/ess-my-groups
+    - path: ./instructions/ess/ess-agent-skills.instructions.md
+    - path: ./instructions/ess/ess-apm-sources.instructions.md
+    - path: ./instructions/ess/ess-cli-write-safety.instructions.md
+    - path: ./instructions/ess/ess-docs-example-urls.instructions.md
+    - path: ./instructions/ess/ess-dockerfile-runtime-copy.instructions.md
+    - path: ./instructions/ess/ess-npmrc-env.instructions.md
+    - path: ./instructions/ess/ess-okf-docs.instructions.md
+    - path: ./instructions/ess/ess-shell-file-naming.instructions.md
+    - path: ./instructions/gitignore.instructions.md
+    - path: ./instructions/langsmith.instructions.md
+    - path: ./instructions/naming-cheatsheet.instructions.md
+    - path: ./instructions/playwright.instructions.md
+    - path: ./instructions/pulumi-local-state.instructions.md
+    - path: ./instructions/uv.instructions.md
+    - path: ./instructions/write-readme.instructions.md
+  mcp:
+    # Managed AWS MCP Server. The local proxy signs requests with your AWS
+    # credential chain; pin it rather than using @latest.
+    - name: aws-mcp
+      registry: false
+      transport: stdio
+      command: uvx
+      args:
+        - mcp-proxy-for-aws@1.7.0
+        - https://aws-mcp.us-east-1.api.aws/mcp
+        - --metadata
+        - AWS_REGION=us-east-1
+      timeout: 100000
+includes: auto
+scripts: {}

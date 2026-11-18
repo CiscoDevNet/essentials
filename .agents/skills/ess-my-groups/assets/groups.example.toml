@@ -1,0 +1,26 @@
+# Personal users and groups for the ess-my-groups agent skill.
+# Edit with `my_groups.py user ...` and `my_groups.py group ...`, or by hand.
+#
+# Users are optional: a group member can be a user key, an email address, or a bare
+# name the agent will ask about. Groups may overlap and may nest other groups.
+
+[users.ada]
+name = "Ada Lovelace"
+aliases = ["Ada"]
+email = "ada@example.com"
+
+[users.ada.handles]
+github = ["ada_example", "ada_oss"]
+
+[users.grace]
+name = "Grace Hopper"
+aliases = ["Amazing Grace"]
+email = "grace@example.com"
+
+[groups.my-team]
+aliases = ["my team"]
+members = ["ada", "grace"]
+
+[groups.reviewers]
+members = ["ada", "alan@example.com"]
+groups = ["my-team"]

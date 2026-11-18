@@ -6,25 +6,35 @@ The skills live under [`ess/`](ess/). Each is self-contained (`SKILL.md` plus op
 
 ## Install
 
-Install with the standard agent-skills CLI ([skills.sh](https://skills.sh)). It auto-detects your agent and places files in the right directory.
+Install with [APM](https://microsoft.github.io/apm/), the only installer that also installs a skill's declared dependencies.
 
-From a local clone (run in the repo root):
+Into your own project, straight from GitHub:
 
 ```bash
-npx skills add ./skills --skill '*' --full-depth                 # all skills
-npx skills add ./skills --skill ess-mcp-hide-secrets --full-depth  # a single skill
-npx skills add ./skills --list --full-depth                      # list without installing
+apm install CiscoDevNet/essentials/skills/ess/ess-mcp-hide-secrets --target cursor
+```
+
+In a clone of this repo, `make install-skills` runs `apm install` for everything declared in [`apm.yml`](../apm.yml): the skills go to `.agents/skills/<name>/`, the rules in [`instructions/`](../instructions/) go to `.cursor/rules/<name>.mdc`, and the `aws-mcp` server goes to `.cursor/mcp.json`. It then checks that `apm.lock.yaml` lists no git-ignored files. `apm install` writes a lock file under `~/.apm`, so it fails inside a sandbox that blocks writes to your home directory.
+
+### Add or change a skill or rule
+
+Author skills in `skills/ess/<name>/` and rules in `instructions/` (portable ones in `instructions/ess/`, with an `ess-` prefix), never in `.agents/skills/` or `.cursor/rules/`. Declare each one in `apm.yml`, run `make install-skills`, and commit the source, `apm.yml`, `apm.lock.yaml`, and the deployed copies together. See [`ess-apm-sources`](../instructions/ess/ess-apm-sources.instructions.md).
+
+APM copies every file in a skill directory, including git-ignored ones, so keep scratch files and `.env` files outside skill directories. A pre-commit hook fails if the lock lists an ignored file.
+
+`env-credentials.mdc` and `git-commits.mdc` in `.cursor/rules/` are hand-managed, because APM cannot write `alwaysApply: true`.
+
+### Install with the agent-skills CLI
+
+The standard agent-skills CLI ([skills.sh](https://skills.sh)) also works for skills without an `apm.yml` of their own. It auto-detects your agent, but it ignores `apm.yml`, so it does not install a skill's dependencies:
+
+```bash
+npx skills add CiscoDevNet/essentials --skill '*' --full-depth                    # all skills
+npx skills add CiscoDevNet/essentials --skill ess-mcp-hide-secrets --full-depth   # a single skill
+npx skills add CiscoDevNet/essentials --list --full-depth                         # list without installing
 ```
 
 `--full-depth` is required so the CLI discovers skills under nested paths like `skills/ess/` (not just top-level directories).
-
-The CLI writes project skills to `.agents/skills/<name>/` (which Cursor reads natively, alongside `.cursor/skills/`). These are gitignored install output — the source of truth stays in `skills/`.
-
-Or straight from GitHub:
-
-```bash
-npx skills add CiscoDevNet/essentials --skill '*' --full-depth
-```
 
 ### Install matrix
 
