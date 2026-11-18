@@ -1,0 +1,21 @@
+{
+  "terms": [
+    "*.cisco.com",
+    "cisco",
+    "myid",
+    "cec",
+    "honeycomb",
+    "ceto",
+    "sales-ai",
+    "agentic-ops-hub",
+    "aoh",
+    "edag",
+    "sspo",
+    "runon",
+    "npi",
+    "aws-sso"
+  ],
+  "allow": {
+    "text": ["CiscoDevNet", "AWS SSO", "aws sso"]
+  }
+}

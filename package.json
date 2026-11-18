@@ -3,28 +3,19 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "bin": {
-    "ess-scan": "tools/typescript/essentials-sync/dist/ess-scan.js"
-  },
-  "files": [
-    "tools/typescript/essentials-sync/.secretlintrc.json",
-    "tools/typescript/essentials-sync/dist/"
-  ],
   "scripts": {
-    "install": "test -f tools/typescript/essentials-sync/dist/ess-scan.js || tsc --project tools/typescript/essentials-sync --noCheck"
-  },
-  "dependencies": {
-    "@secretlint/secretlint-rule-preset-recommend": "^9.0.0",
-    "chalk": "^5.3.0",
-    "commander": "^12.1.0",
-    "execa": "^9.5.1",
-    "globby": "^14.1.0",
-    "secretlint": "^9.0.0"
+    "test": "node --test 'skills/ess/ess-git-repo-sync/scripts/tests/**/*.test.ts'",
+    "typecheck": "tsc --project skills/ess/ess-git-repo-sync/scripts"
   },
   "devDependencies": {
-    "typescript": "^5.6.0"
+    "@cursor/sdk": "1.0.13",
+    "@types/node": "^24.19.0",
+    "typescript": "^5.9.0"
+  },
+  "allowScripts": {
+    "sqlite3": false
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   }
 }

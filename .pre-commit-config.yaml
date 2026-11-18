@@ -45,10 +45,22 @@ repos:
         always_run: true
         stages: [pre-push]
 
-  # Forbidden jargon in commit messages and added lines. The wordlist lives in
-  # essentials-sync; exceptions live in .essentials-sync-jargon.json. The
-  # pre-push hook rescans every unpublished commit, so it also catches commits
-  # made without hooks (git commit-tree, --no-verify).
+  # The ess-scan hook this repo publishes (.pre-commit-hooks.yaml), run on its
+  # own ess-* items.
+  - repo: local
+    hooks:
+      - id: ess-scan
+        name: ess-scan (secrets, jargon, PII in ess-* items)
+        entry: skills/ess/ess-git-repo-sync/scripts/src/ess-scan.ts
+        language: script
+        files: '(^|/)ess-[^/]+/|(^|/)ess/ess-[^/]+$'
+        require_serial: true
+        stages: [pre-push]
+
+  # Forbidden jargon in commit messages and added lines. The wordlist and its
+  # exceptions live in jargon.json at the repo root.
+  # The pre-push hook rescans every unpublished commit, so it also catches
+  # commits made without hooks (git commit-tree, --no-verify).
   - repo: local
     hooks:
       # Runs first so later commit-msg checks never see the injected trailer.
@@ -60,13 +72,13 @@ repos:
         pass_filenames: true
       - id: jargon-commit-msg
         name: jargon (commit message)
-        entry: node --disable-warning=ExperimentalWarning tools/typescript/essentials-sync/src/jargon-check.ts --message-file
+        entry: node skills/ess/ess-git-repo-sync/scripts/src/jargon-check.ts --message-file
         language: system
         always_run: true
         stages: [commit-msg]
       - id: jargon-push
         name: jargon (unpublished commits)
-        entry: node --disable-warning=ExperimentalWarning tools/typescript/essentials-sync/src/jargon-check.ts
+        entry: node skills/ess/ess-git-repo-sync/scripts/src/jargon-check.ts
         language: system
         pass_filenames: false
         always_run: true
