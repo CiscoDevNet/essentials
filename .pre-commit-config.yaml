@@ -56,6 +56,15 @@ repos:
         files: '(^|/)ess-[^/]+/|(^|/)ess/ess-[^/]+$'
         require_serial: true
         stages: [pre-push]
+      # APM deploys git-ignored files from skill directories and records them in
+      # the lock, which would commit a local scratch file or secret by name.
+      - id: apm-lock-check-ignored
+        name: APM lock lists no git-ignored files
+        entry: tools/shell/apm-lock-check-ignored/apm-lock-check-ignored.sh
+        language: script
+        files: ^apm\.lock\.yaml$
+        pass_filenames: false
+        stages: [pre-commit]
 
   # Forbidden jargon in commit messages and added lines. The wordlist and its
   # exceptions live in jargon.json at the repo root.

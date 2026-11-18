@@ -1,5 +1,6 @@
 ---
-alwaysApply: true
+description: Structure a README with the example first, then installation, usage, and tests
+globs: **/README.md
 ---
 
 # How to Write a README

@@ -128,12 +128,16 @@ export function maskAllowedText(line: string, allowText: readonly string[]): str
   return masked;
 }
 
+// A hex digest spells short terms by chance: a term made only of the letters
+// a-f, between digits, appears in roughly one SHA-256 in 170.
+const SHA256_DIGEST = /sha256:[0-9a-f]{64}/gi;
+
 export function findJargonTerms(
   line: string,
   config: JargonConfig,
   allowText: readonly string[] = [],
 ): JargonPattern[] {
-  const masked = maskAllowedText(line, allowText);
+  const masked = maskAllowedText(line, allowText).replace(SHA256_DIGEST, " ");
   return config.patterns.filter((pattern) => pattern.regex.test(masked));
 }
 

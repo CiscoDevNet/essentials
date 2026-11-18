@@ -1,6 +1,6 @@
 ---
 description: LangSmith branding and naming conventions for resource names, comments, and docs
-alwaysApply: true
+globs: **/*.py, **/Pulumi*.yaml
 ---
 
 # LangSmith Naming Convention

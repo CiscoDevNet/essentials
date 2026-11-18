@@ -1,7 +1,6 @@
 ---
 description: Pulumi state management - use local file backend at package root
-globs: **/Pulumi.yaml, **/Pulumi.*.yaml, **/__main__.py
-alwaysApply: false
+applyTo: "**/Pulumi.yaml,**/Pulumi.*.yaml,**/__main__.py"
 ---
 
 # Pulumi Local State Management

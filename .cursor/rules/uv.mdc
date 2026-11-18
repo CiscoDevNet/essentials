@@ -1,6 +1,6 @@
 ---
 description: uv workspace conventions for this monorepo
-alwaysApply: true
+globs: **/pyproject.toml, uv.lock
 ---
 
 # uv Workspace
@@ -20,3 +20,16 @@ Plain `uv sync` only installs the **root** project's dependencies, which are emp
 ## Locking
 
 Use `uv lock` (not `poetry lock` or `uv lock --no-update`). No special flags are needed.
+
+## Resolving `uv.lock` Conflicts During Rebase
+
+When rebasing a feature branch onto `origin/main`, `uv.lock` will conflict if either side changed dependencies. Resolve with:
+
+```bash
+git checkout --theirs uv.lock   # accept main's version as the base
+uv lock                          # regenerate to include your branch's deps
+git add uv.lock
+GIT_EDITOR=true git rebase --continue
+```
+
+After the rebase completes, always run `uv sync --all-packages` before pushing. New workspace members from main won't be importable until synced, and pre-commit pylint will reject the push with `E0401`.

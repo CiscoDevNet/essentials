@@ -1,5 +1,6 @@
 ---
-alwaysApply: true
+description: Naming conventions for Python, TypeScript, and Pulumi code
+globs: **/*.py, **/*.ts, **/*.tsx
 ---
 
 # Naming Cheatsheet
@@ -50,6 +51,20 @@ should_paginatize = a > 10 # made-up verb
 post_count = 5
 has_pagination = post_count > 10
 should_paginate = post_count > 10
+```
+
+## Avoid Single-Letter Variable Names
+
+Do **not** use single-letter variable names unless it is an established convention (e.g., `i`/`j` for loop indices, `x`/`y` for coordinates). They are cryptic and hurt readability.
+
+```python
+# Bad
+h = location.hostname
+d = get_data()
+
+# Good
+hostname = location.hostname
+data = get_data()
 ```
 
 ## Avoid Contractions

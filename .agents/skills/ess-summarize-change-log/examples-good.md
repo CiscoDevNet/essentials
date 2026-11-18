@@ -1,0 +1,5 @@
+- **fix(api-client): centralize deploy naming** — Delegate `<service>-<env>` resolution to `api-client deploy docker`, add `--deployment` for explicit base names, and resolve live deployments for idempotent delete.
+- **fix(infra): pin prod egress to NAT gateway** — Prod firewall rules were allowlisting dev cluster egress; both prod stacks now use the prod NAT gateway IP.
+- **fix(cli): defer delete confirm** — Fix `deploy_docker` docstring, defer delete confirmation until a target exists, and remove erroneous `.env` gates from deploy scripts.
+- **docs(api-client): document --deployment** — Clarify `DEPLOYMENT_NAME` in `push_config.py` and document `--deployment` in `docker-deployment.md`.
+- **fix(web): align listener id messaging** — Use `resolve_deploy_base` consistently, fix deploy docs/env references, and align `LISTENER_ID` messaging with the script requirement.

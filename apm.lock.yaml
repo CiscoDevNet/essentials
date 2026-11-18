@@ -1,0 +1,2213 @@
+lockfile_version: '1'
+apm_version: 0.35.0
+dependencies:
+- repo_url: _local/ess-agent-skills.instructions.md
+  name: ess-agent-skills.instructions.md
+  version: 1.0.0
+  package_type: apm_package
+  deployed_files:
+  - .cursor/rules/ess-agent-skills.mdc
+  deployed_file_hashes:
+    .cursor/rules/ess-agent-skills.mdc: sha256:0dac1c45c680b227d5995d6e79ed8bf690db6513ac8b925f302847929192d28f
+  source: local
+  local_path: ./instructions/ess/ess-agent-skills.instructions.md
+  content_hash: sha256:d44fa68db163aa63b8c97d62844186772d2fbf03238d7097224dd04c37e6584d
+- repo_url: _local/ess-apm-sources.instructions.md
+  name: ess-apm-sources.instructions.md
+  version: 1.0.0
+  package_type: apm_package
+  deployed_files:
+  - .cursor/rules/ess-apm-sources.mdc
+  deployed_file_hashes:
+    .cursor/rules/ess-apm-sources.mdc: sha256:66a0899d3fcd3e80abd0359f0f042bf6a1c930586904ad5b136aeead3b4a8cae
+  source: local
+  local_path: ./instructions/ess/ess-apm-sources.instructions.md
+  content_hash: sha256:42b8e94709f70be332d27a0896c215b8eaa1cae0f1f2c06d8300eb60bf2c818a
+- repo_url: _local/ess-cli-write-safety.instructions.md
+  name: ess-cli-write-safety.instructions.md
+  version: 1.0.0
+  package_type: apm_package
+  deployed_files:
+  - .cursor/rules/ess-cli-write-safety.mdc
+  deployed_file_hashes:
+    .cursor/rules/ess-cli-write-safety.mdc: sha256:9bf28f4d8ae76a842186955c569c69aeade6a097cce11aaad6094b660fe1a92f
+  source: local
+  local_path: ./instructions/ess/ess-cli-write-safety.instructions.md
+  content_hash: sha256:d3fcee7ec90fdc8f4b54fcf95220e9119bb079d9c43924fe57dd0cd3f4bdd28d
+- repo_url: _local/ess-django-docs
+  name: ess-django-docs
+  version: unknown
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/ess-django-docs
+  - .agents/skills/ess-django-docs/LICENSE
+  - .agents/skills/ess-django-docs/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/ess-django-docs/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+    .agents/skills/ess-django-docs/SKILL.md: sha256:53d7d37b5cf220efd2307115992377a722c9114c2bf082c48d9df70ab5a980fd
+  source: local
+  local_path: ./skills/ess/ess-django-docs
+  content_hash: sha256:aae204da8ac27f0102fec813d174d60f42521748728dc9c453d9eb70f19bbcf7
+- repo_url: _local/ess-dockerfile-runtime-copy.instructions.md
+  name: ess-dockerfile-runtime-copy.instructions.md
+  version: 1.0.0
+  package_type: apm_package
+  deployed_files:
+  - .cursor/rules/ess-dockerfile-runtime-copy.mdc
+  deployed_file_hashes:
+    .cursor/rules/ess-dockerfile-runtime-copy.mdc: sha256:15c616ed52d8e38d413d313b54b747ffef0d46c1a9546e1d7226bf37bc6ff0b3
+  source: local
+  local_path: ./instructions/ess/ess-dockerfile-runtime-copy.instructions.md
+  content_hash: sha256:cc23745a3e7a1454d98a8fc36ea8a06a68718dfff38340ef093c30506ccb853d
+- repo_url: _local/ess-docs-example-urls.instructions.md
+  name: ess-docs-example-urls.instructions.md
+  version: 1.0.0
+  package_type: apm_package
+  deployed_files:
+  - .cursor/rules/ess-docs-example-urls.mdc
+  deployed_file_hashes:
+    .cursor/rules/ess-docs-example-urls.mdc: sha256:dc07a39a6e39a4f365dddd2717b407b252620d2e0707f8e5779b16f134700b4d
+  source: local
+  local_path: ./instructions/ess/ess-docs-example-urls.instructions.md
+  content_hash: sha256:fdd6b65812b599a8f96ce3939de406e25c3cd1134eac32ce12fe3468e1dd2636
+- repo_url: _local/ess-env-credentials
+  name: ess-env-credentials
+  version: unknown
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/ess-env-credentials
+  - .agents/skills/ess-env-credentials/LICENSE
+  - .agents/skills/ess-env-credentials/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/ess-env-credentials/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+    .agents/skills/ess-env-credentials/SKILL.md: sha256:d5e8635b55a47a6432093c9a5665c2c202d0b7eca42fe8c993b3ba252c1de387
+  source: local
+  local_path: ./skills/ess/ess-env-credentials
+  content_hash: sha256:362a0af63475e29838958e357b4d96f3ca21012caacc84e42de8ddd074266664
+- repo_url: _local/ess-gh-copilot-review
+  name: ess-gh-copilot-review
+  version: unknown
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/ess-gh-copilot-review
+  - .agents/skills/ess-gh-copilot-review/LICENSE
+  - .agents/skills/ess-gh-copilot-review/SKILL.md
+  - .agents/skills/ess-gh-copilot-review/scripts/review-pr.sh
+  - .agents/skills/ess-gh-copilot-review/scripts/test_review_pr.sh
+  deployed_file_hashes:
+    .agents/skills/ess-gh-copilot-review/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+    .agents/skills/ess-gh-copilot-review/SKILL.md: sha256:9863dd4e8cedfbeb65993674ca18d5737a70c5c994754e9d830fbd7f65b0ee4e
+    .agents/skills/ess-gh-copilot-review/scripts/review-pr.sh: sha256:5c92b054bf6b6a9ff526edd41b011c622608a128fd07cc3e427b4e5db29a752c
+    .agents/skills/ess-gh-copilot-review/scripts/test_review_pr.sh: sha256:1c78a89828277f225a0e7d318b43b3467aeeacf0670b6a9cea5333c91224988b
+  source: local
+  local_path: ./skills/ess/ess-gh-copilot-review
+  content_hash: sha256:1d5d4bde7fbd9399aee2e8634c345426c419755dfcb0605a163621c094161309
+- repo_url: _local/ess-gh-repo-mirror
+  name: ess-gh-repo-mirror
+  version: unknown
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/ess-gh-repo-mirror
+  - .agents/skills/ess-gh-repo-mirror/LICENSE
+  - .agents/skills/ess-gh-repo-mirror/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/ess-gh-repo-mirror/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+    .agents/skills/ess-gh-repo-mirror/SKILL.md: sha256:97bbf2de04277ecc4921c9f27784e59d51e6f7cf7afbc9c94da60da50db81de3
+  source: local
+  local_path: ./skills/ess/ess-gh-repo-mirror
+  content_hash: sha256:1b6d58bdefc40af1d21ef7e6b7c9f3e55b0774ad78fe80f847936f650cd239b1
+- repo_url: _local/ess-git-commits
+  name: ess-git-commits
+  version: unknown
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/ess-git-commits
+  - .agents/skills/ess-git-commits/LICENSE
+  - .agents/skills/ess-git-commits/SKILL.md
+  - .agents/skills/ess-git-commits/references/pre-commit.md
+  - .agents/skills/ess-git-commits/scripts/strip-cursor-coauthor.sh
+  deployed_file_hashes:
+    .agents/skills/ess-git-commits/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+    .agents/skills/ess-git-commits/SKILL.md: sha256:bcb3ba0e5fb0e91c765ce32e5923bb55984acd555e50f8287d5c93b7407d29f9
+    .agents/skills/ess-git-commits/references/pre-commit.md: sha256:ffd0b795cb93a7e92a7d24176931954c7dbe6adbd7a520da074bbaa7ca930d3b
+    .agents/skills/ess-git-commits/scripts/strip-cursor-coauthor.sh: sha256:94f9ad861ea708f008813867112f52a07fdaf805414ac61f4532897bbec42b0b
+  source: local
+  local_path: ./skills/ess/ess-git-commits
+  content_hash: sha256:9d885b86a97dc2350a3398ddd25e4444b6eb7f353906485b39b54bb1cb726fde
+- repo_url: _local/ess-git-repo-sync
+  name: ess-git-repo-sync
+  version: unknown
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/ess-git-repo-sync
+  - .agents/skills/ess-git-repo-sync/LICENSE
+  - .agents/skills/ess-git-repo-sync/SKILL.md
+  - .agents/skills/ess-git-repo-sync/references/cli.md
+  - .agents/skills/ess-git-repo-sync/references/cursor-sdk.md
+  - .agents/skills/ess-git-repo-sync/references/hooks.md
+  - .agents/skills/ess-git-repo-sync/references/install.md
+  - .agents/skills/ess-git-repo-sync/scripts/.secretlintrc.json
+  - .agents/skills/ess-git-repo-sync/scripts/package.json
+  - .agents/skills/ess-git-repo-sync/scripts/sdk/package-lock.json
+  - .agents/skills/ess-git-repo-sync/scripts/sdk/package.json
+  - .agents/skills/ess-git-repo-sync/scripts/src/agent.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/args.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/cli.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/confirm.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/copy.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/dry-run.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/env.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/ess-items.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/ess-scan.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/exec.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/extract-plan.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/file-set.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/jargon-check.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/jargon-list.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/jargon-overrides.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/model-resolver.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/preflight-command.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/program.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/prompts.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/repos.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/reviewer.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/scan-command.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/scanners/index.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/scanners/jargon.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/scanners/pii.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/scanners/secretlint.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/scanners/text-files.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/scanners/trufflehog.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/sdk.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/status-command.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/style.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/sync-command.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/sync.ts
+  - .agents/skills/ess-git-repo-sync/scripts/src/types.ts
+  - .agents/skills/ess-git-repo-sync/scripts/tests/copy.test.ts
+  - .agents/skills/ess-git-repo-sync/scripts/tests/extract-plan.test.ts
+  - .agents/skills/ess-git-repo-sync/scripts/tests/fast-copy-gate.test.ts
+  - .agents/skills/ess-git-repo-sync/scripts/tests/file-set.test.ts
+  - .agents/skills/ess-git-repo-sync/scripts/tests/fixtures/clean-package/README.md
+  - .agents/skills/ess-git-repo-sync/scripts/tests/fixtures/clean-package/src/main.py
+  - .agents/skills/ess-git-repo-sync/scripts/tests/fixtures/dirty-package/README.md
+  - .agents/skills/ess-git-repo-sync/scripts/tests/fixtures/dirty-package/src/client.py
+  - .agents/skills/ess-git-repo-sync/scripts/tests/jargon-check.test.ts
+  - .agents/skills/ess-git-repo-sync/scripts/tests/prompts.test.ts
+  - .agents/skills/ess-git-repo-sync/scripts/tests/read-only-commands.test.ts
+  - .agents/skills/ess-git-repo-sync/scripts/tests/scanners.test.ts
+  - .agents/skills/ess-git-repo-sync/scripts/tests/sync-command.test.ts
+  - .agents/skills/ess-git-repo-sync/scripts/tests/sync-plan.test.ts
+  - .agents/skills/ess-git-repo-sync/scripts/tests/temp-repos.ts
+  - .agents/skills/ess-git-repo-sync/scripts/tsconfig.json
+  deployed_file_hashes:
+    .agents/skills/ess-git-repo-sync/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+    .agents/skills/ess-git-repo-sync/SKILL.md: sha256:7e611cc08fd21dd87608f231985054cacd7ef2688823d7ef3791c9ef2dda59dc
+    .agents/skills/ess-git-repo-sync/references/cli.md: sha256:a1d31722bc9ccf232d643eab10bec4edfbeb6aa164b28145c318c6b57129b6fa
+    .agents/skills/ess-git-repo-sync/references/cursor-sdk.md: sha256:6383379325d5a66e9bf31f6ea402e039c0acaa3e20f3c2c81f8df82a8d353942
+    .agents/skills/ess-git-repo-sync/references/hooks.md: sha256:ee5a26285938af41e5216945f393302e314e96562b0ca541cd9296523a9a59c4
+    .agents/skills/ess-git-repo-sync/references/install.md: sha256:12a03dbfcad07a3d01f245864034022a312006fdb894dd8f8450d9db0197c4b4
+    .agents/skills/ess-git-repo-sync/scripts/.secretlintrc.json: sha256:1c0e86ca72216c22cc77b1c94c27f975b731aa9e104167f5d57a5befa654c10e
+    .agents/skills/ess-git-repo-sync/scripts/package.json: sha256:609158e6c5fbc237939fa3ddf7faab80ab690bdc0c8d584414a885130103c4e8
+    .agents/skills/ess-git-repo-sync/scripts/sdk/package-lock.json: sha256:eb974ef16a692477b30c6bcbc4ada29723dd0cd96fefb3608f24d1e7a2534c82
+    .agents/skills/ess-git-repo-sync/scripts/sdk/package.json: sha256:d10137311d9ea9ccff628fb7b493eb04c7a27dafa9de5a34b7812063b92145d6
+    .agents/skills/ess-git-repo-sync/scripts/src/agent.ts: sha256:c623316be5d643b73032fb54766e4b9bcc63961f8f43f8cd0a9f7a6b1d702d0a
+    .agents/skills/ess-git-repo-sync/scripts/src/args.ts: sha256:be764c7184f99d4da1569eb154c9b25b379683eaeaf1eaaabf9916279aec906d
+    .agents/skills/ess-git-repo-sync/scripts/src/cli.ts: sha256:9ac9d509237f62460b4c4b7ce97acee5443c2bf88e94977328582738cbf2ae0a
+    .agents/skills/ess-git-repo-sync/scripts/src/confirm.ts: sha256:7b894bf82c9571bc350d6251c4a9a2094e9061a699a8da4f8853f7310395d1b3
+    .agents/skills/ess-git-repo-sync/scripts/src/copy.ts: sha256:34d2ea548dab8eac4ff19298ebe7e9c9cfb96ef537dde0c96efba60d0db8d829
+    .agents/skills/ess-git-repo-sync/scripts/src/dry-run.ts: sha256:87c84e90dd445a5627ba99dab7c963733f7cb0f5c89f94cc36976f20de918388
+    .agents/skills/ess-git-repo-sync/scripts/src/env.ts: sha256:be952b8c83299893fdf5335043408ea50bf94ee15d498ea90e11a18f73b376b1
+    .agents/skills/ess-git-repo-sync/scripts/src/ess-items.ts: sha256:79b2e755ea0ef94ca3f443c319fc1e215ff9289e3b763d6895d091263d1184fa
+    .agents/skills/ess-git-repo-sync/scripts/src/ess-scan.ts: sha256:207373564f43d6548b1de4817b5b356f5f87952e03bda754f75147ea6d28bb59
+    .agents/skills/ess-git-repo-sync/scripts/src/exec.ts: sha256:26b7d8e47d01d241f4b142154d1804afb5c2d95b0da0b42436a694473278de99
+    .agents/skills/ess-git-repo-sync/scripts/src/extract-plan.ts: sha256:825770ad3c2c9c404906935ce48a5387be769d3cab0a9c0b9d22ca4ece20cc63
+    .agents/skills/ess-git-repo-sync/scripts/src/file-set.ts: sha256:44ae4eb2f831e38ebcd99e7ff1b4a6e69ee4972b253fc2b3ae4523fc25eba55e
+    .agents/skills/ess-git-repo-sync/scripts/src/jargon-check.ts: sha256:fc20efa00377f2f7e6dd628ab52789b581d54dd4ac60bf736cfd1e619bac5912
+    .agents/skills/ess-git-repo-sync/scripts/src/jargon-list.ts: sha256:047e5317dee2836e90a9d98428b994ac2d99877957829b25c24fcd3164e08abb
+    .agents/skills/ess-git-repo-sync/scripts/src/jargon-overrides.ts: sha256:d491d989f6c558ab57d676a624b47b3762d15fc3adc802f00dcbf2c2a7a419ff
+    .agents/skills/ess-git-repo-sync/scripts/src/model-resolver.ts: sha256:e625a2d6a78ba4a9845b04d992b0fea559cbd0a01f70cc8882ab8e8c448386ac
+    .agents/skills/ess-git-repo-sync/scripts/src/preflight-command.ts: sha256:8bd5eaf8b3ac569c8b1c316d14cf796b3fb3c1ccb256e9ec3b17a2b73412f4d4
+    .agents/skills/ess-git-repo-sync/scripts/src/program.ts: sha256:ca38b0ed55b7a364e220d1993b7a790e7d42198dde9f44d48fc4152cfa6c5d71
+    .agents/skills/ess-git-repo-sync/scripts/src/prompts.ts: sha256:985c51b0910e05bdd0e6be379880ad5283d25492ae907e35f61bb89032af54fa
+    .agents/skills/ess-git-repo-sync/scripts/src/repos.ts: sha256:4dc1385bb12594d1678a1c097e0f74c3b8370715d7b3a012e1b6fbaea2448d4b
+    .agents/skills/ess-git-repo-sync/scripts/src/reviewer.ts: sha256:98d5b538d07bb9575157f0bdc5cd46f3c65f066b13caebf05369ca553a8b7098
+    .agents/skills/ess-git-repo-sync/scripts/src/scan-command.ts: sha256:a2243c4836437ad28414a0f0d7c2abed25487a52fc1a4b32df0270b648527a71
+    .agents/skills/ess-git-repo-sync/scripts/src/scanners/index.ts: sha256:ac030009394ab0fbe96faa2c82a6c87e973db394c0f10ff1991b63442997cc5c
+    .agents/skills/ess-git-repo-sync/scripts/src/scanners/jargon.ts: sha256:308fb18c88bd6c226d1ba8ee0916f1ce2bf6276e17780b094e88262301e920cc
+    .agents/skills/ess-git-repo-sync/scripts/src/scanners/pii.ts: sha256:8b25aa4fde97e5a97a5b379bfc70d70030c86573681ef0414cb5e9a7cfabf3db
+    .agents/skills/ess-git-repo-sync/scripts/src/scanners/secretlint.ts: sha256:33847e76432a8082c451209fe9e8c53a4ad0bde343691eea2fb25f7bc86c9121
+    .agents/skills/ess-git-repo-sync/scripts/src/scanners/text-files.ts: sha256:a116639e04a0bfd87c76f905e394e7be2824b80c814ff167659020f68a747bd3
+    .agents/skills/ess-git-repo-sync/scripts/src/scanners/trufflehog.ts: sha256:2099403f5fa90863e7ec41eebbe90a64c6ce8889840f91cffc50e26bbee2a588
+    .agents/skills/ess-git-repo-sync/scripts/src/sdk.ts: sha256:10db04cc70839fed12ad003a66f83271ee9a35c1222adc7a1c228bd175f666e0
+    .agents/skills/ess-git-repo-sync/scripts/src/status-command.ts: sha256:923bca9abfb1a33f350b206094fbf2de9d772b3962641253d4727e962dea76e4
+    .agents/skills/ess-git-repo-sync/scripts/src/style.ts: sha256:07729b912bce0bcc24f515be022daa9e61ca656f40549e1755df279e26ed7887
+    .agents/skills/ess-git-repo-sync/scripts/src/sync-command.ts: sha256:c696f9a1b272bd84cff4e127a63c2fee0142d4fc22d626080f14317eb6bd3d69
+    .agents/skills/ess-git-repo-sync/scripts/src/sync.ts: sha256:c43d74387a2e657aa72021cf30b26f3adc47dd630b68a0890b032103194b86a3
+    .agents/skills/ess-git-repo-sync/scripts/src/types.ts: sha256:0e547a89a1a21614a16f20d78016658a51b3140ddc9bbe33a5dc1e6e9c84d23a
+    .agents/skills/ess-git-repo-sync/scripts/tests/copy.test.ts: sha256:6b327b3069e583df4c9087eccee497b8c83c3ec373a30a6c17865a6480ff0e99
+    .agents/skills/ess-git-repo-sync/scripts/tests/extract-plan.test.ts: sha256:79bfc52621712e970c712fdca6adba6233d6c37834a5990dc4108208cf3ab07a
+    .agents/skills/ess-git-repo-sync/scripts/tests/fast-copy-gate.test.ts: sha256:e16bc76d0baca8e79945df10d26e99841a5e597dcfa3812d32e93905a8de6cc8
+    .agents/skills/ess-git-repo-sync/scripts/tests/file-set.test.ts: sha256:86ee5d3f6ba07c3fcf0a93593bad551f9e16bf4ba941d2bec9949a589c1c206f
+    .agents/skills/ess-git-repo-sync/scripts/tests/fixtures/clean-package/README.md: sha256:6f37ad4bc403fdd60cbf2f8818b32ad0b96ec90e37be4f881a73df9d56bfba79
+    .agents/skills/ess-git-repo-sync/scripts/tests/fixtures/clean-package/src/main.py: sha256:ce06ee5f336a3148f6a4f84d5e49102e624ac933d0f4ae3f1e9fbef974494617
+    .agents/skills/ess-git-repo-sync/scripts/tests/fixtures/dirty-package/README.md: sha256:5ceb834f491cf9ce3cc9ad85912f17a10d4fe1a9dc1f62890c835db41d65e908
+    .agents/skills/ess-git-repo-sync/scripts/tests/fixtures/dirty-package/src/client.py: sha256:ee9eb3912db277bfd774201bb0c960e83d02abf2cac984e0a5d8642fa1e88624
+    .agents/skills/ess-git-repo-sync/scripts/tests/jargon-check.test.ts: sha256:6f9cacd3ed0034268942a5b7ae959fa6b44fa100c98ae56ad9be8304e925f416
+    .agents/skills/ess-git-repo-sync/scripts/tests/prompts.test.ts: sha256:febb849e9b60d2149f64b1c0eec35f77a071acf9ed1260daa8dd1dab5fad1fe5
+    .agents/skills/ess-git-repo-sync/scripts/tests/read-only-commands.test.ts: sha256:316ff8003009c995d1b4edeaa38e0d3edbbc15786560316f15e1afb615add3bf
+    .agents/skills/ess-git-repo-sync/scripts/tests/scanners.test.ts: sha256:86f505e2660c5c6473cd155a3f20cff8f547a567aec705bf286f3c09000c3c44
+    .agents/skills/ess-git-repo-sync/scripts/tests/sync-command.test.ts: sha256:b23432ede71bf2494e36679ee19280de9462414b18a7e02d8a9df97577e8d956
+    .agents/skills/ess-git-repo-sync/scripts/tests/sync-plan.test.ts: sha256:8e851e126f236d9cc55ac1801e9f5e8a8d9b0b69dc19b6c19b5219b0351c6a1b
+    .agents/skills/ess-git-repo-sync/scripts/tests/temp-repos.ts: sha256:c8022b5c05bbf5060e3cdc054b15a4e66a0742a7f84166dfd14727321f6f2964
+    .agents/skills/ess-git-repo-sync/scripts/tsconfig.json: sha256:3e3a88d2f746d127380918c35a543257f1eec2c4ba3f1e269749e51c6ba1f549
+  source: local
+  local_path: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:9e6b1f417b7975b46cda561a0b3f9386f98e477e2d581350e42a92643b694b9e
+- repo_url: _local/ess-git-tidy
+  name: ess-git-tidy
+  version: unknown
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/ess-git-tidy
+  - .agents/skills/ess-git-tidy/LICENSE
+  - .agents/skills/ess-git-tidy/SKILL.md
+  - .agents/skills/ess-git-tidy/references/classification.md
+  - .agents/skills/ess-git-tidy/references/safety.md
+  - .agents/skills/ess-git-tidy/scripts/audit.sh
+  - .agents/skills/ess-git-tidy/scripts/lib.sh
+  - .agents/skills/ess-git-tidy/scripts/test_audit.sh
+  deployed_file_hashes:
+    .agents/skills/ess-git-tidy/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+    .agents/skills/ess-git-tidy/SKILL.md: sha256:430f7a635096843389393869616afb630538f6a95abebdfa3015eb5fd9b509f3
+    .agents/skills/ess-git-tidy/references/classification.md: sha256:19e399da5e43b36b036a43dbcf0390783241563f1a89dc5b592c5ab7ed1d7aab
+    .agents/skills/ess-git-tidy/references/safety.md: sha256:308a4ae6316eb079060fe485f18121c39adf4987a13865315dbac10d6389fac6
+    .agents/skills/ess-git-tidy/scripts/audit.sh: sha256:c7dd8bfbe5b816832468f04f3f5b7794a0306138a8e924f057ce08602cbd06b9
+    .agents/skills/ess-git-tidy/scripts/lib.sh: sha256:424e5b8af3fb91f0e2d3e3119ab50281d854bb9858de48887e41af14b2012e3f
+    .agents/skills/ess-git-tidy/scripts/test_audit.sh: sha256:7fad3c573feffbaeb2ebb2e3a0bc56121dfb51c0ee985fa9fda1ecd90146d394
+  source: local
+  local_path: ./skills/ess/ess-git-tidy
+  content_hash: sha256:95367b5d99fc1cbcdd921eb0be82e7756e75567fb1e37ff688c4a3f9184d45ac
+- repo_url: _local/ess-mcp-hide-secrets
+  name: ess-mcp-hide-secrets
+  version: unknown
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/ess-mcp-hide-secrets
+  - .agents/skills/ess-mcp-hide-secrets/LICENSE
+  - .agents/skills/ess-mcp-hide-secrets/SKILL.md
+  - .agents/skills/ess-mcp-hide-secrets/references/install-cursor.md
+  - .agents/skills/ess-mcp-hide-secrets/references/launchagent-naming.md
+  - .agents/skills/ess-mcp-hide-secrets/references/launchctl.md
+  - .agents/skills/ess-mcp-hide-secrets/references/rationale.md
+  - .agents/skills/ess-mcp-hide-secrets/scripts/check-inline-secrets.py
+  - .agents/skills/ess-mcp-hide-secrets/scripts/fix-launchagents-dir.sh
+  - .agents/skills/ess-mcp-hide-secrets/scripts/install.sh
+  - .agents/skills/ess-mcp-hide-secrets/scripts/lib.sh
+  - .agents/skills/ess-mcp-hide-secrets/scripts/load-mcp-env.sh
+  - .agents/skills/ess-mcp-hide-secrets/scripts/local.your-username.cursor-mcp-env.plist
+  - .agents/skills/ess-mcp-hide-secrets/scripts/mcp.env.example
+  - .agents/skills/ess-mcp-hide-secrets/scripts/preflight.sh
+  - .agents/skills/ess-mcp-hide-secrets/scripts/render-plist.py
+  - .agents/skills/ess-mcp-hide-secrets/scripts/run.sh
+  - .agents/skills/ess-mcp-hide-secrets/scripts/status.sh
+  - .agents/skills/ess-mcp-hide-secrets/scripts/test_run.sh
+  - .agents/skills/ess-mcp-hide-secrets/scripts/verify.sh
+  deployed_file_hashes:
+    .agents/skills/ess-mcp-hide-secrets/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+    .agents/skills/ess-mcp-hide-secrets/SKILL.md: sha256:74b394859daa2a12e0cee4921ab915afb0f0167afa257126d19f8cc45d8afd6b
+    .agents/skills/ess-mcp-hide-secrets/references/install-cursor.md: sha256:ef299a6e98e1ee233022987eed299fa3eff1ce39a1beb340052681c9d7bfa7b6
+    .agents/skills/ess-mcp-hide-secrets/references/launchagent-naming.md: sha256:2e57e97a3784cb4757c99a7ca4343f440ddbc97516550129350936e71bcb6d90
+    .agents/skills/ess-mcp-hide-secrets/references/launchctl.md: sha256:6fc76dd9b3b22a04c6cd14fc7ea9dd99f1630a08b051e580411b72fcf226af6c
+    .agents/skills/ess-mcp-hide-secrets/references/rationale.md: sha256:a577da49c73fceba1130c5903de1793957d11b413a07abc76a9f5abb4efd537d
+    .agents/skills/ess-mcp-hide-secrets/scripts/check-inline-secrets.py: sha256:f978f49abde2168e95566266faf20fda12e154da5d1d88f81719e04ca47f1eb1
+    .agents/skills/ess-mcp-hide-secrets/scripts/fix-launchagents-dir.sh: sha256:1c47e2d69ef784e60893c9c9ad274dca47dbc5c955ac2b2fef9beeba81c40976
+    .agents/skills/ess-mcp-hide-secrets/scripts/install.sh: sha256:e55a467845276eac00a700a8f7ab17335370340fcc95f7faa8d02a1532351f31
+    .agents/skills/ess-mcp-hide-secrets/scripts/lib.sh: sha256:27e4407402cb0f300095ea542db2cef0dfbd6d3d3f111c1d7ea64dd9a4ae60b3
+    .agents/skills/ess-mcp-hide-secrets/scripts/load-mcp-env.sh: sha256:d8c01879e5ac347c353eeafc7ead52f789990e0c977e91428f0b0cecad3f6471
+    .agents/skills/ess-mcp-hide-secrets/scripts/local.your-username.cursor-mcp-env.plist: sha256:602cc6f360aa8385a9e045ee46018fd5b5be0b28f9605d34e2821f761163bc12
+    .agents/skills/ess-mcp-hide-secrets/scripts/mcp.env.example: sha256:1876e40f263b0258509953acfb158ec69f7a925291c319dc1b580ff21644c64a
+    .agents/skills/ess-mcp-hide-secrets/scripts/preflight.sh: sha256:1abb8db0bad807730e6d603cd63ac76d128e9f3e5549175045caeaefa23f9adf
+    .agents/skills/ess-mcp-hide-secrets/scripts/render-plist.py: sha256:7c4a61b22ddf7541366f03ff03afd3ddbd71c3b872c3ef7294a640a29deb1f3f
+    .agents/skills/ess-mcp-hide-secrets/scripts/run.sh: sha256:a3609c4f19685f9125085eeae5b7bc167241419239d8289e56238e2fc12936e6
+    .agents/skills/ess-mcp-hide-secrets/scripts/status.sh: sha256:25666cf55444bbb7ff6f4f9b97d1789842989cfa7bcca1023dc5c79b845c99b3
+    .agents/skills/ess-mcp-hide-secrets/scripts/test_run.sh: sha256:8a7dbd12e7e9d4d8a1d13fc4f00687e7fd3aefd2b47985381b52edd9c14dfb34
+    .agents/skills/ess-mcp-hide-secrets/scripts/verify.sh: sha256:8675578e93f2f0e227f28d72a65781d00fbae3ee12f504557775a7bdb8b40aed
+  source: local
+  local_path: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: sha256:2ee29d70b57efd6934203595937382e5561482122e2116a27543b1249a8951a5
+- repo_url: _local/ess-my-groups
+  name: ess-my-groups
+  version: unknown
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/ess-my-groups
+  - .agents/skills/ess-my-groups/LICENSE
+  - .agents/skills/ess-my-groups/SKILL.md
+  - .agents/skills/ess-my-groups/assets/groups.example.toml
+  - .agents/skills/ess-my-groups/references/groups-format.md
+  - .agents/skills/ess-my-groups/scripts/my_groups.py
+  - .agents/skills/ess-my-groups/scripts/test_my_groups.py
+  deployed_file_hashes:
+    .agents/skills/ess-my-groups/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+    .agents/skills/ess-my-groups/SKILL.md: sha256:04d107f5450a7acd36047f0a54a62592a42d173a0d584c2a749b25d4987937b1
+    .agents/skills/ess-my-groups/assets/groups.example.toml: sha256:df3ac013c41ba536a434ee399d0d4b6bd5fbbef028095db2f75c59c9cbeff381
+    .agents/skills/ess-my-groups/references/groups-format.md: sha256:30580b1aac0c8e72f314437f6baf9d8bda8e12392131ccbdbe118e177d6b43a1
+    .agents/skills/ess-my-groups/scripts/my_groups.py: sha256:7893d9f6f75f335be2ed19031166aed2af905d85912ca30da8927f710ecf03e3
+    .agents/skills/ess-my-groups/scripts/test_my_groups.py: sha256:ca93c5721355fe2a3c7a33a3ac2049a29e1226de51e5ce5e6d40c4fd561ec6e8
+  source: local
+  local_path: ./skills/ess/ess-my-groups
+  content_hash: sha256:b6454332d31476401e798670533bf18a94e0544877ad9c4c4ff7cf4e233c0e6f
+- repo_url: _local/ess-npmrc-env.instructions.md
+  name: ess-npmrc-env.instructions.md
+  version: 1.0.0
+  package_type: apm_package
+  deployed_files:
+  - .cursor/rules/ess-npmrc-env.mdc
+  deployed_file_hashes:
+    .cursor/rules/ess-npmrc-env.mdc: sha256:35f71b76e3c9c948624c6407600e8abf104f0f5c7fc555f66ca1c44c3a59c54c
+  source: local
+  local_path: ./instructions/ess/ess-npmrc-env.instructions.md
+  content_hash: sha256:5f14874a7c7e2f3cbc3344c72c0a427c0e49c27f172a4568b8c2a653255c088d
+- repo_url: _local/ess-okf-docs.instructions.md
+  name: ess-okf-docs.instructions.md
+  version: 1.0.0
+  package_type: apm_package
+  deployed_files:
+  - .cursor/rules/ess-okf-docs.mdc
+  deployed_file_hashes:
+    .cursor/rules/ess-okf-docs.mdc: sha256:2049193ea149789a8ecbc4f9c2c853310723cbf1c305001daa2efd020ed65c4c
+  source: local
+  local_path: ./instructions/ess/ess-okf-docs.instructions.md
+  content_hash: sha256:c4e293f91168aa361a18afcf14fef0f00ea1ee7c8bd9fea0972ba427d9b0aef8
+- repo_url: _local/ess-postgres-docs
+  name: ess-postgres-docs
+  version: unknown
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/ess-postgres-docs
+  - .agents/skills/ess-postgres-docs/LICENSE
+  - .agents/skills/ess-postgres-docs/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/ess-postgres-docs/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+    .agents/skills/ess-postgres-docs/SKILL.md: sha256:40c5bab3b810eccdb17cf04e7cbe592944a757e49cbaadcc0049d74e1e3fb124
+  source: local
+  local_path: ./skills/ess/ess-postgres-docs
+  content_hash: sha256:8b2e14e2f81d0d285b03b5d2aede57cac2a44226b4bfe82c44dc89a2dbb78b5a
+- repo_url: _local/ess-pr-address-comments
+  name: ess-pr-address-comments
+  version: unknown
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/ess-pr-address-comments
+  - .agents/skills/ess-pr-address-comments/LICENSE
+  - .agents/skills/ess-pr-address-comments/SKILL.md
+  - .agents/skills/ess-pr-address-comments/references/fix-procedure.md
+  - .agents/skills/ess-pr-address-comments/references/subagent-prompts.md
+  - .agents/skills/ess-pr-address-comments/references/worktree-mechanics.md
+  - .agents/skills/ess-pr-address-comments/scripts/create-pr-worktree.sh
+  - .agents/skills/ess-pr-address-comments/scripts/fetch-pr.sh
+  - .agents/skills/ess-pr-address-comments/scripts/find-my-prs.sh
+  - .agents/skills/ess-pr-address-comments/scripts/reply-and-resolve.sh
+  - .agents/skills/ess-pr-address-comments/scripts/safe-push.sh
+  deployed_file_hashes:
+    .agents/skills/ess-pr-address-comments/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+    .agents/skills/ess-pr-address-comments/SKILL.md: sha256:26ddd230777cf8204b57879574cbdcce0693b8d16e1b8ba07434c2816832d771
+    .agents/skills/ess-pr-address-comments/references/fix-procedure.md: sha256:b67034e26c3af01d88e1668fa2eb50defc899630740483cb054b7fb7682461ec
+    .agents/skills/ess-pr-address-comments/references/subagent-prompts.md: sha256:9bc4553afc53269b2422c95238bf7568c169e24257737134fbd4a11008123c8c
+    .agents/skills/ess-pr-address-comments/references/worktree-mechanics.md: sha256:00dceaa678190503599a60c22ab5807b2b89daf087e8b7531584ed93d549c14d
+    .agents/skills/ess-pr-address-comments/scripts/create-pr-worktree.sh: sha256:780102751c4b5808f62bbbb5ac8d1f354c6cc1fd56db80fc1061bf81045f2839
+    .agents/skills/ess-pr-address-comments/scripts/fetch-pr.sh: sha256:3b9ee3fed86bb7795e4639cd591db5092aed46b7de09f2cbbdbf2dab6f91cd45
+    .agents/skills/ess-pr-address-comments/scripts/find-my-prs.sh: sha256:1344e1ef00acede161590a83f70f07121e9ce36b5f956bc1b5e4d8eac491a763
+    .agents/skills/ess-pr-address-comments/scripts/reply-and-resolve.sh: sha256:561e2dde3a0351504903f3de347b99251c8578ab1d5b83037805684d599d05d6
+    .agents/skills/ess-pr-address-comments/scripts/safe-push.sh: sha256:c59e6e51c4b9314fbc938021528a9193e0cd49f8a8b7b1bc4cc5215b8f402538
+  source: local
+  local_path: ./skills/ess/ess-pr-address-comments
+  content_hash: sha256:f13587a6e0512884a4e0da65cb6078df001f0a2eb5470748513463c30ff697c4
+- repo_url: _local/ess-pr-review
+  name: ess-pr-review
+  version: unknown
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/ess-pr-review
+  - .agents/skills/ess-pr-review/LICENSE
+  - .agents/skills/ess-pr-review/SKILL.md
+  - .agents/skills/ess-pr-review/references/agent-conventions.md
+  - .agents/skills/ess-pr-review/references/batch-mechanics.md
+  - .agents/skills/ess-pr-review/references/deterministic-checks.md
+  - .agents/skills/ess-pr-review/references/github-cli.md
+  - .agents/skills/ess-pr-review/references/output-format.md
+  - .agents/skills/ess-pr-review/references/pylint-disables.md
+  - .agents/skills/ess-pr-review/scripts/create-review-worktree.sh
+  - .agents/skills/ess-pr-review/scripts/find-review-requests.sh
+  - .agents/skills/ess-pr-review/scripts/lib.sh
+  - .agents/skills/ess-pr-review/scripts/lint-python.sh
+  - .agents/skills/ess-pr-review/scripts/lint-ts.sh
+  - .agents/skills/ess-pr-review/scripts/report.py
+  - .agents/skills/ess-pr-review/scripts/scan-disables.sh
+  - .agents/skills/ess-pr-review/scripts/scan-pr.sh
+  - .agents/skills/ess-pr-review/scripts/test_find_review_requests.sh
+  - .agents/skills/ess-pr-review/scripts/test_report.py
+  - .agents/skills/ess-pr-review/scripts/test_scan_checkout.sh
+  - .agents/skills/ess-pr-review/scripts/test_scan_disables.sh
+  deployed_file_hashes:
+    .agents/skills/ess-pr-review/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+    .agents/skills/ess-pr-review/SKILL.md: sha256:395830ab0d77cea40c34b3865224eb398e5bf012e312248fe321f3c5c1159c6f
+    .agents/skills/ess-pr-review/references/agent-conventions.md: sha256:ca9a089df62db0a9d815077a924c7b9f6b683e2ea472ffeae361fb90fcbe104e
+    .agents/skills/ess-pr-review/references/batch-mechanics.md: sha256:ae6cad1543b98e5afaad3c00c6f64a6e8bb53c175c746c31a7773db7674e9bf2
+    .agents/skills/ess-pr-review/references/deterministic-checks.md: sha256:1bc95b3799c59f28c4d11ef0f2a1fb93bc9c55a9bbaceaca11a572fd7c786e11
+    .agents/skills/ess-pr-review/references/github-cli.md: sha256:6ebd25263e683ea2b45789136ea045fe562c9c7f95ded1377070382759c921ff
+    .agents/skills/ess-pr-review/references/output-format.md: sha256:8beac600d6acae588918fc109f43b98696713f4dd23bed78c60a5c0106247744
+    .agents/skills/ess-pr-review/references/pylint-disables.md: sha256:61c55cec88423475d9e4c7428ebf928d3b1e3efd79cad2f90665e8ce3cd95115
+    .agents/skills/ess-pr-review/scripts/create-review-worktree.sh: sha256:61be509b4d01c83ec747ad34bb3b4e10f86f82016885de8f8a7817d07492080a
+    .agents/skills/ess-pr-review/scripts/find-review-requests.sh: sha256:d88de30bf2f1267de763f07031e8bdf072e4b87ca02bb4cda03ff5952a4ab2ea
+    .agents/skills/ess-pr-review/scripts/lib.sh: sha256:89c23c04c4f46a2a812039271a098ca739bfb9f8ee32ba4b719fdf1023c41730
+    .agents/skills/ess-pr-review/scripts/lint-python.sh: sha256:4865a4749115e6cee9eadf51388894b2168915589607306035f674bb0f3827bf
+    .agents/skills/ess-pr-review/scripts/lint-ts.sh: sha256:71395775666007653a6a7e5b23d4b207c0ecab7b4f234cbb6a05900cd999b597
+    .agents/skills/ess-pr-review/scripts/report.py: sha256:a0d7c44200e124c2b4a4e05c9184324963cea4957762ffe431d715c21e1edb78
+    .agents/skills/ess-pr-review/scripts/scan-disables.sh: sha256:77376dd1202073630599b04fd6d7fbff53c249bd88ab99a565e5120997724585
+    .agents/skills/ess-pr-review/scripts/scan-pr.sh: sha256:e2e489b346a4d6a5d77865bd98a03c8a8b2bc51c4ba0c986adbeece5523a5c40
+    .agents/skills/ess-pr-review/scripts/test_find_review_requests.sh: sha256:4e12f84884c0489967a344ef18d2f14821b14325c25b2112081fb78eac30228e
+    .agents/skills/ess-pr-review/scripts/test_report.py: sha256:a4d5b0ad35e791b4bb38e4de4fd3ba75f13abba1f6388e869e5a6f0934664e0e
+    .agents/skills/ess-pr-review/scripts/test_scan_checkout.sh: sha256:084007c6d4b2e71bb2f4366472b241e87e2d4a6e48cdad30163e0771d0ff1f88
+    .agents/skills/ess-pr-review/scripts/test_scan_disables.sh: sha256:a1e4e99f70e01edeb77c16da0336ad58b012eeb1e0bd55c9f3532a66613c9957
+  source: local
+  local_path: ./skills/ess/ess-pr-review
+  content_hash: sha256:7473dd8f8f7e92cc86f5b1d8cfc7c06cc89bad26f5a2fa2f15c285514599a4f1
+- repo_url: _local/ess-shell-file-naming.instructions.md
+  name: ess-shell-file-naming.instructions.md
+  version: 1.0.0
+  package_type: apm_package
+  deployed_files:
+  - .cursor/rules/ess-shell-file-naming.mdc
+  deployed_file_hashes:
+    .cursor/rules/ess-shell-file-naming.mdc: sha256:f13ee1e0e3edb2ff224b3888081370d99472b0b57ba4e76906e8974698c1b1ff
+  source: local
+  local_path: ./instructions/ess/ess-shell-file-naming.instructions.md
+  content_hash: sha256:23ecdb27d602d7f5dc1e65fed580e9234b6729455e82d8d855a29dde9e428680
+- repo_url: _local/ess-shell-flags-literal
+  name: ess-shell-flags-literal
+  version: unknown
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/ess-shell-flags-literal
+  - .agents/skills/ess-shell-flags-literal/LICENSE
+  - .agents/skills/ess-shell-flags-literal/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/ess-shell-flags-literal/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+    .agents/skills/ess-shell-flags-literal/SKILL.md: sha256:945cccf7def0e848b0548827626dcd87a75d1e3dee687646e9d095bc04a55f58
+  source: local
+  local_path: ./skills/ess/ess-shell-flags-literal
+  content_hash: sha256:462565dc28621926f95833758d164d8c9f7ee8b033f2784e0e6d71f9008fe385
+- repo_url: _local/ess-summarize-change-log
+  name: ess-summarize-change-log
+  version: unknown
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/ess-summarize-change-log
+  - .agents/skills/ess-summarize-change-log/LICENSE
+  - .agents/skills/ess-summarize-change-log/SKILL.md
+  - .agents/skills/ess-summarize-change-log/examples-good.md
+  - .agents/skills/ess-summarize-change-log/examples.md
+  - .agents/skills/ess-summarize-change-log/scripts/test_validate_summary.py
+  - .agents/skills/ess-summarize-change-log/scripts/validate-summary.sh
+  - .agents/skills/ess-summarize-change-log/scripts/validate_summary.py
+  deployed_file_hashes:
+    .agents/skills/ess-summarize-change-log/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+    .agents/skills/ess-summarize-change-log/SKILL.md: sha256:3ae5ac8d5058ac909093e0586fba2d84901326cd52daab9776e057e49793dc60
+    .agents/skills/ess-summarize-change-log/examples-good.md: sha256:d47bac64feff27fe3341003a3b0653c74d38203f89fd6f5ac0e7065b3d050444
+    .agents/skills/ess-summarize-change-log/examples.md: sha256:18489d4fcc482e5711f3862db5703ba579e3db7dd7c2b0ddaa225bb83a9bdba2
+    .agents/skills/ess-summarize-change-log/scripts/test_validate_summary.py: sha256:2ee05e8eb3cf4858a1fbef1e2af8e6a8882d9dc132400756b45d9b3cad5191c4
+    .agents/skills/ess-summarize-change-log/scripts/validate-summary.sh: sha256:af685970c1eec3fd09e77a5470909973f23c3def7616d5311c6a3115f8fe90d2
+    .agents/skills/ess-summarize-change-log/scripts/validate_summary.py: sha256:75aad2b6758d979a7729de63e1d02304e2f5b9a05ab46af76f4a4a5dd6eb7f10
+  source: local
+  local_path: ./skills/ess/ess-summarize-change-log
+  content_hash: sha256:dbeb5286a50cb5840c5fc4aea5b889cffbf6aa585374be50e51ff406f908091b
+- repo_url: _local/gitignore.instructions.md
+  name: gitignore.instructions.md
+  version: 1.0.0
+  package_type: apm_package
+  deployed_files:
+  - .cursor/rules/gitignore.mdc
+  deployed_file_hashes:
+    .cursor/rules/gitignore.mdc: sha256:c60310df81cf42aff944e9b1639441a45f5729f41b0f50910f54bfe8ae633022
+  source: local
+  local_path: ./instructions/gitignore.instructions.md
+  content_hash: sha256:1f313ca1a8c608ecaeefb2dead9f7478bb2b86db55be865a15994fa6afc773f8
+- repo_url: _local/langsmith.instructions.md
+  name: langsmith.instructions.md
+  version: 1.0.0
+  package_type: apm_package
+  deployed_files:
+  - .cursor/rules/langsmith.mdc
+  deployed_file_hashes:
+    .cursor/rules/langsmith.mdc: sha256:69022ffecd63c3998d66d42a6921f1a93c27b6e878c20e83239250d2a3d7c5dd
+  source: local
+  local_path: ./instructions/langsmith.instructions.md
+  content_hash: sha256:313eade8ce8565e7205c6b368272abbc7047f1209b821c1acc7b2250a46b4535
+- repo_url: _local/naming-cheatsheet.instructions.md
+  name: naming-cheatsheet.instructions.md
+  version: 1.0.0
+  package_type: apm_package
+  deployed_files:
+  - .cursor/rules/naming-cheatsheet.mdc
+  deployed_file_hashes:
+    .cursor/rules/naming-cheatsheet.mdc: sha256:d11757946472dc3e8534b4a4786d15c16a5cf80d918a15d2bd88a15c0fc54565
+  source: local
+  local_path: ./instructions/naming-cheatsheet.instructions.md
+  content_hash: sha256:7a87a64ea8e13a2d5dd9427177d0347ce2d94b68fdec9f6c5216ec21d5204028
+- repo_url: _local/playwright.instructions.md
+  name: playwright.instructions.md
+  version: 1.0.0
+  package_type: apm_package
+  deployed_files:
+  - .cursor/rules/playwright.mdc
+  deployed_file_hashes:
+    .cursor/rules/playwright.mdc: sha256:6e687d50c79a1aaf094fd5dcd118a225898839eda800971c195ec1304dec19bd
+  source: local
+  local_path: ./instructions/playwright.instructions.md
+  content_hash: sha256:d9c5b5bdfb5bf3d242e7f5fc2cf52fff517941ddb0e0cbc4d65627e60d57d9d0
+- repo_url: _local/pulumi-local-state.instructions.md
+  name: pulumi-local-state.instructions.md
+  version: 1.0.0
+  package_type: apm_package
+  deployed_files:
+  - .cursor/rules/pulumi-local-state.mdc
+  deployed_file_hashes:
+    .cursor/rules/pulumi-local-state.mdc: sha256:9420a1d1cd7de7e7b7760a55ee4c6feaac25f849b8b57cf364ef6b7409bc294e
+  source: local
+  local_path: ./instructions/pulumi-local-state.instructions.md
+  content_hash: sha256:1e190a0c3a846b8c8a582869ed2bb502fc0478ec0c05c8a895971f31235eb38e
+- repo_url: _local/uv.instructions.md
+  name: uv.instructions.md
+  version: 1.0.0
+  package_type: apm_package
+  deployed_files:
+  - .cursor/rules/uv.mdc
+  deployed_file_hashes:
+    .cursor/rules/uv.mdc: sha256:4571b24744013c54d54416cfe2bf6cbdb58014bf59bef74078b4cf76f7e1a58b
+  source: local
+  local_path: ./instructions/uv.instructions.md
+  content_hash: sha256:926db195adcf2201b86b2ca211c7bd76b1725f47157f6f3001f580d3498c6676
+- repo_url: _local/write-readme.instructions.md
+  name: write-readme.instructions.md
+  version: 1.0.0
+  package_type: apm_package
+  deployed_files:
+  - .cursor/rules/write-readme.mdc
+  deployed_file_hashes:
+    .cursor/rules/write-readme.mdc: sha256:c9fadc223eb4965eabd474d5fa5cdf9fb3d292c7d1d76f53cc00c02deae84bb3
+  source: local
+  local_path: ./instructions/write-readme.instructions.md
+  content_hash: sha256:719dfceaf1b6ea31ff2f666afb551fce9b86a9bd83f79003bc7a77d3d89ffc98
+deployments:
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-django-docs
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-django-docs
+  active_owner: ./skills/ess/ess-django-docs
+  content_hash: null
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-django-docs/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-django-docs
+  active_owner: ./skills/ess/ess-django-docs
+  content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-django-docs/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-django-docs
+  active_owner: ./skills/ess/ess-django-docs
+  content_hash: sha256:53d7d37b5cf220efd2307115992377a722c9114c2bf082c48d9df70ab5a980fd
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-env-credentials
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-env-credentials
+  active_owner: ./skills/ess/ess-env-credentials
+  content_hash: null
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-env-credentials/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-env-credentials
+  active_owner: ./skills/ess/ess-env-credentials
+  content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-env-credentials/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-env-credentials
+  active_owner: ./skills/ess/ess-env-credentials
+  content_hash: sha256:d5e8635b55a47a6432093c9a5665c2c202d0b7eca42fe8c993b3ba252c1de387
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-gh-copilot-review
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-gh-copilot-review
+  active_owner: ./skills/ess/ess-gh-copilot-review
+  content_hash: null
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-gh-copilot-review/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-gh-copilot-review
+  active_owner: ./skills/ess/ess-gh-copilot-review
+  content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-gh-copilot-review/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-gh-copilot-review
+  active_owner: ./skills/ess/ess-gh-copilot-review
+  content_hash: sha256:9863dd4e8cedfbeb65993674ca18d5737a70c5c994754e9d830fbd7f65b0ee4e
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-gh-copilot-review/scripts/review-pr.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-gh-copilot-review
+  active_owner: ./skills/ess/ess-gh-copilot-review
+  content_hash: sha256:5c92b054bf6b6a9ff526edd41b011c622608a128fd07cc3e427b4e5db29a752c
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-gh-copilot-review/scripts/test_review_pr.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-gh-copilot-review
+  active_owner: ./skills/ess/ess-gh-copilot-review
+  content_hash: sha256:1c78a89828277f225a0e7d318b43b3467aeeacf0670b6a9cea5333c91224988b
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-gh-repo-mirror
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-gh-repo-mirror
+  active_owner: ./skills/ess/ess-gh-repo-mirror
+  content_hash: null
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-gh-repo-mirror/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-gh-repo-mirror
+  active_owner: ./skills/ess/ess-gh-repo-mirror
+  content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-gh-repo-mirror/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-gh-repo-mirror
+  active_owner: ./skills/ess/ess-gh-repo-mirror
+  content_hash: sha256:97bbf2de04277ecc4921c9f27784e59d51e6f7cf7afbc9c94da60da50db81de3
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-commits
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-commits
+  active_owner: ./skills/ess/ess-git-commits
+  content_hash: null
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-commits/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-commits
+  active_owner: ./skills/ess/ess-git-commits
+  content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-commits/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-commits
+  active_owner: ./skills/ess/ess-git-commits
+  content_hash: sha256:bcb3ba0e5fb0e91c765ce32e5923bb55984acd555e50f8287d5c93b7407d29f9
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-commits/references/pre-commit.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-commits
+  active_owner: ./skills/ess/ess-git-commits
+  content_hash: sha256:ffd0b795cb93a7e92a7d24176931954c7dbe6adbd7a520da074bbaa7ca930d3b
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-commits/scripts/strip-cursor-coauthor.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-commits
+  active_owner: ./skills/ess/ess-git-commits
+  content_hash: sha256:94f9ad861ea708f008813867112f52a07fdaf805414ac61f4532897bbec42b0b
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: null
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:7e611cc08fd21dd87608f231985054cacd7ef2688823d7ef3791c9ef2dda59dc
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/references/cli.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:a1d31722bc9ccf232d643eab10bec4edfbeb6aa164b28145c318c6b57129b6fa
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/references/cursor-sdk.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:6383379325d5a66e9bf31f6ea402e039c0acaa3e20f3c2c81f8df82a8d353942
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/references/hooks.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:ee5a26285938af41e5216945f393302e314e96562b0ca541cd9296523a9a59c4
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/references/install.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:12a03dbfcad07a3d01f245864034022a312006fdb894dd8f8450d9db0197c4b4
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/.secretlintrc.json
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:1c0e86ca72216c22cc77b1c94c27f975b731aa9e104167f5d57a5befa654c10e
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/package.json
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:609158e6c5fbc237939fa3ddf7faab80ab690bdc0c8d584414a885130103c4e8
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/sdk/package-lock.json
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:eb974ef16a692477b30c6bcbc4ada29723dd0cd96fefb3608f24d1e7a2534c82
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/sdk/package.json
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:d10137311d9ea9ccff628fb7b493eb04c7a27dafa9de5a34b7812063b92145d6
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/agent.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:c623316be5d643b73032fb54766e4b9bcc63961f8f43f8cd0a9f7a6b1d702d0a
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/args.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:be764c7184f99d4da1569eb154c9b25b379683eaeaf1eaaabf9916279aec906d
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/cli.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:9ac9d509237f62460b4c4b7ce97acee5443c2bf88e94977328582738cbf2ae0a
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/confirm.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:7b894bf82c9571bc350d6251c4a9a2094e9061a699a8da4f8853f7310395d1b3
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/copy.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:34d2ea548dab8eac4ff19298ebe7e9c9cfb96ef537dde0c96efba60d0db8d829
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/dry-run.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:87c84e90dd445a5627ba99dab7c963733f7cb0f5c89f94cc36976f20de918388
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/env.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:be952b8c83299893fdf5335043408ea50bf94ee15d498ea90e11a18f73b376b1
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/ess-items.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:79b2e755ea0ef94ca3f443c319fc1e215ff9289e3b763d6895d091263d1184fa
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/ess-scan.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:207373564f43d6548b1de4817b5b356f5f87952e03bda754f75147ea6d28bb59
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/exec.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:26b7d8e47d01d241f4b142154d1804afb5c2d95b0da0b42436a694473278de99
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/extract-plan.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:825770ad3c2c9c404906935ce48a5387be769d3cab0a9c0b9d22ca4ece20cc63
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/file-set.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:44ae4eb2f831e38ebcd99e7ff1b4a6e69ee4972b253fc2b3ae4523fc25eba55e
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/jargon-check.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:fc20efa00377f2f7e6dd628ab52789b581d54dd4ac60bf736cfd1e619bac5912
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/jargon-list.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:047e5317dee2836e90a9d98428b994ac2d99877957829b25c24fcd3164e08abb
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/jargon-overrides.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:d491d989f6c558ab57d676a624b47b3762d15fc3adc802f00dcbf2c2a7a419ff
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/model-resolver.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:e625a2d6a78ba4a9845b04d992b0fea559cbd0a01f70cc8882ab8e8c448386ac
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/preflight-command.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:8bd5eaf8b3ac569c8b1c316d14cf796b3fb3c1ccb256e9ec3b17a2b73412f4d4
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/program.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:ca38b0ed55b7a364e220d1993b7a790e7d42198dde9f44d48fc4152cfa6c5d71
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/prompts.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:985c51b0910e05bdd0e6be379880ad5283d25492ae907e35f61bb89032af54fa
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/repos.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:4dc1385bb12594d1678a1c097e0f74c3b8370715d7b3a012e1b6fbaea2448d4b
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/reviewer.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:98d5b538d07bb9575157f0bdc5cd46f3c65f066b13caebf05369ca553a8b7098
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/scan-command.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:a2243c4836437ad28414a0f0d7c2abed25487a52fc1a4b32df0270b648527a71
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/scanners/index.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:ac030009394ab0fbe96faa2c82a6c87e973db394c0f10ff1991b63442997cc5c
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/scanners/jargon.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:308fb18c88bd6c226d1ba8ee0916f1ce2bf6276e17780b094e88262301e920cc
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/scanners/pii.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:8b25aa4fde97e5a97a5b379bfc70d70030c86573681ef0414cb5e9a7cfabf3db
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/scanners/secretlint.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:33847e76432a8082c451209fe9e8c53a4ad0bde343691eea2fb25f7bc86c9121
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/scanners/text-files.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:a116639e04a0bfd87c76f905e394e7be2824b80c814ff167659020f68a747bd3
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/scanners/trufflehog.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:2099403f5fa90863e7ec41eebbe90a64c6ce8889840f91cffc50e26bbee2a588
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/sdk.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:10db04cc70839fed12ad003a66f83271ee9a35c1222adc7a1c228bd175f666e0
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/status-command.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:923bca9abfb1a33f350b206094fbf2de9d772b3962641253d4727e962dea76e4
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/style.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:07729b912bce0bcc24f515be022daa9e61ca656f40549e1755df279e26ed7887
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/sync-command.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:c696f9a1b272bd84cff4e127a63c2fee0142d4fc22d626080f14317eb6bd3d69
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/sync.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:c43d74387a2e657aa72021cf30b26f3adc47dd630b68a0890b032103194b86a3
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/src/types.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:0e547a89a1a21614a16f20d78016658a51b3140ddc9bbe33a5dc1e6e9c84d23a
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/tests/copy.test.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:6b327b3069e583df4c9087eccee497b8c83c3ec373a30a6c17865a6480ff0e99
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/tests/extract-plan.test.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:79bfc52621712e970c712fdca6adba6233d6c37834a5990dc4108208cf3ab07a
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/tests/fast-copy-gate.test.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:e16bc76d0baca8e79945df10d26e99841a5e597dcfa3812d32e93905a8de6cc8
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/tests/file-set.test.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:86ee5d3f6ba07c3fcf0a93593bad551f9e16bf4ba941d2bec9949a589c1c206f
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/tests/fixtures/clean-package/README.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:6f37ad4bc403fdd60cbf2f8818b32ad0b96ec90e37be4f881a73df9d56bfba79
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/tests/fixtures/clean-package/src/main.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:ce06ee5f336a3148f6a4f84d5e49102e624ac933d0f4ae3f1e9fbef974494617
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/tests/fixtures/dirty-package/README.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:5ceb834f491cf9ce3cc9ad85912f17a10d4fe1a9dc1f62890c835db41d65e908
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/tests/fixtures/dirty-package/src/client.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:ee9eb3912db277bfd774201bb0c960e83d02abf2cac984e0a5d8642fa1e88624
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/tests/jargon-check.test.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:6f9cacd3ed0034268942a5b7ae959fa6b44fa100c98ae56ad9be8304e925f416
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/tests/prompts.test.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:febb849e9b60d2149f64b1c0eec35f77a071acf9ed1260daa8dd1dab5fad1fe5
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/tests/read-only-commands.test.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:316ff8003009c995d1b4edeaa38e0d3edbbc15786560316f15e1afb615add3bf
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/tests/scanners.test.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:86f505e2660c5c6473cd155a3f20cff8f547a567aec705bf286f3c09000c3c44
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/tests/sync-command.test.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:b23432ede71bf2494e36679ee19280de9462414b18a7e02d8a9df97577e8d956
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/tests/sync-plan.test.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:8e851e126f236d9cc55ac1801e9f5e8a8d9b0b69dc19b6c19b5219b0351c6a1b
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/tests/temp-repos.ts
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:c8022b5c05bbf5060e3cdc054b15a4e66a0742a7f84166dfd14727321f6f2964
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-repo-sync/scripts/tsconfig.json
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-repo-sync
+  active_owner: ./skills/ess/ess-git-repo-sync
+  content_hash: sha256:3e3a88d2f746d127380918c35a543257f1eec2c4ba3f1e269749e51c6ba1f549
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-tidy
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-tidy
+  active_owner: ./skills/ess/ess-git-tidy
+  content_hash: null
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-tidy/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-tidy
+  active_owner: ./skills/ess/ess-git-tidy
+  content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-tidy/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-tidy
+  active_owner: ./skills/ess/ess-git-tidy
+  content_hash: sha256:430f7a635096843389393869616afb630538f6a95abebdfa3015eb5fd9b509f3
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-tidy/references/classification.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-tidy
+  active_owner: ./skills/ess/ess-git-tidy
+  content_hash: sha256:19e399da5e43b36b036a43dbcf0390783241563f1a89dc5b592c5ab7ed1d7aab
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-tidy/references/safety.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-tidy
+  active_owner: ./skills/ess/ess-git-tidy
+  content_hash: sha256:308a4ae6316eb079060fe485f18121c39adf4987a13865315dbac10d6389fac6
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-tidy/scripts/audit.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-tidy
+  active_owner: ./skills/ess/ess-git-tidy
+  content_hash: sha256:c7dd8bfbe5b816832468f04f3f5b7794a0306138a8e924f057ce08602cbd06b9
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-tidy/scripts/lib.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-tidy
+  active_owner: ./skills/ess/ess-git-tidy
+  content_hash: sha256:424e5b8af3fb91f0e2d3e3119ab50281d854bb9858de48887e41af14b2012e3f
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-git-tidy/scripts/test_audit.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-git-tidy
+  active_owner: ./skills/ess/ess-git-tidy
+  content_hash: sha256:7fad3c573feffbaeb2ebb2e3a0bc56121dfb51c0ee985fa9fda1ecd90146d394
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-mcp-hide-secrets
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-mcp-hide-secrets
+  active_owner: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: null
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-mcp-hide-secrets/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-mcp-hide-secrets
+  active_owner: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-mcp-hide-secrets/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-mcp-hide-secrets
+  active_owner: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: sha256:74b394859daa2a12e0cee4921ab915afb0f0167afa257126d19f8cc45d8afd6b
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-mcp-hide-secrets/references/install-cursor.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-mcp-hide-secrets
+  active_owner: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: sha256:ef299a6e98e1ee233022987eed299fa3eff1ce39a1beb340052681c9d7bfa7b6
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-mcp-hide-secrets/references/launchagent-naming.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-mcp-hide-secrets
+  active_owner: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: sha256:2e57e97a3784cb4757c99a7ca4343f440ddbc97516550129350936e71bcb6d90
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-mcp-hide-secrets/references/launchctl.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-mcp-hide-secrets
+  active_owner: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: sha256:6fc76dd9b3b22a04c6cd14fc7ea9dd99f1630a08b051e580411b72fcf226af6c
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-mcp-hide-secrets/references/rationale.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-mcp-hide-secrets
+  active_owner: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: sha256:a577da49c73fceba1130c5903de1793957d11b413a07abc76a9f5abb4efd537d
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-mcp-hide-secrets/scripts/check-inline-secrets.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-mcp-hide-secrets
+  active_owner: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: sha256:f978f49abde2168e95566266faf20fda12e154da5d1d88f81719e04ca47f1eb1
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-mcp-hide-secrets/scripts/fix-launchagents-dir.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-mcp-hide-secrets
+  active_owner: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: sha256:1c47e2d69ef784e60893c9c9ad274dca47dbc5c955ac2b2fef9beeba81c40976
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-mcp-hide-secrets/scripts/install.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-mcp-hide-secrets
+  active_owner: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: sha256:e55a467845276eac00a700a8f7ab17335370340fcc95f7faa8d02a1532351f31
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-mcp-hide-secrets/scripts/lib.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-mcp-hide-secrets
+  active_owner: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: sha256:27e4407402cb0f300095ea542db2cef0dfbd6d3d3f111c1d7ea64dd9a4ae60b3
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-mcp-hide-secrets/scripts/load-mcp-env.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-mcp-hide-secrets
+  active_owner: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: sha256:d8c01879e5ac347c353eeafc7ead52f789990e0c977e91428f0b0cecad3f6471
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-mcp-hide-secrets/scripts/local.your-username.cursor-mcp-env.plist
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-mcp-hide-secrets
+  active_owner: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: sha256:602cc6f360aa8385a9e045ee46018fd5b5be0b28f9605d34e2821f761163bc12
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-mcp-hide-secrets/scripts/mcp.env.example
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-mcp-hide-secrets
+  active_owner: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: sha256:1876e40f263b0258509953acfb158ec69f7a925291c319dc1b580ff21644c64a
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-mcp-hide-secrets/scripts/preflight.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-mcp-hide-secrets
+  active_owner: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: sha256:1abb8db0bad807730e6d603cd63ac76d128e9f3e5549175045caeaefa23f9adf
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-mcp-hide-secrets/scripts/render-plist.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-mcp-hide-secrets
+  active_owner: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: sha256:7c4a61b22ddf7541366f03ff03afd3ddbd71c3b872c3ef7294a640a29deb1f3f
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-mcp-hide-secrets/scripts/run.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-mcp-hide-secrets
+  active_owner: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: sha256:a3609c4f19685f9125085eeae5b7bc167241419239d8289e56238e2fc12936e6
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-mcp-hide-secrets/scripts/status.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-mcp-hide-secrets
+  active_owner: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: sha256:25666cf55444bbb7ff6f4f9b97d1789842989cfa7bcca1023dc5c79b845c99b3
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-mcp-hide-secrets/scripts/test_run.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-mcp-hide-secrets
+  active_owner: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: sha256:8a7dbd12e7e9d4d8a1d13fc4f00687e7fd3aefd2b47985381b52edd9c14dfb34
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-mcp-hide-secrets/scripts/verify.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-mcp-hide-secrets
+  active_owner: ./skills/ess/ess-mcp-hide-secrets
+  content_hash: sha256:8675578e93f2f0e227f28d72a65781d00fbae3ee12f504557775a7bdb8b40aed
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-my-groups
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-my-groups
+  active_owner: ./skills/ess/ess-my-groups
+  content_hash: null
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-my-groups/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-my-groups
+  active_owner: ./skills/ess/ess-my-groups
+  content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-my-groups/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-my-groups
+  active_owner: ./skills/ess/ess-my-groups
+  content_hash: sha256:04d107f5450a7acd36047f0a54a62592a42d173a0d584c2a749b25d4987937b1
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-my-groups/assets/groups.example.toml
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-my-groups
+  active_owner: ./skills/ess/ess-my-groups
+  content_hash: sha256:df3ac013c41ba536a434ee399d0d4b6bd5fbbef028095db2f75c59c9cbeff381
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-my-groups/references/groups-format.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-my-groups
+  active_owner: ./skills/ess/ess-my-groups
+  content_hash: sha256:30580b1aac0c8e72f314437f6baf9d8bda8e12392131ccbdbe118e177d6b43a1
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-my-groups/scripts/my_groups.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-my-groups
+  active_owner: ./skills/ess/ess-my-groups
+  content_hash: sha256:7893d9f6f75f335be2ed19031166aed2af905d85912ca30da8927f710ecf03e3
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-my-groups/scripts/test_my_groups.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-my-groups
+  active_owner: ./skills/ess/ess-my-groups
+  content_hash: sha256:ca93c5721355fe2a3c7a33a3ac2049a29e1226de51e5ce5e6d40c4fd561ec6e8
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-docs
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-docs
+  active_owner: ./skills/ess/ess-postgres-docs
+  content_hash: null
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-docs/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-docs
+  active_owner: ./skills/ess/ess-postgres-docs
+  content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-docs/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-docs
+  active_owner: ./skills/ess/ess-postgres-docs
+  content_hash: sha256:40c5bab3b810eccdb17cf04e7cbe592944a757e49cbaadcc0049d74e1e3fb124
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-address-comments
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-address-comments
+  active_owner: ./skills/ess/ess-pr-address-comments
+  content_hash: null
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-address-comments/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-address-comments
+  active_owner: ./skills/ess/ess-pr-address-comments
+  content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-address-comments/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-address-comments
+  active_owner: ./skills/ess/ess-pr-address-comments
+  content_hash: sha256:26ddd230777cf8204b57879574cbdcce0693b8d16e1b8ba07434c2816832d771
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-address-comments/references/fix-procedure.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-address-comments
+  active_owner: ./skills/ess/ess-pr-address-comments
+  content_hash: sha256:b67034e26c3af01d88e1668fa2eb50defc899630740483cb054b7fb7682461ec
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-address-comments/references/subagent-prompts.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-address-comments
+  active_owner: ./skills/ess/ess-pr-address-comments
+  content_hash: sha256:9bc4553afc53269b2422c95238bf7568c169e24257737134fbd4a11008123c8c
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-address-comments/references/worktree-mechanics.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-address-comments
+  active_owner: ./skills/ess/ess-pr-address-comments
+  content_hash: sha256:00dceaa678190503599a60c22ab5807b2b89daf087e8b7531584ed93d549c14d
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-address-comments/scripts/create-pr-worktree.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-address-comments
+  active_owner: ./skills/ess/ess-pr-address-comments
+  content_hash: sha256:780102751c4b5808f62bbbb5ac8d1f354c6cc1fd56db80fc1061bf81045f2839
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-address-comments/scripts/fetch-pr.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-address-comments
+  active_owner: ./skills/ess/ess-pr-address-comments
+  content_hash: sha256:3b9ee3fed86bb7795e4639cd591db5092aed46b7de09f2cbbdbf2dab6f91cd45
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-address-comments/scripts/find-my-prs.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-address-comments
+  active_owner: ./skills/ess/ess-pr-address-comments
+  content_hash: sha256:1344e1ef00acede161590a83f70f07121e9ce36b5f956bc1b5e4d8eac491a763
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-address-comments/scripts/reply-and-resolve.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-address-comments
+  active_owner: ./skills/ess/ess-pr-address-comments
+  content_hash: sha256:561e2dde3a0351504903f3de347b99251c8578ab1d5b83037805684d599d05d6
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-address-comments/scripts/safe-push.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-address-comments
+  active_owner: ./skills/ess/ess-pr-address-comments
+  content_hash: sha256:c59e6e51c4b9314fbc938021528a9193e0cd49f8a8b7b1bc4cc5215b8f402538
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: null
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: sha256:395830ab0d77cea40c34b3865224eb398e5bf012e312248fe321f3c5c1159c6f
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review/references/agent-conventions.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: sha256:ca9a089df62db0a9d815077a924c7b9f6b683e2ea472ffeae361fb90fcbe104e
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review/references/batch-mechanics.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: sha256:ae6cad1543b98e5afaad3c00c6f64a6e8bb53c175c746c31a7773db7674e9bf2
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review/references/deterministic-checks.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: sha256:1bc95b3799c59f28c4d11ef0f2a1fb93bc9c55a9bbaceaca11a572fd7c786e11
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review/references/github-cli.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: sha256:6ebd25263e683ea2b45789136ea045fe562c9c7f95ded1377070382759c921ff
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review/references/output-format.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: sha256:8beac600d6acae588918fc109f43b98696713f4dd23bed78c60a5c0106247744
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review/references/pylint-disables.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: sha256:61c55cec88423475d9e4c7428ebf928d3b1e3efd79cad2f90665e8ce3cd95115
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review/scripts/create-review-worktree.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: sha256:61be509b4d01c83ec747ad34bb3b4e10f86f82016885de8f8a7817d07492080a
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review/scripts/find-review-requests.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: sha256:d88de30bf2f1267de763f07031e8bdf072e4b87ca02bb4cda03ff5952a4ab2ea
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review/scripts/lib.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: sha256:89c23c04c4f46a2a812039271a098ca739bfb9f8ee32ba4b719fdf1023c41730
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review/scripts/lint-python.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: sha256:4865a4749115e6cee9eadf51388894b2168915589607306035f674bb0f3827bf
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review/scripts/lint-ts.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: sha256:71395775666007653a6a7e5b23d4b207c0ecab7b4f234cbb6a05900cd999b597
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review/scripts/report.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: sha256:a0d7c44200e124c2b4a4e05c9184324963cea4957762ffe431d715c21e1edb78
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review/scripts/scan-disables.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: sha256:77376dd1202073630599b04fd6d7fbff53c249bd88ab99a565e5120997724585
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review/scripts/scan-pr.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: sha256:e2e489b346a4d6a5d77865bd98a03c8a8b2bc51c4ba0c986adbeece5523a5c40
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review/scripts/test_find_review_requests.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: sha256:4e12f84884c0489967a344ef18d2f14821b14325c25b2112081fb78eac30228e
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review/scripts/test_report.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: sha256:a4d5b0ad35e791b4bb38e4de4fd3ba75f13abba1f6388e869e5a6f0934664e0e
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review/scripts/test_scan_checkout.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: sha256:084007c6d4b2e71bb2f4366472b241e87e2d4a6e48cdad30163e0771d0ff1f88
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-pr-review/scripts/test_scan_disables.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-pr-review
+  active_owner: ./skills/ess/ess-pr-review
+  content_hash: sha256:a1e4e99f70e01edeb77c16da0336ad58b012eeb1e0bd55c9f3532a66613c9957
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-shell-flags-literal
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-shell-flags-literal
+  active_owner: ./skills/ess/ess-shell-flags-literal
+  content_hash: null
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-shell-flags-literal/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-shell-flags-literal
+  active_owner: ./skills/ess/ess-shell-flags-literal
+  content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-shell-flags-literal/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-shell-flags-literal
+  active_owner: ./skills/ess/ess-shell-flags-literal
+  content_hash: sha256:945cccf7def0e848b0548827626dcd87a75d1e3dee687646e9d095bc04a55f58
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-summarize-change-log
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-summarize-change-log
+  active_owner: ./skills/ess/ess-summarize-change-log
+  content_hash: null
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-summarize-change-log/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-summarize-change-log
+  active_owner: ./skills/ess/ess-summarize-change-log
+  content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-summarize-change-log/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-summarize-change-log
+  active_owner: ./skills/ess/ess-summarize-change-log
+  content_hash: sha256:3ae5ac8d5058ac909093e0586fba2d84901326cd52daab9776e057e49793dc60
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-summarize-change-log/examples-good.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-summarize-change-log
+  active_owner: ./skills/ess/ess-summarize-change-log
+  content_hash: sha256:d47bac64feff27fe3341003a3b0653c74d38203f89fd6f5ac0e7065b3d050444
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-summarize-change-log/examples.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-summarize-change-log
+  active_owner: ./skills/ess/ess-summarize-change-log
+  content_hash: sha256:18489d4fcc482e5711f3862db5703ba579e3db7dd7c2b0ddaa225bb83a9bdba2
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-summarize-change-log/scripts/test_validate_summary.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-summarize-change-log
+  active_owner: ./skills/ess/ess-summarize-change-log
+  content_hash: sha256:2ee05e8eb3cf4858a1fbef1e2af8e6a8882d9dc132400756b45d9b3cad5191c4
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-summarize-change-log/scripts/validate-summary.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-summarize-change-log
+  active_owner: ./skills/ess/ess-summarize-change-log
+  content_hash: sha256:af685970c1eec3fd09e77a5470909973f23c3def7616d5311c6a3115f8fe90d2
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-summarize-change-log/scripts/validate_summary.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-summarize-change-log
+  active_owner: ./skills/ess/ess-summarize-change-log
+  content_hash: sha256:75aad2b6758d979a7729de63e1d02304e2f5b9a05ab46af76f4a4a5dd6eb7f10
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/ess-agent-skills.mdc
+  runtime: null
+  scope: project
+  owners:
+  - ./instructions/ess/ess-agent-skills.instructions.md
+  active_owner: ./instructions/ess/ess-agent-skills.instructions.md
+  content_hash: sha256:0dac1c45c680b227d5995d6e79ed8bf690db6513ac8b925f302847929192d28f
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/ess-apm-sources.mdc
+  runtime: null
+  scope: project
+  owners:
+  - ./instructions/ess/ess-apm-sources.instructions.md
+  active_owner: ./instructions/ess/ess-apm-sources.instructions.md
+  content_hash: sha256:66a0899d3fcd3e80abd0359f0f042bf6a1c930586904ad5b136aeead3b4a8cae
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/ess-cli-write-safety.mdc
+  runtime: null
+  scope: project
+  owners:
+  - ./instructions/ess/ess-cli-write-safety.instructions.md
+  active_owner: ./instructions/ess/ess-cli-write-safety.instructions.md
+  content_hash: sha256:9bf28f4d8ae76a842186955c569c69aeade6a097cce11aaad6094b660fe1a92f
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/ess-dockerfile-runtime-copy.mdc
+  runtime: null
+  scope: project
+  owners:
+  - ./instructions/ess/ess-dockerfile-runtime-copy.instructions.md
+  active_owner: ./instructions/ess/ess-dockerfile-runtime-copy.instructions.md
+  content_hash: sha256:15c616ed52d8e38d413d313b54b747ffef0d46c1a9546e1d7226bf37bc6ff0b3
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/ess-docs-example-urls.mdc
+  runtime: null
+  scope: project
+  owners:
+  - ./instructions/ess/ess-docs-example-urls.instructions.md
+  active_owner: ./instructions/ess/ess-docs-example-urls.instructions.md
+  content_hash: sha256:dc07a39a6e39a4f365dddd2717b407b252620d2e0707f8e5779b16f134700b4d
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/ess-npmrc-env.mdc
+  runtime: null
+  scope: project
+  owners:
+  - ./instructions/ess/ess-npmrc-env.instructions.md
+  active_owner: ./instructions/ess/ess-npmrc-env.instructions.md
+  content_hash: sha256:35f71b76e3c9c948624c6407600e8abf104f0f5c7fc555f66ca1c44c3a59c54c
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/ess-okf-docs.mdc
+  runtime: null
+  scope: project
+  owners:
+  - ./instructions/ess/ess-okf-docs.instructions.md
+  active_owner: ./instructions/ess/ess-okf-docs.instructions.md
+  content_hash: sha256:2049193ea149789a8ecbc4f9c2c853310723cbf1c305001daa2efd020ed65c4c
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/ess-shell-file-naming.mdc
+  runtime: null
+  scope: project
+  owners:
+  - ./instructions/ess/ess-shell-file-naming.instructions.md
+  active_owner: ./instructions/ess/ess-shell-file-naming.instructions.md
+  content_hash: sha256:f13ee1e0e3edb2ff224b3888081370d99472b0b57ba4e76906e8974698c1b1ff
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/gitignore.mdc
+  runtime: null
+  scope: project
+  owners:
+  - ./instructions/gitignore.instructions.md
+  active_owner: ./instructions/gitignore.instructions.md
+  content_hash: sha256:c60310df81cf42aff944e9b1639441a45f5729f41b0f50910f54bfe8ae633022
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/langsmith.mdc
+  runtime: null
+  scope: project
+  owners:
+  - ./instructions/langsmith.instructions.md
+  active_owner: ./instructions/langsmith.instructions.md
+  content_hash: sha256:69022ffecd63c3998d66d42a6921f1a93c27b6e878c20e83239250d2a3d7c5dd
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/naming-cheatsheet.mdc
+  runtime: null
+  scope: project
+  owners:
+  - ./instructions/naming-cheatsheet.instructions.md
+  active_owner: ./instructions/naming-cheatsheet.instructions.md
+  content_hash: sha256:d11757946472dc3e8534b4a4786d15c16a5cf80d918a15d2bd88a15c0fc54565
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/playwright.mdc
+  runtime: null
+  scope: project
+  owners:
+  - ./instructions/playwright.instructions.md
+  active_owner: ./instructions/playwright.instructions.md
+  content_hash: sha256:6e687d50c79a1aaf094fd5dcd118a225898839eda800971c195ec1304dec19bd
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/pulumi-local-state.mdc
+  runtime: null
+  scope: project
+  owners:
+  - ./instructions/pulumi-local-state.instructions.md
+  active_owner: ./instructions/pulumi-local-state.instructions.md
+  content_hash: sha256:9420a1d1cd7de7e7b7760a55ee4c6feaac25f849b8b57cf364ef6b7409bc294e
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/uv.mdc
+  runtime: null
+  scope: project
+  owners:
+  - ./instructions/uv.instructions.md
+  active_owner: ./instructions/uv.instructions.md
+  content_hash: sha256:4571b24744013c54d54416cfe2bf6cbdb58014bf59bef74078b4cf76f7e1a58b
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/write-readme.mdc
+  runtime: null
+  scope: project
+  owners:
+  - ./instructions/write-readme.instructions.md
+  active_owner: ./instructions/write-readme.instructions.md
+  content_hash: sha256:c9fadc223eb4965eabd474d5fa5cdf9fb3d292c7d1d76f53cc00c02deae84bb3
+- kind: uri
+  target: mcp
+  value: aws-mcp
+  runtime: cursor
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+mcp_servers:
+- aws-mcp
+mcp_configs:
+  aws-mcp:
+    name: aws-mcp
+    transport: stdio
+    args:
+    - mcp-proxy-for-aws@1.7.0
+    - https://aws-mcp.us-east-1.api.aws/mcp
+    - --metadata
+    - AWS_REGION=us-east-1
+    registry: false
+    command: uvx
+    timeout: 100000
+mcp_target_servers:
+  cursor:
+  - aws-mcp
