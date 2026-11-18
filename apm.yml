@@ -30,14 +30,14 @@ dependencies:
     - path: ./instructions/ess/ess-dockerfile-runtime-copy.instructions.md
     - path: ./instructions/ess/ess-npmrc-env.instructions.md
     - path: ./instructions/ess/ess-okf-docs.instructions.md
+    - path: ./instructions/ess/ess-playwright.instructions.md
     - path: ./instructions/ess/ess-shell-file-naming.instructions.md
+    - path: ./instructions/ess/ess-write-readme.instructions.md
     - path: ./instructions/gitignore.instructions.md
     - path: ./instructions/langsmith.instructions.md
     - path: ./instructions/naming-cheatsheet.instructions.md
-    - path: ./instructions/playwright.instructions.md
     - path: ./instructions/pulumi-local-state.instructions.md
     - path: ./instructions/uv.instructions.md
-    - path: ./instructions/write-readme.instructions.md
   mcp:
     # Managed AWS MCP Server. The local proxy signs requests with your AWS
     # credential chain; pin it rather than using @latest.

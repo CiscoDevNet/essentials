@@ -1,0 +1,22 @@
+---
+description: Playwright browser automation conventions
+applyTo: "**/*.py"
+---
+
+# Playwright
+
+This applies only to Python code that uses Playwright; ignore it for other files.
+
+When writing Playwright scripts, always use the system-installed Google Chrome — never Chromium. System Chrome honors the machine's managed policies and trusted certificates, which sites behind single sign-on often require, and it avoids downloading a separate browser.
+
+```python
+# Correct
+pw.chromium.launch(channel="chrome")
+pw.chromium.launch_persistent_context(user_data_dir=..., channel="chrome")
+
+# Wrong — downloads and uses Chromium
+pw.chromium.launch()
+pw.chromium.launch_persistent_context(user_data_dir=...)
+```
+
+Do not run `playwright install chromium` or `playwright install`. If Chrome is missing, ask the user to install Google Chrome rather than falling back to Chromium.

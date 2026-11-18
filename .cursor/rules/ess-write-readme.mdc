@@ -1,6 +1,6 @@
 ---
 description: Structure a README with the example first, then installation, usage, and tests
-applyTo: "**/README.md"
+globs: **/README.md
 ---
 
 # How to Write a README
@@ -41,5 +41,4 @@ A README answers **"What is it?"** and **"How do I use it?"** — nothing more. 
 
 ## Sources
 
-- http://blog.nodejitsu.com/how-to-write-a-readme
-- http://jesusabdullah.github.com/
+- Joshua Holbrook (jesusabdullah), [How To Write A Readme](https://web.archive.org/web/20131109154506/https://blog.nodejitsu.com/how-to-write-a-readme), Nodejitsu blog (archived)
