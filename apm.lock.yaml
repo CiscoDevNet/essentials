@@ -380,6 +380,17 @@ dependencies:
   source: local
   local_path: ./instructions/ess/ess-okf-docs.instructions.md
   content_hash: sha256:c4e293f91168aa361a18afcf14fef0f00ea1ee7c8bd9fea0972ba427d9b0aef8
+- repo_url: _local/ess-playwright.instructions.md
+  name: ess-playwright.instructions.md
+  version: 1.0.0
+  package_type: apm_package
+  deployed_files:
+  - .cursor/rules/ess-playwright.mdc
+  deployed_file_hashes:
+    .cursor/rules/ess-playwright.mdc: sha256:2c05edf050618d6849b330375eb819f3449d51ce6e2dcb917323aec7ac9db39e
+  source: local
+  local_path: ./instructions/ess/ess-playwright.instructions.md
+  content_hash: sha256:2803dab6bf1600ae3d98b197e6cdd6d9bfd1336caa75e2b45d2359fcef5413a5
 - repo_url: _local/ess-postgres-docs
   name: ess-postgres-docs
   version: unknown
@@ -523,6 +534,17 @@ dependencies:
   source: local
   local_path: ./skills/ess/ess-summarize-change-log
   content_hash: sha256:dbeb5286a50cb5840c5fc4aea5b889cffbf6aa585374be50e51ff406f908091b
+- repo_url: _local/ess-write-readme.instructions.md
+  name: ess-write-readme.instructions.md
+  version: 1.0.0
+  package_type: apm_package
+  deployed_files:
+  - .cursor/rules/ess-write-readme.mdc
+  deployed_file_hashes:
+    .cursor/rules/ess-write-readme.mdc: sha256:e3038ccc5fc21c0c70a87631090f17e3c3aa76f7ea153cfa5d951aeeffab73ac
+  source: local
+  local_path: ./instructions/ess/ess-write-readme.instructions.md
+  content_hash: sha256:44af884dfb12d7bf39710896c266365f9376c709a72055d2dbd5fea6027f6ad9
 - repo_url: _local/gitignore.instructions.md
   name: gitignore.instructions.md
   version: 1.0.0
@@ -556,17 +578,6 @@ dependencies:
   source: local
   local_path: ./instructions/naming-cheatsheet.instructions.md
   content_hash: sha256:7a87a64ea8e13a2d5dd9427177d0347ce2d94b68fdec9f6c5216ec21d5204028
-- repo_url: _local/playwright.instructions.md
-  name: playwright.instructions.md
-  version: 1.0.0
-  package_type: apm_package
-  deployed_files:
-  - .cursor/rules/playwright.mdc
-  deployed_file_hashes:
-    .cursor/rules/playwright.mdc: sha256:6e687d50c79a1aaf094fd5dcd118a225898839eda800971c195ec1304dec19bd
-  source: local
-  local_path: ./instructions/playwright.instructions.md
-  content_hash: sha256:d9c5b5bdfb5bf3d242e7f5fc2cf52fff517941ddb0e0cbc4d65627e60d57d9d0
 - repo_url: _local/pulumi-local-state.instructions.md
   name: pulumi-local-state.instructions.md
   version: 1.0.0
@@ -589,17 +600,6 @@ dependencies:
   source: local
   local_path: ./instructions/uv.instructions.md
   content_hash: sha256:926db195adcf2201b86b2ca211c7bd76b1725f47157f6f3001f580d3498c6676
-- repo_url: _local/write-readme.instructions.md
-  name: write-readme.instructions.md
-  version: 1.0.0
-  package_type: apm_package
-  deployed_files:
-  - .cursor/rules/write-readme.mdc
-  deployed_file_hashes:
-    .cursor/rules/write-readme.mdc: sha256:c9fadc223eb4965eabd474d5fa5cdf9fb3d292c7d1d76f53cc00c02deae84bb3
-  source: local
-  local_path: ./instructions/write-readme.instructions.md
-  content_hash: sha256:719dfceaf1b6ea31ff2f666afb551fce9b86a9bd83f79003bc7a77d3d89ffc98
 deployments:
 - kind: project-relative
   target: cursor
@@ -2115,6 +2115,15 @@ deployments:
   content_hash: sha256:2049193ea149789a8ecbc4f9c2c853310723cbf1c305001daa2efd020ed65c4c
 - kind: project-relative
   target: cursor
+  value: .cursor/rules/ess-playwright.mdc
+  runtime: null
+  scope: project
+  owners:
+  - ./instructions/ess/ess-playwright.instructions.md
+  active_owner: ./instructions/ess/ess-playwright.instructions.md
+  content_hash: sha256:2c05edf050618d6849b330375eb819f3449d51ce6e2dcb917323aec7ac9db39e
+- kind: project-relative
+  target: cursor
   value: .cursor/rules/ess-shell-file-naming.mdc
   runtime: null
   scope: project
@@ -2122,6 +2131,15 @@ deployments:
   - ./instructions/ess/ess-shell-file-naming.instructions.md
   active_owner: ./instructions/ess/ess-shell-file-naming.instructions.md
   content_hash: sha256:f13ee1e0e3edb2ff224b3888081370d99472b0b57ba4e76906e8974698c1b1ff
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/ess-write-readme.mdc
+  runtime: null
+  scope: project
+  owners:
+  - ./instructions/ess/ess-write-readme.instructions.md
+  active_owner: ./instructions/ess/ess-write-readme.instructions.md
+  content_hash: sha256:e3038ccc5fc21c0c70a87631090f17e3c3aa76f7ea153cfa5d951aeeffab73ac
 - kind: project-relative
   target: cursor
   value: .cursor/rules/gitignore.mdc
@@ -2151,15 +2169,6 @@ deployments:
   content_hash: sha256:d11757946472dc3e8534b4a4786d15c16a5cf80d918a15d2bd88a15c0fc54565
 - kind: project-relative
   target: cursor
-  value: .cursor/rules/playwright.mdc
-  runtime: null
-  scope: project
-  owners:
-  - ./instructions/playwright.instructions.md
-  active_owner: ./instructions/playwright.instructions.md
-  content_hash: sha256:6e687d50c79a1aaf094fd5dcd118a225898839eda800971c195ec1304dec19bd
-- kind: project-relative
-  target: cursor
   value: .cursor/rules/pulumi-local-state.mdc
   runtime: null
   scope: project
@@ -2176,15 +2185,6 @@ deployments:
   - ./instructions/uv.instructions.md
   active_owner: ./instructions/uv.instructions.md
   content_hash: sha256:4571b24744013c54d54416cfe2bf6cbdb58014bf59bef74078b4cf76f7e1a58b
-- kind: project-relative
-  target: cursor
-  value: .cursor/rules/write-readme.mdc
-  runtime: null
-  scope: project
-  owners:
-  - ./instructions/write-readme.instructions.md
-  active_owner: ./instructions/write-readme.instructions.md
-  content_hash: sha256:c9fadc223eb4965eabd474d5fa5cdf9fb3d292c7d1d76f53cc00c02deae84bb3
 - kind: uri
   target: mcp
   value: aws-mcp
