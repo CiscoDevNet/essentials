@@ -23,6 +23,8 @@ dependencies:
     - path: ./skills/ess/ess-django-docs
     - path: ./skills/ess/ess-postgres-docs
     - path: ./skills/ess/ess-my-groups
+    - path: ./skills/ess/ess-passwords
+    - path: ./skills/ess/ess-postgres-provision
     - path: ./instructions/ess/ess-agent-skills.instructions.md
     - path: ./instructions/ess/ess-apm-sources.instructions.md
     - path: ./instructions/ess/ess-cli-write-safety.instructions.md
@@ -32,6 +34,7 @@ dependencies:
     - path: ./instructions/ess/ess-okf-docs.instructions.md
     - path: ./instructions/ess/ess-playwright.instructions.md
     - path: ./instructions/ess/ess-shell-file-naming.instructions.md
+    - path: ./instructions/ess/ess-skill-scripts-pytest.instructions.md
     - path: ./instructions/ess/ess-write-readme.instructions.md
     - path: ./instructions/gitignore.instructions.md
     - path: ./instructions/langsmith.instructions.md

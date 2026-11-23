@@ -1,4 +1,4 @@
-# ess-passwords
+# ess-passwords CLI and API reference
 
 Readable passwords from a filtered EFF wordlist — the kind you can read
 aloud on a call without wincing.
@@ -26,15 +26,32 @@ print(generated.value)         # VOCATION-paddle-move-bonding-overrate-scruffy-2
 print(generated.entropy_bits)  # 88.8
 ```
 
-## Installation
+## Running the CLI
 
-From the workspace root:
+The CLI ships in this skill's `scripts/` directory. Run it with uv, where
+`SKILL_DIR` is this skill's installed directory:
 
 ```bash
-uv sync --all-packages
+uvx --from "$SKILL_DIR/scripts" ess-passwords generate
 ```
 
-A plain `uv sync` will not put the `ess-passwords` command on `PATH`.
+uv builds it into its own cache, so nothing is written inside the skill.
+
+Python code and other skills' CLIs use it as a path dependency on that
+`scripts/` directory, for example in `pyproject.toml`:
+
+```toml
+[tool.uv.sources]
+ess-passwords = { path = "../../ess-passwords/scripts" }
+```
+
+Use a path, not `workspace = true`, and keep this `scripts/` directory out of
+the uv workspace's members: uv refuses a path source that points at a
+workspace member, and a skill installed elsewhere has no workspace to
+resolve. Leave it non-editable, so running a consumer never writes bytecode
+into this skill; `cache-keys` in its `pyproject.toml` rebuilds it when the
+source changes. Every consumer in one environment must agree on that,
+because uv rejects the same path as both editable and not.
 
 ## CLI
 
@@ -93,17 +110,25 @@ reflected in reported strength automatically. `load_wordlist()` reads
 and filters the EFF file once per process and returns the same immutable
 tuple thereafter; word selection is per password, so this does not make
 passwords repeat. If a crude word slips through, add it to
-`_EXCLUDED_WORDS` in [`wordlist.py`](src/ess_passwords/wordlist.py)
+`_EXCLUDED_WORDS` in [`wordlist.py`](../scripts/src/ess_passwords/wordlist.py)
 rather than regenerating a password by hand.
 
 ## Running tests
 
+From a checkout of the repo that hosts this skill, with its uv workspace
+synced:
+
 ```bash
-uv run pytest packages/python/ess-passwords
+uv run pytest skills/ess/ess-passwords/scripts
 ```
+
+Run this suite in its own command. A project that depends on this one
+installs a built copy of `ess_passwords` without its tests, and pytest's
+default import mode can resolve these test modules against that copy. To
+run both suites in one command, add `--import-mode=importlib`.
 
 ## License
 
-Generation uses
+Apache-2.0. See [LICENSE](../LICENSE). Generation uses
 [xkcdpass](https://github.com/redacted/XKCD-password-generator)
 (BSD-3-Clause), which bundles the EFF long wordlist.

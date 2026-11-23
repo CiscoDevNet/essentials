@@ -29,13 +29,16 @@ members = [
     "packages/python/ess-langsmith-client",
     "packages/python/ess-load-test",
     "packages/python/ess-outlook",
-    "packages/python/ess-passwords",
     "packages/python/ess-service-now-incident",
     "packages/python/ess-webex",
     "packages/python/langsmith-network",
     "packages/python/azure-ai",
     "examples/python/ess-messages",
     "examples/python/ess-hello-jwt-auth-code",
+    # skills/ess/ess-passwords/scripts is a path dependency, not a member:
+    # skills that install beside it reference it by path, which uv refuses
+    # for a member.
+    "skills/ess/ess-postgres-provision/scripts",
 ]
 
 [tool.ruff]
@@ -47,7 +50,10 @@ select = ["E", "F", "B", "PERF", "C", "I", "N", "PL"]
 [tool.ruff.lint.per-file-ignores]
 # ess-passwords tests: inline word counts, length caps, and entropy floors are
 # the values under test; naming them would just indirect the assertion.
-"packages/python/ess-passwords/src/ess_passwords/test_*.py" = ["PLR2004"]
+"**/ess-passwords/scripts/src/ess_passwords/test_*.py" = ["PLR2004"]
+# ess-postgres-provision tests: exit codes, file modes, role counts, and server
+# versions are the values under test.
+"**/ess-postgres-provision/scripts/src/ess_postgres_provision/**/test_*.py" = ["PLR2004"]
 
 [tool.bandit]
 exclude_dirs = [".venv", "venv", "node_modules", "__pycache__", ".git"]

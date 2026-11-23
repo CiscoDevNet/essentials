@@ -38,13 +38,6 @@ dependencies:
   name: ess-django-docs
   version: unknown
   package_type: claude_skill
-  deployed_files:
-  - .agents/skills/ess-django-docs
-  - .agents/skills/ess-django-docs/LICENSE
-  - .agents/skills/ess-django-docs/SKILL.md
-  deployed_file_hashes:
-    .agents/skills/ess-django-docs/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
-    .agents/skills/ess-django-docs/SKILL.md: sha256:53d7d37b5cf220efd2307115992377a722c9114c2bf082c48d9df70ab5a980fd
   source: local
   local_path: ./skills/ess/ess-django-docs
   content_hash: sha256:aae204da8ac27f0102fec813d174d60f42521748728dc9c453d9eb70f19bbcf7
@@ -74,13 +67,6 @@ dependencies:
   name: ess-env-credentials
   version: unknown
   package_type: claude_skill
-  deployed_files:
-  - .agents/skills/ess-env-credentials
-  - .agents/skills/ess-env-credentials/LICENSE
-  - .agents/skills/ess-env-credentials/SKILL.md
-  deployed_file_hashes:
-    .agents/skills/ess-env-credentials/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
-    .agents/skills/ess-env-credentials/SKILL.md: sha256:d5e8635b55a47a6432093c9a5665c2c202d0b7eca42fe8c993b3ba252c1de387
   source: local
   local_path: ./skills/ess/ess-env-credentials
   content_hash: sha256:362a0af63475e29838958e357b4d96f3ca21012caacc84e42de8ddd074266664
@@ -380,6 +366,13 @@ dependencies:
   source: local
   local_path: ./instructions/ess/ess-okf-docs.instructions.md
   content_hash: sha256:c4e293f91168aa361a18afcf14fef0f00ea1ee7c8bd9fea0972ba427d9b0aef8
+- repo_url: _local/ess-passwords
+  name: ess-passwords
+  version: unknown
+  package_type: claude_skill
+  source: local
+  local_path: ./skills/ess/ess-passwords
+  content_hash: sha256:bf50b2b58106983aa0bf65a88f16eab7c690dce83fd406a2e35e5ec8c0938aae
 - repo_url: _local/ess-playwright.instructions.md
   name: ess-playwright.instructions.md
   version: 1.0.0
@@ -395,16 +388,105 @@ dependencies:
   name: ess-postgres-docs
   version: unknown
   package_type: claude_skill
-  deployed_files:
-  - .agents/skills/ess-postgres-docs
-  - .agents/skills/ess-postgres-docs/LICENSE
-  - .agents/skills/ess-postgres-docs/SKILL.md
-  deployed_file_hashes:
-    .agents/skills/ess-postgres-docs/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
-    .agents/skills/ess-postgres-docs/SKILL.md: sha256:40c5bab3b810eccdb17cf04e7cbe592944a757e49cbaadcc0049d74e1e3fb124
   source: local
   local_path: ./skills/ess/ess-postgres-docs
   content_hash: sha256:8b2e14e2f81d0d285b03b5d2aede57cac2a44226b4bfe82c44dc89a2dbb78b5a
+- repo_url: _local/ess-postgres-provision
+  name: ess-postgres-provision
+  version: 0.1.0
+  package_type: hybrid
+  deployed_files:
+  - .agents/skills/ess-postgres-provision
+  - .agents/skills/ess-postgres-provision/LICENSE
+  - .agents/skills/ess-postgres-provision/SKILL.md
+  - .agents/skills/ess-postgres-provision/apm.yml
+  - .agents/skills/ess-postgres-provision/references/cli.md
+  - .agents/skills/ess-postgres-provision/references/test-postgresql-16-with-homebrew.md
+  - .agents/skills/ess-postgres-provision/scripts/pyproject.toml
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/__init__.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/__main__.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/conftest.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/connection.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/credentials.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/exceptions.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/interrupts.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/lifecycle.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/naming.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/options.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/passwords.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/preflight.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/provision.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/__init__.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/base.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/delivery.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/file.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/registry.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/terminal.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/test_sinks.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/__init__.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/catalog.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/database.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/lifecycle.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/maintenance.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/test_parse.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/test_statements.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_connection.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_credentials.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_integration.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_lifecycle.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_main.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_naming.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_preflight.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_provision.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/ui.py
+  - .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/verify.py
+  deployed_file_hashes:
+    .agents/skills/ess-postgres-provision/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+    .agents/skills/ess-postgres-provision/SKILL.md: sha256:c0787d1009a4cda84f7d339e1381486a6971f6f58e9fb34472ef9f9a0cb82957
+    .agents/skills/ess-postgres-provision/apm.yml: sha256:9a1e54554cfe9a6fe4a5c7742de621a31ed5ed093e2f91a1a2b6c5fb9980ff36
+    .agents/skills/ess-postgres-provision/references/cli.md: sha256:4cc1dca71def8716106ba5253fcfa0c0d1eafc5c4e7ed639ab1b32507438f838
+    .agents/skills/ess-postgres-provision/references/test-postgresql-16-with-homebrew.md: sha256:0466c613f5c2d34b02925635ef50227e6e29d546bc6f237fcf19c8b85fe8de2d
+    .agents/skills/ess-postgres-provision/scripts/pyproject.toml: sha256:f6670268f68b139fef0f798d9ec6e0021e5f8f48a59e29572d8f91928d192466
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/__init__.py: sha256:36ad119bb7a448c748550451f24f6ac844f1404aa4381e0ff4b10f76ef77c388
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/__main__.py: sha256:fed4fc18cf4c4fa6979fdca14ed7ea07148ff7ffb7c10b4d93528d839feb28b8
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/conftest.py: sha256:6d6d82751b4bbc10464d54ce80761eb94825b2f918875d869c9f67b89e6e56ab
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/connection.py: sha256:fdebe69b6d84096bcd3796d78cd240a83cabbf4642e1e83b4981b5f0ec3fa9cc
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/credentials.py: sha256:6365afaac311cd18bb40f5e77e7fa774bcd0f4c3bdb4885646391fe423d47110
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/exceptions.py: sha256:5d9e7a14be8401fb63c2def65fedab2120831ada588ffb443e64d56ca8acc690
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/interrupts.py: sha256:2c819103963d7275b0b7218817ec146d95f5ae9e9f6e165f7db468767a08754d
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/lifecycle.py: sha256:cb6d6b61deb7619770734c14305a6673333b2e8643dbb4081f395c526aa074e1
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/naming.py: sha256:e43813c66cc98bcc7ad66ee2102b8cbfb685f90f2f3f04a932887b765be63e86
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/options.py: sha256:0a5eacc799174f5f1101a65a17dbb982c94296ad00b2bf1b2f7b55dd7b647b3a
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/passwords.py: sha256:9882f474b0df30b61b9f6cfb12831486bdb2d44ca267a7f0d95615d8e836fc41
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/preflight.py: sha256:7dc94eac59f98f4193574ea7d2e4b5238e9b5e9560671d269e8b9239e1c07754
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/provision.py: sha256:6885d7a93a09465976c979026cf9c914be3942bee9dddb6237c41d6685a1043b
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/__init__.py: sha256:ea53e794966a527c69f850791c1426663cee4810719d83d7c895069bfb4e6d8b
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/base.py: sha256:dcef86d8d4308707d9100df1743f74e3b5acd74b43f2c3817de4f4501983fa25
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/delivery.py: sha256:a9b6aaae245b5b475d9144588651211587985aecfcec3df14f822c82f39ffe12
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/file.py: sha256:0b816c109f261d86eefa51f34f0fd04be1abbf071968e25383b346b5d32d0174
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/registry.py: sha256:9197dc95f957f48bf67f43a0ed88f26b88e415733024cb352db76b5426a5f080
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/terminal.py: sha256:0d77094f605f2c0af5812834a3bf54f3365da8babb1160d0ab312de8aa58cc99
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/test_sinks.py: sha256:9fe43fb99edf54e7cb102d39976d8a463712a0485d7cec7a02f9099bf70f82bd
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/__init__.py: sha256:dbad95bd60dd960f3f72d29ba197dd916c127031283957af2d3724da88201667
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/catalog.py: sha256:8691efa94408edc6771873997998fbab5548f6b6ae858294d6d33b2aaedd2ab8
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/database.py: sha256:08c1e458eac370add673b95c399945da5c2d4f71f7733f27fcf2635aa216c84f
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/lifecycle.py: sha256:3ce877fea3cb26a90bc922966bccbef8c5bcb0ec9204caed2507e5b2863d6f3b
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/maintenance.py: sha256:1931715e3b53d2cb5cac303701babd719d5e3ea9dc664f6588e36d3e33a0e6d9
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/test_parse.py: sha256:13862b244b84144c6cd527a373d8e2819a8962629f443eaec7066a64b77a010d
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/test_statements.py: sha256:ec3899a6611716a33217fabab6fc84df23b23963ec2e4b840cfc20e9c41e0e39
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_connection.py: sha256:367ba20675f723e2e5f7e177144f18dc25119c530f7b4a8da2310c5a593d03ee
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_credentials.py: sha256:3254dac458f820f784bc1dfdaacbf55bb54372296f07903dd311c276cf70c541
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_integration.py: sha256:723eb3f30ffdf2ae1a400bf840dae91dac54f62aeb4c5ca979aa56058aa64f0c
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_lifecycle.py: sha256:73f27416358a065d29d5ce63cdfe871d6f55b8fecd4576c2065a4babe24711aa
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_main.py: sha256:3097455416076348c213a97e3bb48f91fd2c1edd99a57be5738bfbde086478b6
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_naming.py: sha256:8bd862bae665aaf33e4b5d7a12a004ce3a128e634d54e1712fb489776a31d0f5
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_preflight.py: sha256:f7ed173ae7ad80c0c6e4e943d13cc358f824aa7dd7373a936f7fff9dca43206a
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_provision.py: sha256:23ad0a5f3b2ed89b97a59ab78aa154e4bf6e23644a0ae29cb0d666fcc65d5a00
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/ui.py: sha256:c8f884c9956359d791144c99e80e1e8e574b836146f1f11a483486806d68bbc8
+    .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/verify.py: sha256:46c2401c0488e96c7ae2dbbfda305e1999c6db9b289cb9e9abab098c607cd086
+  source: local
+  local_path: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:612df3fd2c52a95b98d6c8d5d8770d1d7ff2a51969621477803b79c460230bfe
 - repo_url: _local/ess-pr-address-comments
   name: ess-pr-address-comments
   version: unknown
@@ -510,6 +592,17 @@ dependencies:
   source: local
   local_path: ./skills/ess/ess-shell-flags-literal
   content_hash: sha256:462565dc28621926f95833758d164d8c9f7ee8b033f2784e0e6d71f9008fe385
+- repo_url: _local/ess-skill-scripts-pytest.instructions.md
+  name: ess-skill-scripts-pytest.instructions.md
+  version: 1.0.0
+  package_type: apm_package
+  deployed_files:
+  - .cursor/rules/ess-skill-scripts-pytest.mdc
+  deployed_file_hashes:
+    .cursor/rules/ess-skill-scripts-pytest.mdc: sha256:ba63f208a0cc9ea9f712f5d4ea6fadb5c6e207218ba1aabdb41298be7a09e83b
+  source: local
+  local_path: ./instructions/ess/ess-skill-scripts-pytest.instructions.md
+  content_hash: sha256:14970480413c6bdb6046dd5981f1c5a4cae116143f4787079d18b0f913822f72
 - repo_url: _local/ess-summarize-change-log
   name: ess-summarize-change-log
   version: unknown
@@ -600,6 +693,96 @@ dependencies:
   source: local
   local_path: ./instructions/uv.instructions.md
   content_hash: sha256:926db195adcf2201b86b2ca211c7bd76b1725f47157f6f3001f580d3498c6676
+- repo_url: _local/ess-django-docs
+  name: ess-django-docs
+  version: unknown
+  depth: 2
+  resolved_by: _local/ess-postgres-provision
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/ess-django-docs
+  - .agents/skills/ess-django-docs/LICENSE
+  - .agents/skills/ess-django-docs/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/ess-django-docs/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+    .agents/skills/ess-django-docs/SKILL.md: sha256:53d7d37b5cf220efd2307115992377a722c9114c2bf082c48d9df70ab5a980fd
+  source: local
+  local_path: ../ess-django-docs
+  declaring_parent: ./skills/ess/ess-postgres-provision
+  anchored_local_path: skills/ess/ess-django-docs
+  content_hash: sha256:aae204da8ac27f0102fec813d174d60f42521748728dc9c453d9eb70f19bbcf7
+- repo_url: _local/ess-env-credentials
+  name: ess-env-credentials
+  version: unknown
+  depth: 2
+  resolved_by: _local/ess-postgres-provision
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/ess-env-credentials
+  - .agents/skills/ess-env-credentials/LICENSE
+  - .agents/skills/ess-env-credentials/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/ess-env-credentials/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+    .agents/skills/ess-env-credentials/SKILL.md: sha256:d5e8635b55a47a6432093c9a5665c2c202d0b7eca42fe8c993b3ba252c1de387
+  source: local
+  local_path: ../ess-env-credentials
+  declaring_parent: ./skills/ess/ess-postgres-provision
+  anchored_local_path: skills/ess/ess-env-credentials
+  content_hash: sha256:362a0af63475e29838958e357b4d96f3ca21012caacc84e42de8ddd074266664
+- repo_url: _local/ess-passwords
+  name: ess-passwords
+  version: unknown
+  depth: 2
+  resolved_by: _local/ess-postgres-provision
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/ess-passwords
+  - .agents/skills/ess-passwords/LICENSE
+  - .agents/skills/ess-passwords/SKILL.md
+  - .agents/skills/ess-passwords/references/cli.md
+  - .agents/skills/ess-passwords/scripts/pyproject.toml
+  - .agents/skills/ess-passwords/scripts/src/ess_passwords/__init__.py
+  - .agents/skills/ess-passwords/scripts/src/ess_passwords/__main__.py
+  - .agents/skills/ess-passwords/scripts/src/ess_passwords/exceptions.py
+  - .agents/skills/ess-passwords/scripts/src/ess_passwords/password.py
+  - .agents/skills/ess-passwords/scripts/src/ess_passwords/test_main.py
+  - .agents/skills/ess-passwords/scripts/src/ess_passwords/test_password.py
+  - .agents/skills/ess-passwords/scripts/src/ess_passwords/wordlist.py
+  deployed_file_hashes:
+    .agents/skills/ess-passwords/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+    .agents/skills/ess-passwords/SKILL.md: sha256:555d32d72218be6d285b7e79cf9c859dd038f16d6493b01b43ca3ad850ca6254
+    .agents/skills/ess-passwords/references/cli.md: sha256:0daf78f29ac87925851e3a30a56041fd5694454de692e2f8e667d2d79531959a
+    .agents/skills/ess-passwords/scripts/pyproject.toml: sha256:b7fd8e6c7df07e864e77943da3436e617b7e2c8be37ebbccdde57092524c9359
+    .agents/skills/ess-passwords/scripts/src/ess_passwords/__init__.py: sha256:481d9da3f7481f2b122a771d36aed29bc6a7d43e4153e846c5b097c0b2163628
+    .agents/skills/ess-passwords/scripts/src/ess_passwords/__main__.py: sha256:907fbe6c1abba490b97d7954b17e472d9418de4a869139d5e39e94261041e308
+    .agents/skills/ess-passwords/scripts/src/ess_passwords/exceptions.py: sha256:10be67e894110683a8c8d9b492aa8b360dbac8ce0ea536612867d536a12226a8
+    .agents/skills/ess-passwords/scripts/src/ess_passwords/password.py: sha256:005b041838d45734c36d362524552d756865dec663f25e344b91ad7d28d89b03
+    .agents/skills/ess-passwords/scripts/src/ess_passwords/test_main.py: sha256:6e26f9131e813d0fd0bdbb587e99471dc14ed1ada85a2d403f36497126828cb7
+    .agents/skills/ess-passwords/scripts/src/ess_passwords/test_password.py: sha256:c1f31ef458855a216559a81b43324a5bb13c107c08a88f9c0471d7360bebc307
+    .agents/skills/ess-passwords/scripts/src/ess_passwords/wordlist.py: sha256:0aab3917dd3a8aebac59be0e259356fb525056f32b5bb13e867e7e89eee12820
+  source: local
+  local_path: ../ess-passwords
+  declaring_parent: ./skills/ess/ess-postgres-provision
+  anchored_local_path: skills/ess/ess-passwords
+  content_hash: sha256:bf50b2b58106983aa0bf65a88f16eab7c690dce83fd406a2e35e5ec8c0938aae
+- repo_url: _local/ess-postgres-docs
+  name: ess-postgres-docs
+  version: unknown
+  depth: 2
+  resolved_by: _local/ess-postgres-provision
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/ess-postgres-docs
+  - .agents/skills/ess-postgres-docs/LICENSE
+  - .agents/skills/ess-postgres-docs/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/ess-postgres-docs/LICENSE: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+    .agents/skills/ess-postgres-docs/SKILL.md: sha256:40c5bab3b810eccdb17cf04e7cbe592944a757e49cbaadcc0049d74e1e3fb124
+  source: local
+  local_path: ../ess-postgres-docs
+  declaring_parent: ./skills/ess/ess-postgres-provision
+  anchored_local_path: skills/ess/ess-postgres-docs
+  content_hash: sha256:8b2e14e2f81d0d285b03b5d2aede57cac2a44226b4bfe82c44dc89a2dbb78b5a
 deployments:
 - kind: project-relative
   target: cursor
@@ -607,8 +790,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./skills/ess/ess-django-docs
-  active_owner: ./skills/ess/ess-django-docs
+  - local:skills/ess/ess-django-docs
+  active_owner: local:skills/ess/ess-django-docs
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -616,8 +799,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./skills/ess/ess-django-docs
-  active_owner: ./skills/ess/ess-django-docs
+  - local:skills/ess/ess-django-docs
+  active_owner: local:skills/ess/ess-django-docs
   content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
 - kind: project-relative
   target: cursor
@@ -625,8 +808,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./skills/ess/ess-django-docs
-  active_owner: ./skills/ess/ess-django-docs
+  - local:skills/ess/ess-django-docs
+  active_owner: local:skills/ess/ess-django-docs
   content_hash: sha256:53d7d37b5cf220efd2307115992377a722c9114c2bf082c48d9df70ab5a980fd
 - kind: project-relative
   target: cursor
@@ -634,8 +817,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./skills/ess/ess-env-credentials
-  active_owner: ./skills/ess/ess-env-credentials
+  - local:skills/ess/ess-env-credentials
+  active_owner: local:skills/ess/ess-env-credentials
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -643,8 +826,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./skills/ess/ess-env-credentials
-  active_owner: ./skills/ess/ess-env-credentials
+  - local:skills/ess/ess-env-credentials
+  active_owner: local:skills/ess/ess-env-credentials
   content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
 - kind: project-relative
   target: cursor
@@ -652,8 +835,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./skills/ess/ess-env-credentials
-  active_owner: ./skills/ess/ess-env-credentials
+  - local:skills/ess/ess-env-credentials
+  active_owner: local:skills/ess/ess-env-credentials
   content_hash: sha256:d5e8635b55a47a6432093c9a5665c2c202d0b7eca42fe8c993b3ba252c1de387
 - kind: project-relative
   target: cursor
@@ -1638,12 +1821,120 @@ deployments:
   content_hash: sha256:ca93c5721355fe2a3c7a33a3ac2049a29e1226de51e5ce5e6d40c4fd561ec6e8
 - kind: project-relative
   target: cursor
+  value: .agents/skills/ess-passwords
+  runtime: null
+  scope: project
+  owners:
+  - local:skills/ess/ess-passwords
+  active_owner: local:skills/ess/ess-passwords
+  content_hash: null
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-passwords/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - local:skills/ess/ess-passwords
+  active_owner: local:skills/ess/ess-passwords
+  content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-passwords/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - local:skills/ess/ess-passwords
+  active_owner: local:skills/ess/ess-passwords
+  content_hash: sha256:555d32d72218be6d285b7e79cf9c859dd038f16d6493b01b43ca3ad850ca6254
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-passwords/references/cli.md
+  runtime: null
+  scope: project
+  owners:
+  - local:skills/ess/ess-passwords
+  active_owner: local:skills/ess/ess-passwords
+  content_hash: sha256:0daf78f29ac87925851e3a30a56041fd5694454de692e2f8e667d2d79531959a
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-passwords/scripts/pyproject.toml
+  runtime: null
+  scope: project
+  owners:
+  - local:skills/ess/ess-passwords
+  active_owner: local:skills/ess/ess-passwords
+  content_hash: sha256:b7fd8e6c7df07e864e77943da3436e617b7e2c8be37ebbccdde57092524c9359
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-passwords/scripts/src/ess_passwords/__init__.py
+  runtime: null
+  scope: project
+  owners:
+  - local:skills/ess/ess-passwords
+  active_owner: local:skills/ess/ess-passwords
+  content_hash: sha256:481d9da3f7481f2b122a771d36aed29bc6a7d43e4153e846c5b097c0b2163628
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-passwords/scripts/src/ess_passwords/__main__.py
+  runtime: null
+  scope: project
+  owners:
+  - local:skills/ess/ess-passwords
+  active_owner: local:skills/ess/ess-passwords
+  content_hash: sha256:907fbe6c1abba490b97d7954b17e472d9418de4a869139d5e39e94261041e308
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-passwords/scripts/src/ess_passwords/exceptions.py
+  runtime: null
+  scope: project
+  owners:
+  - local:skills/ess/ess-passwords
+  active_owner: local:skills/ess/ess-passwords
+  content_hash: sha256:10be67e894110683a8c8d9b492aa8b360dbac8ce0ea536612867d536a12226a8
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-passwords/scripts/src/ess_passwords/password.py
+  runtime: null
+  scope: project
+  owners:
+  - local:skills/ess/ess-passwords
+  active_owner: local:skills/ess/ess-passwords
+  content_hash: sha256:005b041838d45734c36d362524552d756865dec663f25e344b91ad7d28d89b03
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-passwords/scripts/src/ess_passwords/test_main.py
+  runtime: null
+  scope: project
+  owners:
+  - local:skills/ess/ess-passwords
+  active_owner: local:skills/ess/ess-passwords
+  content_hash: sha256:6e26f9131e813d0fd0bdbb587e99471dc14ed1ada85a2d403f36497126828cb7
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-passwords/scripts/src/ess_passwords/test_password.py
+  runtime: null
+  scope: project
+  owners:
+  - local:skills/ess/ess-passwords
+  active_owner: local:skills/ess/ess-passwords
+  content_hash: sha256:c1f31ef458855a216559a81b43324a5bb13c107c08a88f9c0471d7360bebc307
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-passwords/scripts/src/ess_passwords/wordlist.py
+  runtime: null
+  scope: project
+  owners:
+  - local:skills/ess/ess-passwords
+  active_owner: local:skills/ess/ess-passwords
+  content_hash: sha256:0aab3917dd3a8aebac59be0e259356fb525056f32b5bb13e867e7e89eee12820
+- kind: project-relative
+  target: cursor
   value: .agents/skills/ess-postgres-docs
   runtime: null
   scope: project
   owners:
-  - ./skills/ess/ess-postgres-docs
-  active_owner: ./skills/ess/ess-postgres-docs
+  - local:skills/ess/ess-postgres-docs
+  active_owner: local:skills/ess/ess-postgres-docs
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -1651,8 +1942,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./skills/ess/ess-postgres-docs
-  active_owner: ./skills/ess/ess-postgres-docs
+  - local:skills/ess/ess-postgres-docs
+  active_owner: local:skills/ess/ess-postgres-docs
   content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
 - kind: project-relative
   target: cursor
@@ -1660,9 +1951,405 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./skills/ess/ess-postgres-docs
-  active_owner: ./skills/ess/ess-postgres-docs
+  - local:skills/ess/ess-postgres-docs
+  active_owner: local:skills/ess/ess-postgres-docs
   content_hash: sha256:40c5bab3b810eccdb17cf04e7cbe592944a757e49cbaadcc0049d74e1e3fb124
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: null
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:c0787d1009a4cda84f7d339e1381486a6971f6f58e9fb34472ef9f9a0cb82957
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/apm.yml
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:9a1e54554cfe9a6fe4a5c7742de621a31ed5ed093e2f91a1a2b6c5fb9980ff36
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/references/cli.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:4cc1dca71def8716106ba5253fcfa0c0d1eafc5c4e7ed639ab1b32507438f838
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/references/test-postgresql-16-with-homebrew.md
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:0466c613f5c2d34b02925635ef50227e6e29d546bc6f237fcf19c8b85fe8de2d
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/pyproject.toml
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:f6670268f68b139fef0f798d9ec6e0021e5f8f48a59e29572d8f91928d192466
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/__init__.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:36ad119bb7a448c748550451f24f6ac844f1404aa4381e0ff4b10f76ef77c388
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/__main__.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:fed4fc18cf4c4fa6979fdca14ed7ea07148ff7ffb7c10b4d93528d839feb28b8
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/conftest.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:6d6d82751b4bbc10464d54ce80761eb94825b2f918875d869c9f67b89e6e56ab
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/connection.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:fdebe69b6d84096bcd3796d78cd240a83cabbf4642e1e83b4981b5f0ec3fa9cc
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/credentials.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:6365afaac311cd18bb40f5e77e7fa774bcd0f4c3bdb4885646391fe423d47110
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/exceptions.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:5d9e7a14be8401fb63c2def65fedab2120831ada588ffb443e64d56ca8acc690
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/interrupts.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:2c819103963d7275b0b7218817ec146d95f5ae9e9f6e165f7db468767a08754d
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/lifecycle.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:cb6d6b61deb7619770734c14305a6673333b2e8643dbb4081f395c526aa074e1
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/naming.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:e43813c66cc98bcc7ad66ee2102b8cbfb685f90f2f3f04a932887b765be63e86
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/options.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:0a5eacc799174f5f1101a65a17dbb982c94296ad00b2bf1b2f7b55dd7b647b3a
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/passwords.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:9882f474b0df30b61b9f6cfb12831486bdb2d44ca267a7f0d95615d8e836fc41
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/preflight.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:7dc94eac59f98f4193574ea7d2e4b5238e9b5e9560671d269e8b9239e1c07754
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/provision.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:6885d7a93a09465976c979026cf9c914be3942bee9dddb6237c41d6685a1043b
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/__init__.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:ea53e794966a527c69f850791c1426663cee4810719d83d7c895069bfb4e6d8b
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/base.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:dcef86d8d4308707d9100df1743f74e3b5acd74b43f2c3817de4f4501983fa25
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/delivery.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:a9b6aaae245b5b475d9144588651211587985aecfcec3df14f822c82f39ffe12
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/file.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:0b816c109f261d86eefa51f34f0fd04be1abbf071968e25383b346b5d32d0174
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/registry.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:9197dc95f957f48bf67f43a0ed88f26b88e415733024cb352db76b5426a5f080
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/terminal.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:0d77094f605f2c0af5812834a3bf54f3365da8babb1160d0ab312de8aa58cc99
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sinks/test_sinks.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:9fe43fb99edf54e7cb102d39976d8a463712a0485d7cec7a02f9099bf70f82bd
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/__init__.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:dbad95bd60dd960f3f72d29ba197dd916c127031283957af2d3724da88201667
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/catalog.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:8691efa94408edc6771873997998fbab5548f6b6ae858294d6d33b2aaedd2ab8
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/database.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:08c1e458eac370add673b95c399945da5c2d4f71f7733f27fcf2635aa216c84f
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/lifecycle.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:3ce877fea3cb26a90bc922966bccbef8c5bcb0ec9204caed2507e5b2863d6f3b
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/maintenance.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:1931715e3b53d2cb5cac303701babd719d5e3ea9dc664f6588e36d3e33a0e6d9
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/test_parse.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:13862b244b84144c6cd527a373d8e2819a8962629f443eaec7066a64b77a010d
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/sql/test_statements.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:ec3899a6611716a33217fabab6fc84df23b23963ec2e4b840cfc20e9c41e0e39
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_connection.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:367ba20675f723e2e5f7e177144f18dc25119c530f7b4a8da2310c5a593d03ee
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_credentials.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:3254dac458f820f784bc1dfdaacbf55bb54372296f07903dd311c276cf70c541
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_integration.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:723eb3f30ffdf2ae1a400bf840dae91dac54f62aeb4c5ca979aa56058aa64f0c
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_lifecycle.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:73f27416358a065d29d5ce63cdfe871d6f55b8fecd4576c2065a4babe24711aa
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_main.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:3097455416076348c213a97e3bb48f91fd2c1edd99a57be5738bfbde086478b6
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_naming.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:8bd862bae665aaf33e4b5d7a12a004ce3a128e634d54e1712fb489776a31d0f5
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_preflight.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:f7ed173ae7ad80c0c6e4e943d13cc358f824aa7dd7373a936f7fff9dca43206a
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/test_provision.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:23ad0a5f3b2ed89b97a59ab78aa154e4bf6e23644a0ae29cb0d666fcc65d5a00
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/ui.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:c8f884c9956359d791144c99e80e1e8e574b836146f1f11a483486806d68bbc8
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/ess-postgres-provision/scripts/src/ess_postgres_provision/verify.py
+  runtime: null
+  scope: project
+  owners:
+  - ./skills/ess/ess-postgres-provision
+  active_owner: ./skills/ess/ess-postgres-provision
+  content_hash: sha256:46c2401c0488e96c7ae2dbbfda305e1999c6db9b289cb9e9abab098c607cd086
 - kind: project-relative
   target: cursor
   value: .agents/skills/ess-pr-address-comments
@@ -2131,6 +2818,15 @@ deployments:
   - ./instructions/ess/ess-shell-file-naming.instructions.md
   active_owner: ./instructions/ess/ess-shell-file-naming.instructions.md
   content_hash: sha256:f13ee1e0e3edb2ff224b3888081370d99472b0b57ba4e76906e8974698c1b1ff
+- kind: project-relative
+  target: cursor
+  value: .cursor/rules/ess-skill-scripts-pytest.mdc
+  runtime: null
+  scope: project
+  owners:
+  - ./instructions/ess/ess-skill-scripts-pytest.instructions.md
+  active_owner: ./instructions/ess/ess-skill-scripts-pytest.instructions.md
+  content_hash: sha256:ba63f208a0cc9ea9f712f5d4ea6fadb5c6e207218ba1aabdb41298be7a09e83b
 - kind: project-relative
   target: cursor
   value: .cursor/rules/ess-write-readme.mdc

@@ -2,7 +2,6 @@
 name = "ess-passwords"
 version = "0.1.0"
 description = "Readable password generation from a filtered EFF wordlist"
-readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.12,<3.13"
 dependencies = [
@@ -22,8 +21,18 @@ ess-passwords = "ess_passwords.__main__:main"
 requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
+# Consumers install this as a non-editable path dependency; rebuild it when
+# the source changes rather than only when pyproject.toml does.
+[tool.uv]
+cache-keys = [{ file = "pyproject.toml" }, { file = "src/**/*.py" }]
+
 [tool.hatch.build]
 exclude = ["**/test_*.py"]
+
+# pytest would otherwise write .pytest_cache here, inside the skill, where
+# the skill installer copies it.
+[tool.pytest.ini_options]
+addopts = "-p no:cacheprovider"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ess_passwords"]

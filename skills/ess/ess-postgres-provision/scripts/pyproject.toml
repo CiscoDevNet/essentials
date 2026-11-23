@@ -1,0 +1,46 @@
+[project]
+name = "ess-postgres-provision"
+version = "0.1.0"
+description = "Provision a Postgres database, schema, and four separated login roles"
+license = "Apache-2.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "click>=8.1",
+    "ess-passwords",
+    "psycopg[binary]>=3.2",
+]
+
+[dependency-groups]
+dev = [
+    "pglast>=8.9",
+    "pytest>=8.0",
+]
+
+[project.scripts]
+ess-postgres-provision = "ess_postgres_provision.__main__:main"
+
+# A path, not `workspace = true`: it resolves the same from skills/ess/ and
+# from the agent skills directory APM installs both skills into. Not
+# editable, so running the CLI never writes into the installed sibling.
+[tool.uv.sources]
+ess-passwords = { path = "../../ess-passwords/scripts" }
+
+# The skill runs a uvx build of this directory, which by default is rebuilt
+# only when pyproject.toml changes; an updated skill would run stale code.
+[tool.uv]
+cache-keys = [{ file = "pyproject.toml" }, { file = "src/**/*.py" }]
+
+[tool.hatch.build]
+exclude = ["**/test_*.py", "**/conftest.py"]
+
+# pytest would otherwise write .pytest_cache here, inside the skill, where
+# the skill installer copies it.
+[tool.pytest.ini_options]
+addopts = "-p no:cacheprovider"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ess_postgres_provision"]
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
