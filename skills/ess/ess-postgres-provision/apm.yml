@@ -1,0 +1,9 @@
+name: ess-postgres-provision
+version: 0.1.0
+description: Provision a Postgres database, schema, and four separated login roles
+dependencies:
+  apm:
+    - path: ../ess-passwords
+    - path: ../ess-env-credentials
+    - path: ../ess-postgres-docs
+    - path: ../ess-django-docs
